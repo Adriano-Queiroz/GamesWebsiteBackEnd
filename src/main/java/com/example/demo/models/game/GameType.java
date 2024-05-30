@@ -1,4 +1,5 @@
-package com.example.demo.model.Game;
+package com.example.demo.models.game;
+
 
 public enum GameType {
     BATTLESHIP,
