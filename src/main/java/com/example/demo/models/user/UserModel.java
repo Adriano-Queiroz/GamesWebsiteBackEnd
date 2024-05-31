@@ -21,6 +21,10 @@ public class UserModel {
     @GeneratedValue
     private Long codUser;
 
+    private String username;
+
+    private String email;
+
     @ManyToOne
     @JoinColumn(name = "cod_user_role")
     private UserRoleModel userRole;
