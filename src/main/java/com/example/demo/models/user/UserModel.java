@@ -41,4 +41,5 @@ public class UserModel {
 
     @ManyToMany(mappedBy = "users") // mappedBy refers to the field name in MatchModel
     private List<BattleModel> battles = new ArrayList<>();
+    private double balance;
 }

@@ -16,4 +16,6 @@ public class GameModel {
 
     @Enumerated
     private GameType gameType;
+
+    private double housePercentage;
 }

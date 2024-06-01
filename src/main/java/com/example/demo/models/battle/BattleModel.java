@@ -22,7 +22,7 @@ public class BattleModel {
     private String board; // fiz isto assim para ser escalável, sabemos o tipo de board através do tipo de game
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('P1_TURN', 'P2_TURN','P1_WON','P2_WON')")
+    @Column(columnDefinition = "ENUM('P1_TURN', 'P2_TURN','P1_WON','P2_WON', 'DRAW')")
     private Status status;
     @ManyToMany
     @JoinTable(
@@ -35,6 +35,7 @@ public class BattleModel {
     @ManyToOne
     @JoinColumn(name = "cod_game")
     private GameModel game;
+    private double bet;
 
     public String swapStatus(){
         if(status.equals(Status.P1_TURN))
