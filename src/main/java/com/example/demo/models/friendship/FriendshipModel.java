@@ -22,4 +22,5 @@ public class FriendshipModel {
     private UserModel codUserAccept; // who accepted request
 
     private Boolean state;
+
 }

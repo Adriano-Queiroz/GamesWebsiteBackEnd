@@ -14,4 +14,6 @@ public class GameModel {
     @GeneratedValue
     private Long codGame;
 
+    @Enumerated
+    private GameType gameType;
 }

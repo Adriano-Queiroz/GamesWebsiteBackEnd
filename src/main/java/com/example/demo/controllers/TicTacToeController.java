@@ -1,31 +1,30 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dtos.tictactoe.GetPossibleMovesRequestDTO;
-import com.example.demo.dtos.tictactoe.MakeMoveDTO;
-import com.example.demo.repositories.IBattleRepository;
+import com.example.demo.dtos.tictactoe.MakeMoveRequestDTO;
+import com.example.demo.dtos.tictactoe.MakeMoveResponseDTO;
 import com.example.demo.services.tictactoe.TicTacToeService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 
-@RestController("/tictactoe")
+
+@Controller
 public class TicTacToeController {
-        TicTacToeService ticTacToeService;
-        IBattleRepository iBattleRepository;
-        public TicTacToeController(TicTacToeService ticTacToeService, IBattleRepository iBattleRepository){
-            this.ticTacToeService = ticTacToeService;
-            this.iBattleRepository = iBattleRepository;
-        }
-    @GetMapping("/getMoves")
-    public ResponseEntity<char[][]> getPossibleMoves(@RequestBody GetPossibleMovesRequestDTO getPossibleMovesRequestDTO){
-        char[][] possibleMoves = ticTacToeService.getPossibleMoves(getPossibleMovesRequestDTO.board());
-        return ResponseEntity.ok(possibleMoves);
-    } // nao eh suposto ter isto, quando enviamos a nova board para quem vai começar a ser a vez, enviamos os moves possiveis
-    /*
-    @PostMapping("makeMove")
-    public ResponseEntity<char[][]> makeMove(@RequestBody MakeMoveDTO makeMoveDTO){
-            //char[][] // receber board mudada do FE, serializar e enviar para a bd
-        //envias
-    }
 
-     */
+    @Autowired
+    private TicTacToeService ticTacToeService;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @MessageMapping("/move")
+    public void makeMove(MakeMoveRequestDTO makeMoveRequestDTO) throws Exception {
+        System.out.println("ayo");
+        MakeMoveResponseDTO responseDTO = ticTacToeService.makeMove(makeMoveRequestDTO);
+
+        messagingTemplate.convertAndSend(
+                "/topic/game/" + responseDTO.codBattle() +"/" + makeMoveRequestDTO.player(), responseDTO);
+
+    }
 }

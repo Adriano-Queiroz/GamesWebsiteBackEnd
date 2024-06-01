@@ -1,6 +1,8 @@
 package com.example.demo.models.battle;
 
+import com.example.demo.models.game.GameModel;
 import com.example.demo.models.user.UserModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +18,12 @@ public class BattleModel {
 
     @Id
     private Long codBattle;
+    @JsonIgnore
+    private String board; // fiz isto assim para ser escalável, sabemos o tipo de board através do tipo de game
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "ENUM('P1_TURN', 'P2_TURN','P1_WON','P2_WON')")
+    private Status status;
     @ManyToMany
     @JoinTable(
             name = "user_battle", // Creating a join table
@@ -24,6 +31,18 @@ public class BattleModel {
             inverseJoinColumns = @JoinColumn(name = "cod_user")
     )
     private Set<UserModel> users = new HashSet<>();
-    //adicionar game
-    //
+
+    @ManyToOne
+    @JoinColumn(name = "cod_game")
+    private GameModel game;
+
+    public String swapStatus(){
+        if(status.equals(Status.P1_TURN))
+            status = Status.P2_TURN;
+        else
+            status = Status.P1_TURN;
+        return status.toString();
+    }
+
+
 }
