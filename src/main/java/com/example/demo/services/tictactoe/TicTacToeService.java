@@ -1,5 +1,6 @@
 package com.example.demo.services.tictactoe;
 
+import com.example.demo.Tuple;
 import com.example.demo.boards.TicTacToeBoard;
 import com.example.demo.dtos.tictactoe.MakeMoveRequestDTO;
 import com.example.demo.dtos.tictactoe.MakeMoveResponseDTO;
@@ -60,18 +61,14 @@ public class TicTacToeService {
 
      */
     public MakeMoveResponseDTO makeMove(MakeMoveRequestDTO makeMoveRequestDTO){
-        System.out.println("ayo2 cod battle:" + makeMoveRequestDTO.codBattle());
-        System.out.println(makeMoveRequestDTO.toString());
         Optional<BattleModel> battleOptional = iBattleRepository.findById(makeMoveRequestDTO.codBattle());
-        System.out.println("ayo3 battle optional:" + battleOptional);
-        String board = makeMoveRequestDTO.board();
-        System.out.println("ayo4");
-        String[][] boardArray = ((TicTacToeBoard)
-                BoardMapper.getBoard(GameType.TICTACTOE, board))
-                .getBoard();
 
         if(battleOptional.isPresent()){
             BattleModel battle = battleOptional.get();
+            String board = makeMoveRequestDTO.board();
+            String[][] boardArray = ((TicTacToeBoard)
+                    BoardMapper.getBoard(GameType.TICTACTOE, board))
+                    .getBoard();
             System.out.println("Setting board: " + board);
             battle.setBoard(board);
             iBattleRepository.save(battle);
@@ -81,4 +78,26 @@ public class TicTacToeService {
         }
         return null;
     }
+    public Tuple<Boolean, String> hasWinner(String[][] board) {
+        // Check rows for a winner
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0].equals(board[i][1]) && board[i][1].equals(board[i][2]) && !board[i][0].equals("")) {
+                return new Tuple<>(true, board[i][0]);
+            }
+        }
+        // Check columns for a winner
+        for (int i = 0; i < 3; i++) {
+            if (board[0][i].equals(board[1][i]) && board[1][i].equals(board[2][i]) && !board[0][i].equals("")) {
+                return new Tuple<>(true, board[0][i]);
+            }
+        }
+        // Check diagonals for a winner
+        if ((board[0][0].equals(board[1][1]) && board[1][1].equals(board[2][2]) && !board[0][0].equals("")) ||
+                (board[0][2].equals(board[1][1]) && board[1][1].equals(board[2][0]) && !board[0][2].equals(""))) {
+            return new Tuple<>(true, board[1][1]);
+        }
+        return new Tuple<>(false, ""); // No winner found
+    }
+
+
 }
