@@ -38,8 +38,10 @@ public class UserModel {
 
     @OneToMany(mappedBy = "codUserAccept")
     private List<FriendshipModel> receivedFriendshipRequests;
-
+/*
     @ManyToMany(mappedBy = "users") // mappedBy refers to the field name in MatchModel
     private List<BattleModel> battles = new ArrayList<>();
+
+ */
     private double balance;
 }
