@@ -1,6 +1,7 @@
 package com.example.demo.models.lobby;
 
 import com.example.demo.models.game.GameModel;
+import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.UserModel;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,4 +22,9 @@ public class LobbyModel {
     @ManyToOne
     @JoinColumn(name = "cod_game")
     private GameModel game;
+
+    @ManyToOne
+    @JoinColumn(name = "cod_room")
+    private RoomModel roomModel;
+
 }

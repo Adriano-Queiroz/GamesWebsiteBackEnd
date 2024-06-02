@@ -31,7 +31,7 @@ public class TicTacToeController {
     public void makeMove(MakeMoveRequestDTO makeMoveRequestDTO) throws Exception {
         System.out.println("ayo");
         MakeMoveResponseDTO responseDTO = ticTacToeLogicService.makeMove(makeMoveRequestDTO);
-        Tuple<Boolean,String> hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
+        Tuple hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
                 BoardMapper.getBoard(GameType.TICTACTOE, responseDTO.board()))
                 .getBoard());
 

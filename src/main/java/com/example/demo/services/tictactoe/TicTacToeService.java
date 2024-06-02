@@ -31,19 +31,20 @@ public class TicTacToeService {
         messagingTemplate.convertAndSend(
                 "/topic/game/" + codBattle +"/2",
                 new EndGameResponseDTO(status));
+        BattleModel battle = iBattleRepository.findById(codBattle).get();
+        UserModel user1 = battle.getPlayer1();
+        UserModel user2 = battle.getPlayer2();
 
+        treatBets(Status.valueOf(status),user1,user2,battle);
     }
     public void treatUnfinishedGame(SimpMessagingTemplate messagingTemplate, long codBattle, String player, MakeMoveResponseDTO responseDTO){
         messagingTemplate.convertAndSend(
                 "/topic/game/" + codBattle +"/" + player,
                 responseDTO);
     }
-    public void treatBets(Status status, long codPlayer1, long codPlayer2, long codBattle){
-        UserModel user1 = iUserModelRepository.findById(codPlayer1).get();
-        UserModel user2 = iUserModelRepository.findById(codPlayer2).get();
-        BattleModel battle = iBattleRepository.findById(codBattle).get();
+    public void treatBets(Status status, UserModel user1, UserModel user2, BattleModel battle){
         double housePercentage = battle.getGame().getHousePercentage();
-        double bet = battle.getBet();
+        double bet = battle.getRoom().getBet();
         double betToContabilize = bet * (1.00-housePercentage);
         double houseAmount = bet - betToContabilize;
         if(status==Status.P1_WON){

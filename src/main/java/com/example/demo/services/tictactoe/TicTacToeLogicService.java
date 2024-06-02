@@ -76,25 +76,25 @@ public class TicTacToeLogicService {
         }
         return null;
     }
-    public Tuple<Boolean, String> hasFinished(String[][] board) {
+    public Tuple hasFinished(String[][] board) {
         // Check rows for a winner
         for (int i = 0; i < 3; i++) {
             if (board[i][0].equals(board[i][1]) && board[i][1].equals(board[i][2]) && !board[i][0].equals("")) {
-                return new Tuple<>(true, board[i][0]);
+                return new Tuple(true, board[i][0]);
             }
         }
         // Check columns for a winner
         for (int i = 0; i < 3; i++) {
             if (board[0][i].equals(board[1][i]) && board[1][i].equals(board[2][i]) && !board[0][i].equals("")) {
-                return new Tuple<>(true, board[0][i]);
+                return new Tuple(true, board[0][i]);
             }
         }
         // Check diagonals for a winner
         if ((board[0][0].equals(board[1][1]) && board[1][1].equals(board[2][2]) && !board[0][0].equals("")) ||
                 (board[0][2].equals(board[1][1]) && board[1][1].equals(board[2][0]) && !board[0][2].equals(""))) {
-            return new Tuple<>(true, board[1][1]);
+            return new Tuple(true, board[1][1]);
         }
-        return new Tuple<>(false, ""); // No winner found
+        return new Tuple(false, ""); // No winner found
     }
 
 

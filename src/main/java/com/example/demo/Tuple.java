@@ -1,4 +1,4 @@
 package com.example.demo;
 
-public record Tuple<A,B>(A hasFinished, B winner) {
+public record Tuple(Boolean hasFinished, String winner) {
 }
