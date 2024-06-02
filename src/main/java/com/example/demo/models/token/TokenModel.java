@@ -15,7 +15,7 @@ import java.util.UUID;
 public class TokenModel {
     @Id
     @GeneratedValue
-    private Long codToken;
+    private UUID codToken;
 
     @Column
     private UUID token;

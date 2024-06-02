@@ -19,3 +19,4 @@ public class GameModel {
 
     private double housePercentage;
 }
+

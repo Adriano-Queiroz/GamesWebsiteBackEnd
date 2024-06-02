@@ -1,4 +1,4 @@
-
+/*
 package com.example.demo.services;
 
 import com.example.demo.dtos.user.CreateUserInputDTO;
@@ -36,8 +36,8 @@ public class UserService {
         if(token == null){
             throw new NotFoundException("User not found");
         }
-        UserModel user = userRepository.getUserModelByToken(token.getToken().toString());
-
+        //UserModel user = userRepository.getUserModelByToken(token.getToken().toString());
+        UserModel user = userRepository.getUserModelByToken(token);
         return new AuthenticatedUser(user,token.getToken().toString());
     }
 
@@ -46,6 +46,10 @@ public class UserService {
     }
 
     public UserModel getUserByToken(String token) {
-        return userRepository.getUserModelByToken(token);
+        return userRepository.getUserModelByToken(new TokenModel());
     }
 }
+
+ */
+
+

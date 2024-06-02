@@ -1,8 +1,7 @@
 package com.example.demo.models.room;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.demo.models.game.GameModel;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +12,11 @@ import lombok.Setter;
 public class RoomModel {
 
     @Id
+    @GeneratedValue
     private Long codRoom;
 
     private double bet;
+    @ManyToOne
+    @JoinColumn(name = "cod_game")
+    private GameModel game;
 }

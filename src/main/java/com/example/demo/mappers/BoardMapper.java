@@ -10,6 +10,7 @@ public class BoardMapper {
     public static Board getBoard(GameType gameType, String board){
         if(gameType == GameType.TICTACTOE){
             Gson gson = new Gson();
+            System.out.println("Board in GSON: \n" + board);
             TicTacToeBoard ticTacToeBoard = new TicTacToeBoard(gson.fromJson(board, String[][].class));
             String[][] boardArray = ticTacToeBoard.getBoard();
             System.out.println("BOARD:");

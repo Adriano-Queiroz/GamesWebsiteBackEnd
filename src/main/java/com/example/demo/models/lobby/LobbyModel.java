@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 public class LobbyModel {
     @Id
+    @GeneratedValue
     private Long codLobby;
 
     @ManyToOne
