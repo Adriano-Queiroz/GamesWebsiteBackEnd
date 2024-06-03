@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,12 +15,15 @@ import java.util.UUID;
 @Table(name = "token")
 public class TokenModel {
     @Id
-    @GeneratedValue
-    private UUID codToken;
+    private String tokenValidationInfo;
 
     @Column
-    private UUID token;
+    private Instant createdAt;
 
-    @OneToMany(mappedBy = "token")
-    private List<UserModel> userList;
+    @Column
+    private Instant lastUsedAt;
+
+    @OneToOne
+    @JoinColumn(name = "codUser")
+    private UserModel user;
 }

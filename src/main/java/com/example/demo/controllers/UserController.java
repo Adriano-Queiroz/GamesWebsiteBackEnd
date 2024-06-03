@@ -1,4 +1,4 @@
-/*
+
 package com.example.demo.controllers;
 
 import com.example.demo.dtos.InfoDTO;
@@ -6,12 +6,18 @@ import com.example.demo.dtos.user.*;
 import com.example.demo.models.user.AuthenticatedUser;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.services.UserService;
+import com.example.demo.services.exceptions.AlreadyExistsException;
+import com.example.demo.services.exceptions.InternalErrorException;
+import com.example.demo.services.exceptions.InvalidUsernameOrPasswordException;
 import com.example.demo.services.exceptions.NotFoundException;
-import org.springframework.http.MediaType;
+import org.slf4j.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/user")
+
+@RestController
 public class UserController {
 
     UserService userService;
@@ -20,36 +26,38 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
+
+    @GetMapping("user/{id}")
     public ResponseEntity<UserInfoOutputDTO> getUserById(@PathVariable long id) throws NotFoundException{
         UserModel user = userService.getUserById(id);
         UserInfoOutputDTO userInfoOutputDTO = new UserInfoOutputDTO(user.getCodUser(), user.getUsername(), user.getEmail());
         return ResponseEntity.ok(userInfoOutputDTO);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<CreateUserOutputDTO> createUser(@RequestBody CreateUserInputDTO createUserInputDTO){
-        UserModel user = userService.createUser(createUserInputDTO);
+    @PostMapping("user/create")
+    public ResponseEntity<CreateUserOutputDTO> createUser(@RequestBody CreateUserInputDTO createUserInputDTO) throws AlreadyExistsException {
+        UserModel user = userService.createUser(createUserInputDTO.username(), createUserInputDTO.email(), createUserInputDTO.password());
         CreateUserOutputDTO createUserOutputDTO = new CreateUserOutputDTO(user.getCodUser(), user.getUsername(), user.getEmail());
         return ResponseEntity.status(201).body(createUserOutputDTO);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginUserOutputDTO> login(@RequestBody LoginUserInputDTO loginUserInputDTO) throws NotFoundException {
-        AuthenticatedUser authenticatedUser = userService.login(loginUserInputDTO);
+    @PostMapping("user/login")
+    public ResponseEntity<LoginUserOutputDTO> login(@RequestBody LoginUserInputDTO loginUserInputDTO) throws InvalidUsernameOrPasswordException, InternalErrorException {
+        AuthenticatedUser authenticatedUser = userService.login(loginUserInputDTO.username(), loginUserInputDTO.password());
+        ResponseCookie cookie = ResponseCookie.from("token", authenticatedUser.token())
+                .httpOnly(true)
+                .maxAge(3600)
+                .path("/")
+                .build();
         LoginUserOutputDTO output = new LoginUserOutputDTO(authenticatedUser.user().getCodUser(),authenticatedUser.token());
-        return ResponseEntity.ok(output);
+        return ResponseEntity.status(200).header(HttpHeaders.SET_COOKIE, cookie.toString()).body(output);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<InfoDTO> logout(@RequestBody String token) {
-        userService.logout(token);
+    @PostMapping("user/logout")
+    public ResponseEntity<InfoDTO> logout(AuthenticatedUser user) throws NotFoundException {
+        userService.logout(user.token());
         return ResponseEntity.status(200).body(new InfoDTO("User logged out"));
     }
 
 
-
-
 }
-
- */

@@ -1,10 +1,12 @@
-/*
 package com.example.demo.Auth_Pipeline;
 
 import com.example.demo.models.user.AuthenticatedUser;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.services.UserService;
+import com.example.demo.services.exceptions.AuthenticationException;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class RequestTokenProcessor {
@@ -17,7 +19,7 @@ public class RequestTokenProcessor {
         this.usersService = usersService;
     }
 
-    public AuthenticatedUser processAuthorizationHeaderValue(String authorizationValue) {
+    public AuthenticatedUser processAuthorizationHeaderValue(String authorizationValue) throws AuthenticationException {
         if (authorizationValue == null) {
             return null;
         }
@@ -35,7 +37,7 @@ public class RequestTokenProcessor {
         return null;
     }
 
-    public AuthenticatedUser processAuthorizationCookie(String authorizationCookie) {
+    public AuthenticatedUser processAuthorizationCookie(String authorizationCookie) throws AuthenticationException {
         if (authorizationCookie == null) {
             return null;
         }
@@ -47,5 +49,3 @@ public class RequestTokenProcessor {
     }
 }
 
-
- */

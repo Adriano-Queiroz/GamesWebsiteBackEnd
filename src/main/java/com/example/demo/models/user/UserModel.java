@@ -14,7 +14,12 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "user")
+@Table(name = "user",
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+}
+)
 public class UserModel {
 
     @Id
@@ -25,13 +30,11 @@ public class UserModel {
 
     private String email;
 
+    private String passwordValidationInfo;
+
     @ManyToOne
     @JoinColumn(name = "cod_user_role")
     private UserRoleModel userRole;
-
-    @ManyToOne
-    @JoinColumn(name = "cod_token")
-    private TokenModel token;
 
     @OneToMany(mappedBy = "codUserRequest")
     private List<FriendshipModel> sentFriendshipRequests;

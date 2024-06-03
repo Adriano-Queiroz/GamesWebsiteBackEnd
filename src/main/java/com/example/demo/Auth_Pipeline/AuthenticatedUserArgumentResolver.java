@@ -1,6 +1,7 @@
 package com.example.demo.Auth_Pipeline;
 
 import com.example.demo.models.user.AuthenticatedUser;
+import com.example.demo.services.exceptions.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
