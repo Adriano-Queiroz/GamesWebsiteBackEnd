@@ -1,6 +1,7 @@
 package com.example.demo.dtos.lobby;
 
 public record LobbyResponseDTO(
-    String message
+    String message,
+    boolean isSecondPlayer
 ) {
 }
