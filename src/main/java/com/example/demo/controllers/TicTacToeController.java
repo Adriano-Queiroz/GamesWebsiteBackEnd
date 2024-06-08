@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -28,7 +29,7 @@ public class TicTacToeController {
     private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/move")
-    public void makeMove(MakeMoveRequestDTO makeMoveRequestDTO) throws Exception {
+    public void makeMove(@RequestBody MakeMoveRequestDTO makeMoveRequestDTO) throws Exception {
         System.out.println("ayo");
         MakeMoveResponseDTO responseDTO = ticTacToeLogicService.makeMove(makeMoveRequestDTO);
         Tuple hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
