@@ -1,9 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dtos.lobby.DeleteLobbyRequestDTO;
-import com.example.demo.dtos.lobby.DeleteLobbyResponseDTO;
-import com.example.demo.dtos.lobby.LobbyRequestDTO;
-import com.example.demo.dtos.lobby.LobbyResponseDTO;
+import com.example.demo.dtos.lobby.*;
 import com.example.demo.services.LobbyService;
 import com.example.demo.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,12 @@ public class LobbyController {
     public ResponseEntity<DeleteLobbyResponseDTO> deleteLobby(@RequestBody DeleteLobbyRequestDTO deleteLobbyRequestDTO) {
         long codLobby = lobbyService.deleteLobby(deleteLobbyRequestDTO.codUser());
         return ResponseEntity.ok(new DeleteLobbyResponseDTO(codLobby));
+    }
+
+    @PostMapping("/friend")
+    public ResponseEntity<FriendsLobbyResponseDTO> getFriendsLobby(@RequestBody FriendsLobbyRequestDTO friendsLobbyRequestDTO){
+
+        return null;
     }
 
 }

@@ -19,6 +19,9 @@ public class LobbyModel {
     @ManyToOne
     @JoinColumn(name = "cod_user")
     private UserModel user;
+    @ManyToOne
+    @JoinColumn(name = "friend_invited")
+    private UserModel friendInvited;
 
     @ManyToOne
     @JoinColumn(name = "cod_game")
@@ -26,6 +29,6 @@ public class LobbyModel {
 
     @ManyToOne
     @JoinColumn(name = "cod_room")
-    private RoomModel roomModel;
+    private RoomModel room;
 
 }
