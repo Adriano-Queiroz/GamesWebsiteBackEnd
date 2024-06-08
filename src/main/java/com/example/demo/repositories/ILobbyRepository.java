@@ -13,4 +13,6 @@ public interface ILobbyRepository extends JpaRepository<LobbyModel,Long> {
     //Optional<LobbyModel> findFirstByGameOrderByCodLobbyDesc(GameModel game);
     Optional <LobbyModel> findFirstByRoomOrderByCodLobbyDesc(RoomModel room);
     Optional<LobbyModel> findFirstByUserOrderByCodLobbyDesc(UserModel user);
+    //Optional<LobbyModel> findFirstByInviteIdOrderByCodLobby(long inviteId);
+
 }

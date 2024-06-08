@@ -29,9 +29,10 @@ public class LobbyController {
     }
 
     @PostMapping("/friend")
-    public ResponseEntity<FriendsLobbyResponseDTO> getFriendsLobby(@RequestBody FriendsLobbyRequestDTO friendsLobbyRequestDTO){
-
-        return null;
+    public ResponseEntity<LobbyResponseDTO> getFriendsLobby(@RequestBody FriendsLobbyRequestDTO friendsLobbyRequestDTO) throws NotFoundException {
+        //logic to send friend invite
+        // need to create lobby first, then send invite with the lobby
+        return lobbyService.getLobby(friendsLobbyRequestDTO);
     }
 
 }

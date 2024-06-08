@@ -23,6 +23,8 @@ public class LobbyModel {
     @JoinColumn(name = "friend_invited")
     private UserModel friendInvited;
 
+    private long inviteId;
+
     @ManyToOne
     @JoinColumn(name = "cod_game")
     private GameModel game;

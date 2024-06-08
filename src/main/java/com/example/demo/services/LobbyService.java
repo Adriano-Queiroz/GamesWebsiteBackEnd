@@ -1,6 +1,8 @@
 package com.example.demo.services;
 
 import com.example.demo.PlayersTuple;
+import com.example.demo.dtos.lobby.FriendsLobbyRequestDTO;
+import com.example.demo.dtos.lobby.FriendsLobbyResponseDTO;
 import com.example.demo.dtos.lobby.LobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
 import com.example.demo.models.battle.BattleModel;
@@ -48,7 +50,29 @@ public class LobbyService {
        iLobbyRepository.delete(lobby);
        return lobby.getCodLobby();
     }
-
+    public ResponseEntity<LobbyResponseDTO> getLobby(FriendsLobbyRequestDTO friendsLobbyRequestDTO) throws NotFoundException{
+        Optional<RoomModel> optionalRoom = iRoomRepository.findById(friendsLobbyRequestDTO.codRoom());
+        Optional<UserModel> optionalUser = iUserModelRepository.findById(friendsLobbyRequestDTO.codUser());
+        Optional<UserModel> optionalFriend = iUserModelRepository.findById(friendsLobbyRequestDTO.codUser());
+        if (!optionalUser.isPresent())
+            throw new NotFoundException("User not found of id " + friendsLobbyRequestDTO.codUser());
+        if (!optionalRoom.isPresent())
+            throw new NotFoundException("Room not found of id " + friendsLobbyRequestDTO.codRoom());
+        if (!optionalFriend.isPresent())
+            throw new NotFoundException("Friend not found of id " + friendsLobbyRequestDTO.codRoom());
+        RoomModel room = optionalRoom.get();
+        UserModel user = optionalUser.get();
+        UserModel friend = optionalFriend.get();
+        if(friendsLobbyRequestDTO.codLobby() < 0){
+            LobbyModel lobby = createLobby(user,room,friend);
+            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false));
+        }
+        Optional<LobbyModel> optionalLobby = iLobbyRepository.findById(friendsLobbyRequestDTO.codLobby());
+        if(!optionalLobby.isPresent())
+            throw new NotFoundException("Did not find lobby with id: " + friendsLobbyRequestDTO.codLobby());
+        LobbyModel lobby = optionalLobby.get();
+        return createBattle(lobby, friend,room);
+    }
     public ResponseEntity<LobbyResponseDTO> getLobby(LobbyRequestDTO lobbyRequestDTO) throws NotFoundException {
         Optional<RoomModel> optionalRoom = iRoomRepository.findById(lobbyRequestDTO.codRoom());
         Optional<UserModel> optionalUser = iUserModelRepository.findById(lobbyRequestDTO.codUser());
@@ -57,18 +81,19 @@ public class LobbyService {
         if (!optionalRoom.isPresent())
             throw new NotFoundException("Room not found of id " + lobbyRequestDTO.codRoom());
         RoomModel room = optionalRoom.get();
-        GameModel game = room.getGame();
+        //GameModel game = room.getGame();
         UserModel newUser = optionalUser.get();
-        Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomOrderByCodLobbyDesc(room); // trocar pra bet
+        Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomOrderByCodLobbyDesc(room);
         if (!optionalLobby.isPresent()) {
-            LobbyModel lobby = new LobbyModel();
-            lobby.setGame(game);
-            lobby.setUser(newUser);
-            lobby.setRoom(room);
-            iLobbyRepository.save(lobby);
+            LobbyModel lobby = createLobby(newUser,room,null);
             return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false));
         }
         LobbyModel lobby = optionalLobby.get();
+        return createBattle(lobby,newUser,room);
+    }
+
+    public ResponseEntity<LobbyResponseDTO> createBattle(LobbyModel lobby, UserModel newUser,RoomModel room){
+
         UserModel oldUser = lobby.getUser();
         BattleModel battle = new BattleModel();
         PlayersTuple playersTuple = randomizePlayers(oldUser, newUser);
@@ -80,6 +105,15 @@ public class LobbyService {
                 oldUser,
                 newUser,
                 lobby.getCodLobby());
+    }
+    public LobbyModel createLobby(UserModel user, RoomModel room,UserModel friend){
+        LobbyModel lobby = new LobbyModel();
+        lobby.setGame(room.getGame());
+        lobby.setUser(user);
+        lobby.setRoom(room);
+        if(friend!=null) lobby.setFriendInvited(friend);
+        iLobbyRepository.save(lobby);
+        return lobby;
     }
 
     public PlayersTuple randomizePlayers(UserModel oldUser, UserModel newUser) {
