@@ -1,15 +1,14 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dtos.lobby.RestLobbyRequestDTO;
+import com.example.demo.dtos.lobby.DeleteLobbyRequestDTO;
+import com.example.demo.dtos.lobby.DeleteLobbyResponseDTO;
+import com.example.demo.dtos.lobby.LobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
 import com.example.demo.services.LobbyService;
 import com.example.demo.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/lobby")
@@ -23,7 +22,13 @@ public class LobbyController {
     }
 
     @PostMapping
-    public ResponseEntity<LobbyResponseDTO> getLobby(@RequestBody RestLobbyRequestDTO restLobbyRequestDTO) throws NotFoundException {
-        return lobbyService.getLobby(restLobbyRequestDTO);
+    public ResponseEntity<LobbyResponseDTO> getLobby(@RequestBody LobbyRequestDTO lobbyRequestDTO) throws NotFoundException {
+        return lobbyService.getLobby(lobbyRequestDTO);
     }
+    @DeleteMapping("/delete")
+    public ResponseEntity<DeleteLobbyResponseDTO> deleteLobby(@RequestBody DeleteLobbyRequestDTO deleteLobbyRequestDTO) {
+        long codLobby = lobbyService.deleteLobby(deleteLobbyRequestDTO.codUser());
+        return ResponseEntity.ok(new DeleteLobbyResponseDTO(codLobby));
+    }
+
 }

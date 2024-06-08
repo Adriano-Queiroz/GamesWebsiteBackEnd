@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.PlayersTuple;
-import com.example.demo.dtos.lobby.RestLobbyRequestDTO;
+import com.example.demo.dtos.lobby.LobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
 import com.example.demo.models.battle.BattleModel;
 import com.example.demo.models.game.GameModel;
@@ -42,13 +42,20 @@ public class LobbyService {
         this.webSocketService = webSocketService;
     }
 
-    public ResponseEntity<LobbyResponseDTO> getLobby(RestLobbyRequestDTO restLobbyRequestDTO) throws NotFoundException {
-        Optional<RoomModel> optionalRoom = iRoomRepository.findById(restLobbyRequestDTO.codRoom());
-        Optional<UserModel> optionalUser = iUserModelRepository.findById(restLobbyRequestDTO.codUser());
+    public long deleteLobby(long codUser){
+       UserModel user = iUserModelRepository.findById(codUser).get();
+       LobbyModel lobby = iLobbyRepository.findFirstByUserOrderByCodLobbyDesc(user).get();
+       iLobbyRepository.delete(lobby);
+       return lobby.getCodLobby();
+    }
+
+    public ResponseEntity<LobbyResponseDTO> getLobby(LobbyRequestDTO lobbyRequestDTO) throws NotFoundException {
+        Optional<RoomModel> optionalRoom = iRoomRepository.findById(lobbyRequestDTO.codRoom());
+        Optional<UserModel> optionalUser = iUserModelRepository.findById(lobbyRequestDTO.codUser());
         if (!optionalUser.isPresent())
-            throw new NotFoundException("User not found of id " + restLobbyRequestDTO.codUser());
+            throw new NotFoundException("User not found of id " + lobbyRequestDTO.codUser());
         if (!optionalRoom.isPresent())
-            throw new NotFoundException("Room not found of id " + restLobbyRequestDTO.codRoom());
+            throw new NotFoundException("Room not found of id " + lobbyRequestDTO.codRoom());
         RoomModel room = optionalRoom.get();
         GameModel game = room.getGame();
         UserModel newUser = optionalUser.get();
