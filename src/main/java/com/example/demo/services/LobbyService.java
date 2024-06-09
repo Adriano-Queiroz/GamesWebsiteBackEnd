@@ -2,11 +2,9 @@ package com.example.demo.services;
 
 import com.example.demo.PlayersTuple;
 import com.example.demo.dtos.lobby.FriendsLobbyRequestDTO;
-import com.example.demo.dtos.lobby.FriendsLobbyResponseDTO;
 import com.example.demo.dtos.lobby.LobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
 import com.example.demo.models.battle.BattleModel;
-import com.example.demo.models.game.GameModel;
 import com.example.demo.models.lobby.LobbyModel;
 import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.UserModel;

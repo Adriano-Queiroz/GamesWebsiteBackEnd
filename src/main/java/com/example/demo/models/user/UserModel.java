@@ -37,11 +37,11 @@ public class UserModel {
     @JoinColumn(name = "cod_user_role")
     private UserRoleModel userRole;
 
-    @OneToMany(mappedBy = "codUserRequest")
-    private List<FriendshipModel> sentFriendshipRequests;
+    //@OneToMany(mappedBy = "codUserRequest")
+    //private List<FriendshipModel> sentFriendshipRequests;
 
-    @OneToMany(mappedBy = "codUserAccept")
-    private List<FriendshipModel> receivedFriendshipRequests;
+    //@OneToMany(mappedBy = "codUserAccept")
+    //private List<FriendshipModel> receivedFriendshipRequests;
 /*
     @ManyToMany(mappedBy = "users") // mappedBy refers to the field name in MatchModel
     private List<BattleModel> battles = new ArrayList<>();

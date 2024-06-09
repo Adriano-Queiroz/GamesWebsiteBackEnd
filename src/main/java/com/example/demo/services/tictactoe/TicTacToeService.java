@@ -5,16 +5,12 @@ import com.example.demo.dtos.tictactoe.EndGameResponseDTO;
 import com.example.demo.dtos.tictactoe.MakeMoveResponseDTO;
 import com.example.demo.models.battle.BattleModel;
 import com.example.demo.models.battle.Status;
-import com.example.demo.models.game.GameModel;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IBattleRepository;
-import com.example.demo.repositories.IGameRepository;
 import com.example.demo.repositories.IUserModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class TicTacToeService {

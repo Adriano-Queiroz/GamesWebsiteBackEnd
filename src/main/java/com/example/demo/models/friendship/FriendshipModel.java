@@ -11,16 +11,17 @@ import lombok.Setter;
 @Setter
 public class FriendshipModel {
     @Id
+    @GeneratedValue
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "cod_user_request")
-    private UserModel codUserRequest; // who sent request
+    private UserModel userRequest; // who sent request
 
     @ManyToOne
     @JoinColumn(name = "cod_user_accept")
-    private UserModel codUserAccept; // who accepted request
+    private UserModel userAccept; // who accepted request
 
-    private Boolean state;
+    private Boolean isAccepted;
 
 }

@@ -2,8 +2,6 @@
 package com.example.demo.services;
 
 import com.example.demo.Auth_Pipeline.UsersDomain;
-import com.example.demo.dtos.user.CreateUserInputDTO;
-import com.example.demo.dtos.user.LoginUserInputDTO;
 import com.example.demo.models.token.TokenModel;
 import com.example.demo.models.user.AuthenticatedUser;
 import com.example.demo.models.user.PasswordValidationInfo;

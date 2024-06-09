@@ -2,11 +2,9 @@ package com.example.demo.controllers;
 
 import com.example.demo.Tuple;
 import com.example.demo.boards.TicTacToeBoard;
-import com.example.demo.dtos.tictactoe.EndGameResponseDTO;
 import com.example.demo.dtos.tictactoe.MakeMoveRequestDTO;
 import com.example.demo.dtos.tictactoe.MakeMoveResponseDTO;
 import com.example.demo.mappers.BoardMapper;
-import com.example.demo.models.battle.Status;
 import com.example.demo.models.game.GameType;
 import com.example.demo.services.tictactoe.TicTacToeLogicService;
 import com.example.demo.services.tictactoe.TicTacToeService;

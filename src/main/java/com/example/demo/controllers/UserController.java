@@ -10,7 +10,6 @@ import com.example.demo.services.exceptions.AlreadyExistsException;
 import com.example.demo.services.exceptions.InternalErrorException;
 import com.example.demo.services.exceptions.InvalidUsernameOrPasswordException;
 import com.example.demo.services.exceptions.NotFoundException;
-import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
