@@ -48,7 +48,7 @@ public class UserController {
                 .maxAge(3600)
                 .path("/")
                 .build();
-        LoginUserOutputDTO output = new LoginUserOutputDTO(authenticatedUser.user().getCodUser(),authenticatedUser.token());
+        LoginUserOutputDTO output = new LoginUserOutputDTO(authenticatedUser.user().getCodUser(),authenticatedUser.user().getUsername());
         return ResponseEntity.status(200).header(HttpHeaders.SET_COOKIE, cookie.toString()).body(output);
     }
 
