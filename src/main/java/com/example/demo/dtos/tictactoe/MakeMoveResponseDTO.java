@@ -5,5 +5,5 @@ public record MakeMoveResponseDTO(
         String possibleMoves,
         long codBattle,
         String status
-) {
-}
+)
+{}

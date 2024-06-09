@@ -1,5 +1,6 @@
 package com.example.demo.models.game;
 
+import com.example.demo.dtos.games.GameDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +15,13 @@ public class GameModel {
     @GeneratedValue
     private Long codGame;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private GameType gameType;
 
     private double housePercentage;
+
+    public GameDTO gameModelToDTO(){
+        return new GameDTO(codGame,gameType.name());
+    }
 }
 
