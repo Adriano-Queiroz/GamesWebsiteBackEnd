@@ -53,9 +53,14 @@ public class UserController {
     }
 
     @PostMapping("user/logout")
-    public ResponseEntity<InfoDTO> logout(AuthenticatedUser user) throws NotFoundException {
-        userService.logout(user.token());
-        return ResponseEntity.status(200).body(new InfoDTO("User logged out"));
+    public ResponseEntity<InfoDTO> logout(AuthenticatedUser authenticatedUser) throws NotFoundException {
+        userService.logout(authenticatedUser.token());
+        ResponseCookie cookie = ResponseCookie.from("token", authenticatedUser.token())
+                .httpOnly(true)
+                .maxAge(0)
+                .path("/")
+                .build();
+        return ResponseEntity.status(200).header(HttpHeaders.SET_COOKIE, cookie.toString()).body(new InfoDTO("User logged out"));
     }
 
 

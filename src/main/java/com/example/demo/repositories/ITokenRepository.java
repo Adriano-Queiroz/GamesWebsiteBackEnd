@@ -8,4 +8,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ITokenRepository extends JpaRepository<TokenModel, String> {
+    Optional<TokenModel> findByUser(UserModel user);
 }

@@ -4,6 +4,8 @@ import com.example.demo.models.user.AuthenticatedUser;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.services.UserService;
 import com.example.demo.services.exceptions.AuthenticationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -14,6 +16,7 @@ public class RequestTokenProcessor {
     private final UserService usersService;
 
     public static final String SCHEME = "bearer";
+    private static final Logger logger = LoggerFactory.getLogger(RequestTokenProcessor.class);
 
     public RequestTokenProcessor(UserService usersService) {
         this.usersService = usersService;
@@ -41,6 +44,7 @@ public class RequestTokenProcessor {
         if (authorizationCookie == null) {
             return null;
         }
+        logger.info("existe cookie");
         UserModel user = usersService.getUserByToken(authorizationCookie);
         if (user != null) {
             return new AuthenticatedUser(user, authorizationCookie);
