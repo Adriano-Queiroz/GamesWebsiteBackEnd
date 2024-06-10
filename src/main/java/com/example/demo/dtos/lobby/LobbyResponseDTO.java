@@ -4,6 +4,7 @@ public record LobbyResponseDTO(
     String message,
     boolean isSecondPlayer,
     long codLobby,
-    boolean isPlayer1
+    boolean isPlayer1,
+    String board
 ) {
 }

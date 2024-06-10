@@ -5,12 +5,14 @@ import com.example.demo.dtos.lobby.FriendsLobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
 import com.example.demo.models.battle.BattleModel;
+import com.example.demo.models.game.GameType;
 import com.example.demo.models.lobby.LobbyModel;
 import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.*;
 import com.example.demo.services.exceptions.NotFoundException;
 import com.example.demo.services.sockets.WebSocketService;
+import com.example.demo.services.tictactoe.TicTacToeLogicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class LobbyService {
     IBattleRepository iBattleRepository;
     IRoomRepository iRoomRepository;
     WebSocketService webSocketService;
+    private GamesService gamesService;
 
     @Autowired
     public LobbyService(ILobbyRepository iLobbyRepository,
@@ -33,13 +36,15 @@ public class LobbyService {
                         IUserModelRepository iUserModelRepository,
                         IBattleRepository iBattleRepository,
                         IRoomRepository iRoomRepository,
-                        WebSocketService webSocketService) {
+                        WebSocketService webSocketService,
+                        GamesService gamesService) {
         this.iLobbyRepository = iLobbyRepository;
         this.iGameRepository = iGameRepository;
         this.iUserModelRepository = iUserModelRepository;
         this.iBattleRepository = iBattleRepository;
         this.iRoomRepository = iRoomRepository;
         this.webSocketService = webSocketService;
+        this.gamesService = gamesService;
     }
 
     public long deleteLobby(long codUser){
@@ -63,7 +68,7 @@ public class LobbyService {
         UserModel friend = optionalFriend.get();
         if(friendsLobbyRequestDTO.codLobby() < 0){
             LobbyModel lobby = createLobby(user,room,friend);
-            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false));
+            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,""));
         }
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findById(friendsLobbyRequestDTO.codLobby());
         if(!optionalLobby.isPresent())
@@ -84,7 +89,7 @@ public class LobbyService {
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomOrderByCodLobbyDesc(room);
         if (!optionalLobby.isPresent()) {
             LobbyModel lobby = createLobby(newUser,room,null);
-            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false));
+            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,""));
         }
         LobbyModel lobby = optionalLobby.get();
         return createBattle(lobby,newUser,room);
@@ -102,7 +107,7 @@ public class LobbyService {
                 playersTuple.player2(),
                 oldUser,
                 newUser,
-                lobby.getCodLobby());
+                lobby);
     }
     public LobbyModel createLobby(UserModel user, RoomModel room,UserModel friend){
         LobbyModel lobby = new LobbyModel();
@@ -127,19 +132,22 @@ public class LobbyService {
         iBattleRepository.save(battle);
     }
 
-    public ResponseEntity<LobbyResponseDTO> sendMessagesAfterOpponentFound(UserModel player1, UserModel player2, UserModel oldUser, UserModel newUser, long codLobby) {
+    public ResponseEntity<LobbyResponseDTO> sendMessagesAfterOpponentFound(UserModel player1, UserModel player2, UserModel oldUser, UserModel newUser, LobbyModel lobby) {
         boolean isOldUserPlayer1 = player1.equals(oldUser);
+        String emptyBoard = gamesService.getEmptyBoard(lobby.getGame().getGameType());
         LobbyResponseDTO lobbyResponseDTO = new LobbyResponseDTO(
                 "Found Opponent, game is about to begin",
                 true,
-                codLobby,
-                isOldUserPlayer1
+                lobby.getCodLobby(),
+                isOldUserPlayer1,
+                emptyBoard
         );
-        webSocketService.sendMessage("/topic/lobby/" + codLobby, lobbyResponseDTO);
+        webSocketService.sendMessage("/topic/lobby/" + lobby.getCodLobby(), lobbyResponseDTO);
         return ResponseEntity.ok(new LobbyResponseDTO("Found Opponent, game is about to begin",
                 true,
-                codLobby,
-                !isOldUserPlayer1
+                lobby.getCodLobby(),
+                !isOldUserPlayer1,
+                emptyBoard
         ));
     }
 }

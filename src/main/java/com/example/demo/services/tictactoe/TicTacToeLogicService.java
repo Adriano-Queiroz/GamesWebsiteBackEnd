@@ -11,6 +11,7 @@ import com.example.demo.repositories.IBattleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -96,6 +97,16 @@ public class TicTacToeLogicService {
         }
         return new Tuple(false, ""); // No winner found
     }
-
+    public String[][] getEmptyBoard() {
+        return new String[][] {
+                {"", "", ""},
+                {"", "", ""},
+                {"", "", ""}
+        };
+    }
+    public String getEmptyBoardAsJson(){
+        Gson gson = new Gson();
+        return gson.toJson(getEmptyBoard());
+    }
 
 }
