@@ -27,11 +27,11 @@ public class TicTacToeService {
                 hasFinishedTuple.winner().equals("O") ? Status.P2_WON : Status.DRAW)
                 .toString();
         messagingTemplate.convertAndSend(
-                "/topic/game/" + codBattle +"/X",
+                "/topic/battle/" + codBattle +"/X",
                 new EndGameResponseDTO(status));
 
         messagingTemplate.convertAndSend(
-                "/topic/game/" + codBattle +"/O",
+                "/topic/battle/" + codBattle +"/O",
                 new EndGameResponseDTO(status));
         
         BattleModel battle = iBattleRepository.findById(codBattle).get();
@@ -42,7 +42,7 @@ public class TicTacToeService {
     }
     public void treatUnfinishedGame(SimpMessagingTemplate messagingTemplate, long codBattle, String player, MakeMoveResponseDTO responseDTO){
         messagingTemplate.convertAndSend(
-                "/topic/game/" + codBattle +"/" + player,
+                "/topic/battle/" + codBattle +"/" + player,
                 responseDTO);
     }
     public void treatBets(Status status, UserModel user1, UserModel user2, BattleModel battle){

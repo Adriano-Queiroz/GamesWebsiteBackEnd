@@ -56,12 +56,12 @@ public class BattleModel {
     @JoinColumn(name = "cod_room")
     private RoomModel room;
 
-    public String swapStatus(){
+    public Status swapStatus(){
         if(status.equals(Status.P1_TURN))
             status = Status.P2_TURN;
         else
             status = Status.P1_TURN;
-        return status.toString();
+        return status;
     }
 
 

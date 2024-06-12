@@ -6,6 +6,7 @@ import com.example.demo.dtos.tictactoe.MakeMoveRequestDTO;
 import com.example.demo.dtos.tictactoe.MakeMoveResponseDTO;
 import com.example.demo.mappers.BoardMapper;
 import com.example.demo.models.battle.BattleModel;
+import com.example.demo.models.battle.Status;
 import com.example.demo.models.game.GameType;
 import com.example.demo.repositories.IBattleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,7 +62,7 @@ public class TicTacToeLogicService {
      */
     public MakeMoveResponseDTO makeMove(MakeMoveRequestDTO makeMoveRequestDTO){
         Optional<BattleModel> battleOptional = iBattleRepository.findById(makeMoveRequestDTO.codBattle());
-
+        System.out.println("BATTLE COD DTO:" + makeMoveRequestDTO.codBattle());
         if(battleOptional.isPresent()){
             BattleModel battle = battleOptional.get();
             String board = makeMoveRequestDTO.board();
@@ -70,10 +71,11 @@ public class TicTacToeLogicService {
                     .getBoard();
             System.out.println("Setting board: " + board);
             battle.setBoard(board);
+            battle.setStatus(battle.swapStatus());
             iBattleRepository.save(battle);
             return new MakeMoveResponseDTO(board,getPossibleMoves(boardArray),
                     makeMoveRequestDTO.codBattle(),
-                    battle.swapStatus());
+                    battle.getStatus().toString());
         }
         return null;
     }

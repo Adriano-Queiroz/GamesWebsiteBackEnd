@@ -48,10 +48,16 @@ public class LobbyService {
     }
 
     public long deleteLobby(long codUser){
-       UserModel user = iUserModelRepository.findById(codUser).get();
-       LobbyModel lobby = iLobbyRepository.findFirstByUserOrderByCodLobbyDesc(user).get();
-       iLobbyRepository.delete(lobby);
-       return lobby.getCodLobby();
+        try{
+            UserModel user = iUserModelRepository.findById(codUser).get();
+            LobbyModel lobby = iLobbyRepository.findFirstByUserOrderByCodLobbyDesc(user).get();
+            iLobbyRepository.delete(lobby);
+            return lobby.getCodLobby();
+        }catch(Exception e){
+            System.out.println("mambo");
+        }
+      return -1;
+
     }
     public ResponseEntity<LobbyResponseDTO> getLobby(FriendsLobbyRequestDTO friendsLobbyRequestDTO) throws NotFoundException{
         Optional<RoomModel> optionalRoom = iRoomRepository.findById(friendsLobbyRequestDTO.codRoom());
@@ -68,7 +74,7 @@ public class LobbyService {
         UserModel friend = optionalFriend.get();
         if(friendsLobbyRequestDTO.codLobby() < 0){
             LobbyModel lobby = createLobby(user,room,friend);
-            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,""));
+            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,"",-1));
         }
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findById(friendsLobbyRequestDTO.codLobby());
         if(!optionalLobby.isPresent())
@@ -89,7 +95,7 @@ public class LobbyService {
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomOrderByCodLobbyDesc(room);
         if (!optionalLobby.isPresent()) {
             LobbyModel lobby = createLobby(newUser,room,null);
-            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,""));
+            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,"",-1));
         }
         LobbyModel lobby = optionalLobby.get();
         return createBattle(lobby,newUser,room);
@@ -107,7 +113,8 @@ public class LobbyService {
                 playersTuple.player2(),
                 oldUser,
                 newUser,
-                lobby);
+                lobby,
+                battle.getCodBattle());
     }
     public LobbyModel createLobby(UserModel user, RoomModel room,UserModel friend){
         LobbyModel lobby = new LobbyModel();
@@ -132,7 +139,7 @@ public class LobbyService {
         iBattleRepository.save(battle);
     }
 
-    public ResponseEntity<LobbyResponseDTO> sendMessagesAfterOpponentFound(UserModel player1, UserModel player2, UserModel oldUser, UserModel newUser, LobbyModel lobby) {
+    public ResponseEntity<LobbyResponseDTO> sendMessagesAfterOpponentFound(UserModel player1, UserModel player2, UserModel oldUser, UserModel newUser, LobbyModel lobby, long codBattle) {
         boolean isOldUserPlayer1 = player1.equals(oldUser);
         String emptyBoard = gamesService.getEmptyBoard(lobby.getGame().getGameType());
         LobbyResponseDTO lobbyResponseDTO = new LobbyResponseDTO(
@@ -140,14 +147,16 @@ public class LobbyService {
                 true,
                 lobby.getCodLobby(),
                 isOldUserPlayer1,
-                emptyBoard
+                emptyBoard,
+                codBattle
         );
         webSocketService.sendMessage("/topic/lobby/" + lobby.getCodLobby(), lobbyResponseDTO);
         return ResponseEntity.ok(new LobbyResponseDTO("Found Opponent, game is about to begin",
                 true,
                 lobby.getCodLobby(),
                 !isOldUserPlayer1,
-                emptyBoard
+                emptyBoard,
+                codBattle
         ));
     }
 }
