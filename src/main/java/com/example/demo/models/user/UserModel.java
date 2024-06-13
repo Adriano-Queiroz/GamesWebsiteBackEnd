@@ -37,6 +37,9 @@ public class UserModel {
     @JoinColumn(name = "cod_user_role")
     private UserRoleModel userRole;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TokenModel> tokens = new ArrayList<>();
+
     //@OneToMany(mappedBy = "codUserRequest")
     //private List<FriendshipModel> sentFriendshipRequests;
 

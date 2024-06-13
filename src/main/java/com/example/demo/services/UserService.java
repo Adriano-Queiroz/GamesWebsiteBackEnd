@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Comparator;
+import java.util.List;
 
 @Component
 public class UserService {
@@ -59,6 +61,20 @@ public class UserService {
         if(!usersDomain.validatePassword(password, usersDomain.createPasswordValidationInformation(password))){
             throw new InvalidUsernameOrPasswordException("Invalid username or password");
         }
+
+        List<TokenModel> userTokens = tokenRepository.findByUser(user);
+        int maxTokens = usersDomain.getMaxNumberOfTokensPerUser();
+
+        if (userTokens.size() >= maxTokens) {
+            // Sort tokens by createdAt
+            userTokens.sort(Comparator.comparing(TokenModel::getCreatedAt));
+
+            // Remove the oldest token(s) if necessary
+            for (int i = 0; i <= userTokens.size() - maxTokens; i++) {
+                tokenRepository.delete(userTokens.get(i));
+            }
+        }
+
         String tokenValue = usersDomain.generateTokenValue();
         Instant now = clock.instant();
         TokenModel token = new TokenModel();

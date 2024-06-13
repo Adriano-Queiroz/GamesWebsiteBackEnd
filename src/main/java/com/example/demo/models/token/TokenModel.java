@@ -23,7 +23,7 @@ public class TokenModel {
     @Column
     private Instant lastUsedAt;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "codUser")
     private UserModel user;
 }

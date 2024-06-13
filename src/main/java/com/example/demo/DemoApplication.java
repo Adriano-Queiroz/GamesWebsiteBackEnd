@@ -32,7 +32,7 @@ public class DemoApplication {
 				256/8,
 				Duration.ofHours(24),
 				Duration.ofHours(1),
-				3
+				5
 		);
 	}
 	@Bean

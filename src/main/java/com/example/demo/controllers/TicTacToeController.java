@@ -27,6 +27,7 @@ public class TicTacToeController {
     private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/move")
+    //send to ???
     public void makeMove(@RequestBody MakeMoveRequestDTO makeMoveRequestDTO) throws Exception {
         System.out.println("ayo");
         MakeMoveResponseDTO responseDTO = ticTacToeLogicService.makeMove(makeMoveRequestDTO);

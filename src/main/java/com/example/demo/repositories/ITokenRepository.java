@@ -4,9 +4,10 @@ import com.example.demo.models.token.TokenModel;
 import com.example.demo.models.user.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface ITokenRepository extends JpaRepository<TokenModel, String> {
-    Optional<TokenModel> findByUser(UserModel user);
+    List<TokenModel> findByUser(UserModel user);
 }
