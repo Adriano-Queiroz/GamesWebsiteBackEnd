@@ -71,7 +71,7 @@ public class FriendshipController {
     }
     @PostMapping("/accept")
     public ResponseEntity<FriendshipAcceptResponseDTO> acceptFriendship(@RequestBody FriendshipAcceptRequestDTO friendshipAcceptRequestDTO){
-        UserModel userRequest = iUserModelRepository.findById(friendshipAcceptRequestDTO.codRequest()).get();
+        UserModel userRequest = iUserModelRepository.findByUsername(friendshipAcceptRequestDTO.usernameRequest()).get();
         UserModel userAccept = iUserModelRepository.findById(friendshipAcceptRequestDTO.codAccept()).get();
         FriendshipModel friendship = iFriendshipRepository.findFirstByIsAcceptedAndUserRequestAndAndUserAccept(
                 false,
@@ -80,6 +80,17 @@ public class FriendshipController {
         friendship.setIsAccepted(true);
         iFriendshipRepository.save(friendship);
         return ResponseEntity.ok(new FriendshipAcceptResponseDTO("Friend Request accepted"));
+    }
+    @DeleteMapping("/reject")
+    public ResponseEntity<FriendshipAcceptResponseDTO> deleteFriendship(@RequestBody FriendshipAcceptRequestDTO friendshipAcceptRequestDTO){
+        UserModel userRequest = iUserModelRepository.findByUsername(friendshipAcceptRequestDTO.usernameRequest()).get();
+        UserModel userAccept = iUserModelRepository.findById(friendshipAcceptRequestDTO.codAccept()).get();
+        FriendshipModel friendship = iFriendshipRepository.findFirstByIsAcceptedAndUserRequestAndAndUserAccept(
+                false,
+                userRequest,
+                userAccept).get();
+        iFriendshipRepository.delete(friendship);
+        return ResponseEntity.ok(new FriendshipAcceptResponseDTO("Friend Request rejected"));
     }
     @GetMapping("/solicitations/{codUser}")
     public ResponseEntity<FriendshipSolicitationListResponseDTO> getFriendSolicitations
