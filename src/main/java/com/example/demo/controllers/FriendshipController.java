@@ -10,12 +10,15 @@ import com.example.demo.models.user.UserModel;
 //import com.example.demo.repositories.IFriendRequestRepository;
 import com.example.demo.repositories.IFriendshipRepository;
 import com.example.demo.repositories.IUserModelRepository;
+import com.example.demo.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/friendship")
@@ -27,9 +30,12 @@ public class FriendshipController {
     //@Autowired
     //IFriendRequestRepository iFriendRequestRepository;
     @PostMapping("/solicitation")
-    public ResponseEntity<FriendshipSolicitationResponseDTO> friendRequest(@RequestBody FriendshipSolicitationRequestDTO friendshipSolicitationRequestDTO){
+    public ResponseEntity<FriendshipSolicitationResponseDTO> friendRequest(@RequestBody FriendshipSolicitationRequestDTO friendshipSolicitationRequestDTO) throws NotFoundException {
         UserModel user = iUserModelRepository.findById(friendshipSolicitationRequestDTO.codUser()).get();
-        UserModel friend = iUserModelRepository.findById(friendshipSolicitationRequestDTO.codFriend()).get();
+        Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(friendshipSolicitationRequestDTO.friendUsername());
+        if(!optionalFriend.isPresent())
+            throw new NotFoundException("Friend not found");
+        UserModel friend = optionalFriend.get();
         FriendshipModel friendship = new FriendshipModel();
         friendship.setUserRequest(user);
         friendship.setUserAccept(friend);
