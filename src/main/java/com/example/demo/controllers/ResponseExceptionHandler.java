@@ -30,6 +30,10 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDTO> handleAlreadyExistsException(AlreadyExistsException e) {
         return ResponseEntity.status(409).body(new ErrorDTO(e.getMessage()));
     }
+    @ExceptionHandler(AlreadyFriendsException.class)
+    public ResponseEntity<ErrorDTO> handleAlreadyFriendsException(AlreadyFriendsException e) {
+        return ResponseEntity.status(409).body(new ErrorDTO(e.getMessage()));
+    }
 
     @ExceptionHandler(InternalErrorException.class)
     public ResponseEntity<ErrorDTO> handleInternalErrorException(InternalErrorException e) {

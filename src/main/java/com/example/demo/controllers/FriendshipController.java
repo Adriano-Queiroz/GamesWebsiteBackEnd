@@ -10,6 +10,8 @@ import com.example.demo.models.user.UserModel;
 //import com.example.demo.repositories.IFriendRequestRepository;
 import com.example.demo.repositories.IFriendshipRepository;
 import com.example.demo.repositories.IUserModelRepository;
+import com.example.demo.services.exceptions.AlreadyExistsException;
+import com.example.demo.services.exceptions.AlreadyFriendsException;
 import com.example.demo.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,12 +33,37 @@ public class FriendshipController {
     //@Autowired
     //IFriendRequestRepository iFriendRequestRepository;
     @PostMapping("/solicitation")
-    public ResponseEntity<FriendshipSolicitationResponseDTO> friendRequest(@RequestBody FriendshipSolicitationRequestDTO friendshipSolicitationRequestDTO) throws NotFoundException {
+    public ResponseEntity<FriendshipSolicitationResponseDTO> friendRequest(@RequestBody FriendshipSolicitationRequestDTO friendshipSolicitationRequestDTO) throws NotFoundException, AlreadyExistsException, AlreadyFriendsException {
         UserModel user = iUserModelRepository.findById(friendshipSolicitationRequestDTO.codUser()).get();
         Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(friendshipSolicitationRequestDTO.friendUsername());
+
         if(!optionalFriend.isPresent())
             throw new NotFoundException("Friend not found");
         UserModel friend = optionalFriend.get();
+        Optional<FriendshipModel> possibleFriendships = iFriendshipRepository.findFirstByIsAcceptedAndUserRequestAndAndUserAccept(
+                false,
+                user,
+                friend
+        );
+        Optional<FriendshipModel> possibleFriendshipsTurnedAround = iFriendshipRepository.findFirstByIsAcceptedAndUserRequestAndAndUserAccept(
+                false,
+                friend,
+                user
+        );
+        if(possibleFriendships.isPresent() || possibleFriendshipsTurnedAround.isPresent())
+            throw new AlreadyExistsException("Ja existe um pedido de amizade entre vocês");
+        possibleFriendships = iFriendshipRepository.findFirstByIsAcceptedAndUserRequestAndAndUserAccept(
+                true,
+                user,
+                friend
+        );
+        possibleFriendshipsTurnedAround = iFriendshipRepository.findFirstByIsAcceptedAndUserRequestAndAndUserAccept(
+                true,
+                friend,
+                user
+        );
+        if(possibleFriendships.isPresent() || possibleFriendshipsTurnedAround.isPresent())
+            throw new AlreadyFriendsException("Vocês já são amigos");
         FriendshipModel friendship = new FriendshipModel();
         friendship.setUserRequest(user);
         friendship.setUserAccept(friend);
