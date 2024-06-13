@@ -40,6 +40,18 @@ public class TicTacToeService {
 
         treatBets(Status.valueOf(status),user1,user2,battle);
     }
+    public Status RestTreatFinishedGame(Tuple hasFinishedTuple, long codBattle){
+        Status status = (hasFinishedTuple.winner().equals("X") ? Status.P1_WON :
+                hasFinishedTuple.winner().equals("O") ? Status.P2_WON : Status.DRAW);
+
+        BattleModel battle = iBattleRepository.findById(codBattle).get();
+        UserModel user1 = battle.getPlayer1();
+        UserModel user2 = battle.getPlayer2();
+        battle.setStatus(status);
+        treatBets(status,user1,user2,battle);
+        iBattleRepository.save(battle);
+        return status;
+    }
     public void treatUnfinishedGame(SimpMessagingTemplate messagingTemplate, long codBattle, String player, MakeMoveResponseDTO responseDTO){
         messagingTemplate.convertAndSend(
                 "/topic/battle/" + codBattle +"/" + player,
