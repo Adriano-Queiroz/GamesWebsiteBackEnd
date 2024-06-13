@@ -1,10 +1,8 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dtos.friendship.FriendshipAcceptRequestDTO;
-import com.example.demo.dtos.friendship.FriendshipAcceptResponseDTO;
-import com.example.demo.dtos.friendship.FriendshipSolicitationRequestDTO;
-import com.example.demo.dtos.friendship.FriendshipSolicitationResponseDTO;
+import com.example.demo.dtos.friendship.*;
 //import com.example.demo.models.friend_request.FriendRequestModel;
+import com.example.demo.dtos.user.UserDTO;
 import com.example.demo.models.friendship.FriendshipModel;
 import com.example.demo.models.user.UserModel;
 //import com.example.demo.repositories.IFriendRequestRepository;
@@ -15,13 +13,13 @@ import com.example.demo.services.exceptions.AlreadyFriendsException;
 import com.example.demo.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/friendship")
@@ -82,5 +80,46 @@ public class FriendshipController {
         friendship.setIsAccepted(true);
         iFriendshipRepository.save(friendship);
         return ResponseEntity.ok(new FriendshipAcceptResponseDTO("Friend Request accepted"));
+    }
+    @GetMapping("/solicitations/{codUser}")
+    public ResponseEntity<FriendshipSolicitationListResponseDTO> getFriendSolicitations
+            (@PathVariable long codUser) throws NotFoundException {
+        Optional<UserModel> optionalUser = iUserModelRepository.findById(codUser);
+        if(!optionalUser.isPresent())
+            throw new NotFoundException("User não encontrado");
+        UserModel user = optionalUser.get();
+        List<FriendshipModel> friendSolicitations = iFriendshipRepository.findAllByIsAcceptedAndUserAccept(
+                false
+                ,user);
+        List<UserDTO> userDTOList = friendSolicitations.stream().map(
+                solicitation ->new UserDTO(solicitation.getUserRequest().getUsername()))
+                .toList();
+        return ResponseEntity.ok(new FriendshipSolicitationListResponseDTO(userDTOList));
+    }
+    @GetMapping("/friends/{codUser}")
+    public ResponseEntity<FriendsResponseDTO> getFriends
+            (@PathVariable long codUser) throws NotFoundException {
+        Optional<UserModel> optionalUser = iUserModelRepository.findById(codUser);
+        if(!optionalUser.isPresent())
+            throw new NotFoundException("User não encontrado");
+        UserModel user = optionalUser.get();
+        List<FriendshipModel> acceptedFriends = iFriendshipRepository.findAllByIsAcceptedAndUserAccept(
+                true,
+                user
+        );
+        List<FriendshipModel> requestedFriends = iFriendshipRepository.findAllByIsAcceptedAndUserRequest(
+                true,
+                user
+        );
+
+        List<UserDTO> userDTOList = requestedFriends.stream()
+                .map(friendship -> new UserDTO(friendship.getUserAccept().getUsername()))
+                .collect(Collectors.toList());
+
+        userDTOList.addAll(acceptedFriends.stream()
+                .map(friendship -> new UserDTO(friendship.getUserRequest().getUsername()))
+                .toList());
+
+        return ResponseEntity.ok(new FriendsResponseDTO(userDTOList));
     }
 }
