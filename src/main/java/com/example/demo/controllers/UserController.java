@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping("user/{id}")
     public ResponseEntity<UserInfoOutputDTO> getUserById(@PathVariable long id) throws NotFoundException{
         UserModel user = userService.getUserById(id);
-        UserInfoOutputDTO userInfoOutputDTO = new UserInfoOutputDTO(user.getCodUser(), user.getUsername(), user.getEmail());
+        UserInfoOutputDTO userInfoOutputDTO = new UserInfoOutputDTO(user.getCodUser(), user.getUsername(), user.getEmail(), user.getBalance());
         return ResponseEntity.ok(userInfoOutputDTO);
     }
 
