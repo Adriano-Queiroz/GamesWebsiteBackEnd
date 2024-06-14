@@ -58,10 +58,9 @@ public class UserService {
             throw new InvalidUsernameOrPasswordException("Username and password must not be empty");
         }
         UserModel user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidUsernameOrPasswordException("Invalid username or password"));
-        if(!usersDomain.validatePassword(password, usersDomain.createPasswordValidationInformation(password))){
+        if(!usersDomain.validatePassword(password, new PasswordValidationInfo(user.getPasswordValidationInfo()))){
             throw new InvalidUsernameOrPasswordException("Invalid username or password");
         }
-
         List<TokenModel> userTokens = tokenRepository.findByUser(user);
         int maxTokens = usersDomain.getMaxNumberOfTokensPerUser();
 
