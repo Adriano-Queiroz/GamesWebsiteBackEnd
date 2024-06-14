@@ -2,17 +2,22 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.friendship.*;
 //import com.example.demo.models.friend_request.FriendRequestModel;
+import com.example.demo.dtos.friendship_battle.SendInviteRequestDTO;
+import com.example.demo.dtos.friendship_battle.SendInviteResponseDTO;
 import com.example.demo.dtos.user.UserDTO;
+import com.example.demo.models.InviteModel;
 import com.example.demo.models.friendship.FriendshipModel;
 import com.example.demo.models.user.UserModel;
 //import com.example.demo.repositories.IFriendRequestRepository;
 import com.example.demo.repositories.IFriendshipRepository;
+import com.example.demo.repositories.IInviteRepository;
 import com.example.demo.repositories.IUserModelRepository;
 import com.example.demo.services.exceptions.AlreadyExistsException;
 import com.example.demo.services.exceptions.AlreadyFriendsException;
 import com.example.demo.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
@@ -28,6 +33,12 @@ public class FriendshipController {
     private IFriendshipRepository iFriendshipRepository;
     @Autowired
     private IUserModelRepository iUserModelRepository;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private IInviteRepository iInviteRepository;
+
     //@Autowired
     //IFriendRequestRepository iFriendRequestRepository;
     @PostMapping("/solicitation")
@@ -132,5 +143,23 @@ public class FriendshipController {
                 .toList());
 
         return ResponseEntity.ok(new FriendsResponseDTO(userDTOList));
+    }
+    @PostMapping("/invite")
+    public void sendInvite(@RequestBody SendInviteRequestDTO sendInviteRequestDTO) throws NotFoundException {
+        InviteModel invite = new InviteModel();
+        UserModel user = iUserModelRepository.findById(sendInviteRequestDTO.codUser()).get();
+        Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(sendInviteRequestDTO.friendUsername());
+        if (!optionalFriend.isPresent())
+            throw new NotFoundException("Friend not found");
+        UserModel friend = optionalFriend.get();
+
+        invite.setUserAccept(friend);
+        invite.setUserRequest(user);
+        invite.setIsAccepted(false);
+        iInviteRepository.save(invite);
+
+        messagingTemplate.convertAndSend(
+                "/topic/invites/" + friend.getCodUser(),
+                new SendInviteResponseDTO(invite.getCodInvite(), user.getUsername()));
     }
 }
