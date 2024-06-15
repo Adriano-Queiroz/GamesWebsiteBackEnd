@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.InfoDTO;
 import com.example.demo.dtos.battle.IsInBattleDTO;
+import com.example.demo.dtos.battle.LeaveBattleRequestDTO;
 import com.example.demo.dtos.user.*;
 import com.example.demo.models.user.AuthenticatedUser;
 import com.example.demo.models.user.UserModel;
@@ -70,5 +71,11 @@ public class UserController {
     @GetMapping("/user/isInBattle/{codUser}")
     public ResponseEntity<IsInBattleDTO> isInBattle(@PathVariable long codUser) throws NotFoundException {
         return ResponseEntity.ok(battleService.isInBattle(codUser));
+    }
+    @DeleteMapping("/user/leaveBattle")
+    public ResponseEntity<String> leaveBattle(@RequestBody LeaveBattleRequestDTO leaveBattleRequestDTO) throws NotFoundException{
+        return ResponseEntity.ok(battleService.leaveBattle(
+                leaveBattleRequestDTO.codUser(),
+                leaveBattleRequestDTO.player()));
     }
 }

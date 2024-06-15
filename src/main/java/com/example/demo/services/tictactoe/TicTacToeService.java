@@ -77,5 +77,6 @@ public class TicTacToeService {
         }
         iUserModelRepository.save(user1);
         iUserModelRepository.save(user2);
+        iBattleRepository.delete(battle);
     }
 }
