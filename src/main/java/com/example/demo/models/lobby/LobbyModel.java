@@ -1,11 +1,14 @@
 package com.example.demo.models.lobby;
 
 import com.example.demo.models.game.GameModel;
+import com.example.demo.models.invite.InviteModel;
 import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.UserModel;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "lobby")
@@ -32,5 +35,8 @@ public class LobbyModel {
     @ManyToOne
     @JoinColumn(name = "cod_room")
     private RoomModel room;
+
+    @OneToMany(mappedBy = "lobby", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<InviteModel> invites;
 
 }

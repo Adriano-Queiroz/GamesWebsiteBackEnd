@@ -97,6 +97,24 @@ public class TicTacToeLogicService {
                 (board[0][2].equals(board[1][1]) && board[1][1].equals(board[2][0]) && !board[0][2].equals(""))) {
             return new Tuple(true, board[1][1]);
         }
+        boolean isFull = true;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j].equals("")) {
+                    isFull = false;
+                    break;
+                }
+            }
+            if (!isFull) {
+                break;
+            }
+        }
+
+        // If the board is full and there's no winner, it's a draw
+        if (isFull) {
+            return new Tuple(true, "");
+        }
+
         return new Tuple(false, ""); // No winner found
     }
     public String[][] getEmptyBoard() {
