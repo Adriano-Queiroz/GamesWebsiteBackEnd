@@ -2,8 +2,10 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.friendship.*;
 //import com.example.demo.models.friend_request.FriendRequestModel;
+import com.example.demo.dtos.friendship_battle.AcceptInviteRequestDTO;
 import com.example.demo.dtos.friendship_battle.SendInviteRequestDTO;
 import com.example.demo.dtos.friendship_battle.SendInviteResponseDTO;
+import com.example.demo.dtos.lobby.LobbyResponseDTO;
 import com.example.demo.dtos.user.UserDTO;
 import com.example.demo.models.InviteModel;
 import com.example.demo.models.friendship.FriendshipModel;
@@ -12,6 +14,7 @@ import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IFriendshipRepository;
 import com.example.demo.repositories.IInviteRepository;
 import com.example.demo.repositories.IUserModelRepository;
+import com.example.demo.services.LobbyService;
 import com.example.demo.services.exceptions.AlreadyExistsException;
 import com.example.demo.services.exceptions.AlreadyFriendsException;
 import com.example.demo.services.exceptions.NotFoundException;
@@ -38,6 +41,8 @@ public class FriendshipController {
 
     @Autowired
     private IInviteRepository iInviteRepository;
+    @Autowired
+    private LobbyService lobbyService;
 
     //@Autowired
     //IFriendRequestRepository iFriendRequestRepository;
@@ -145,7 +150,7 @@ public class FriendshipController {
         return ResponseEntity.ok(new FriendsResponseDTO(userDTOList));
     }
     @PostMapping("/invite")
-    public void sendInvite(@RequestBody SendInviteRequestDTO sendInviteRequestDTO) throws NotFoundException {
+    public ResponseEntity<LobbyResponseDTO> sendInvite(@RequestBody SendInviteRequestDTO sendInviteRequestDTO) throws NotFoundException {
         InviteModel invite = new InviteModel();
         UserModel user = iUserModelRepository.findById(sendInviteRequestDTO.codUser()).get();
         Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(sendInviteRequestDTO.friendUsername());
@@ -158,8 +163,28 @@ public class FriendshipController {
         invite.setIsAccepted(false);
         iInviteRepository.save(invite);
 
-        messagingTemplate.convertAndSend(
-                "/topic/invites/" + friend.getCodUser(),
-                new SendInviteResponseDTO(invite.getCodInvite(), user.getUsername()));
+
+
+        return lobbyService.getLobby(sendInviteRequestDTO,invite, messagingTemplate);
     }
+
+    @PostMapping("/acceptInvite")
+    public ResponseEntity<LobbyResponseDTO> acceptInvite(@RequestBody AcceptInviteRequestDTO acceptInviteRequestDTO) throws NotFoundException {
+        UserModel user = iUserModelRepository.findById(acceptInviteRequestDTO.codUser()).get();
+        Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(acceptInviteRequestDTO.friendUsername());
+        if (!optionalFriend.isPresent())
+            throw new NotFoundException("Friend not found");
+        UserModel friend = optionalFriend.get();
+
+        Optional<InviteModel> invite = iInviteRepository.findFirstByUserAcceptAndUserRequestAndIsAccepted(
+                user,
+                friend,
+                false
+        );
+        if(!invite.isPresent())
+            throw new NotFoundException("Invite not found");
+        iInviteRepository.delete(invite.get());
+        return lobbyService.getLobby(acceptInviteRequestDTO);
+    }
+
 }

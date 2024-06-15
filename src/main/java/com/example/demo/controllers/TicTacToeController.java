@@ -40,7 +40,6 @@ public class TicTacToeController {
     private IUserModelRepository iUserModelRepository;
 
     @MessageMapping("/move")
-    //send to ???
     public void makeMove(@RequestBody MakeMoveRequestDTO makeMoveRequestDTO) throws Exception {
         System.out.println("ayo");
         MakeMoveResponseDTO responseDTO = ticTacToeLogicService.makeMove(makeMoveRequestDTO);
@@ -64,6 +63,7 @@ public class TicTacToeController {
         }
 
     }
+    /*
     @MessageMapping("/invite")
     public void sendInvite(@RequestBody SendInviteRequestDTO sendInviteRequestDTO) throws NotFoundException {
         InviteModel invite = new InviteModel();
@@ -82,4 +82,6 @@ public class TicTacToeController {
                 "/topic/invites/" + friend.getCodUser(),
                 new SendInviteResponseDTO(invite.getCodInvite(), user.getUsername()));
     }
+
+     */
 }

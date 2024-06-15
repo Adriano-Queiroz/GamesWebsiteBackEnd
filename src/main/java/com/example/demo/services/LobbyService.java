@@ -1,9 +1,13 @@
 package com.example.demo.services;
 
 import com.example.demo.PlayersTuple;
+import com.example.demo.dtos.friendship_battle.AcceptInviteRequestDTO;
+import com.example.demo.dtos.friendship_battle.SendInviteRequestDTO;
+import com.example.demo.dtos.friendship_battle.SendInviteResponseDTO;
 import com.example.demo.dtos.lobby.FriendsLobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
+import com.example.demo.models.InviteModel;
 import com.example.demo.models.battle.BattleModel;
 import com.example.demo.models.game.GameType;
 import com.example.demo.models.lobby.LobbyModel;
@@ -15,6 +19,7 @@ import com.example.demo.services.sockets.WebSocketService;
 import com.example.demo.services.tictactoe.TicTacToeLogicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -59,7 +64,27 @@ public class LobbyService {
       return -1;
 
     }
-    public ResponseEntity<LobbyResponseDTO> getLobby(FriendsLobbyRequestDTO friendsLobbyRequestDTO) throws NotFoundException{
+    /*
+    public ResponseEntity<LobbyResponseDTO> createFriendsLobby(FriendsLobbyRequestDTO friendsLobbyRequestDTO) throws NotFoundException{
+        Optional<RoomModel> optionalRoom = iRoomRepository.findById(friendsLobbyRequestDTO.codRoom());
+        Optional<UserModel> optionalUser = iUserModelRepository.findById(friendsLobbyRequestDTO.codUser());
+        Optional<UserModel> optionalFriend = iUserModelRepository.findById(friendsLobbyRequestDTO.codUser());
+        if (!optionalUser.isPresent())
+            throw new NotFoundException("User not found of id " + friendsLobbyRequestDTO.codUser());
+        if (!optionalRoom.isPresent())
+            throw new NotFoundException("Room not found of id " + friendsLobbyRequestDTO.codRoom());
+        if (!optionalFriend.isPresent())
+            throw new NotFoundException("Friend not found of id " + friendsLobbyRequestDTO.codRoom());
+        RoomModel room = optionalRoom.get();
+        UserModel user = optionalUser.get();
+        UserModel friend = optionalFriend.get();
+        LobbyModel lobby = createLobby(user,room,friend);
+        return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,"",-1));
+    }
+
+     */
+
+        public ResponseEntity<LobbyResponseDTO> getLobby(FriendsLobbyRequestDTO friendsLobbyRequestDTO) throws NotFoundException{
         Optional<RoomModel> optionalRoom = iRoomRepository.findById(friendsLobbyRequestDTO.codRoom());
         Optional<UserModel> optionalUser = iUserModelRepository.findById(friendsLobbyRequestDTO.codUser());
         Optional<UserModel> optionalFriend = iUserModelRepository.findById(friendsLobbyRequestDTO.codUser());
@@ -158,5 +183,52 @@ public class LobbyService {
                 emptyBoard,
                 codBattle
         ));
+    }
+
+    public ResponseEntity<LobbyResponseDTO> getLobby(SendInviteRequestDTO sendInviteRequestDTO, InviteModel invite, SimpMessagingTemplate messagingTemplate) throws NotFoundException {
+        Optional<RoomModel> optionalRoom = iRoomRepository.findById(sendInviteRequestDTO.codRoom());
+        Optional<UserModel> optionalUser = iUserModelRepository.findById(sendInviteRequestDTO.codUser());
+        Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(sendInviteRequestDTO.friendUsername());
+        if (!optionalUser.isPresent())
+            throw new NotFoundException("User not found of id " + sendInviteRequestDTO.codUser());
+        if (!optionalRoom.isPresent())
+            throw new NotFoundException("Room not found of id " + sendInviteRequestDTO.codRoom());
+        if (!optionalFriend.isPresent())
+            throw new NotFoundException("Friend not found of id " + sendInviteRequestDTO.codRoom());
+        RoomModel room = optionalRoom.get();
+        UserModel user = optionalUser.get();
+        UserModel friend = optionalFriend.get();
+        if(sendInviteRequestDTO.codLobby() < 0){
+            LobbyModel lobby = createLobby(user,room,friend);
+            messagingTemplate.convertAndSend(
+                    "/topic/invites/" + friend.getCodUser(),
+                    new SendInviteResponseDTO(invite.getCodInvite(), user.getUsername(),lobby.getCodLobby()));
+            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,"",-1));
+        }
+        Optional<LobbyModel> optionalLobby = iLobbyRepository.findById(sendInviteRequestDTO.codLobby());
+        if(!optionalLobby.isPresent())
+            throw new NotFoundException("Did not find lobby with id: " + sendInviteRequestDTO.codLobby());
+        LobbyModel lobby = optionalLobby.get();
+        return createBattle(lobby, friend,room);
+    }
+    public ResponseEntity<LobbyResponseDTO> getLobby(AcceptInviteRequestDTO acceptInviteRequestDTO) throws NotFoundException {
+        Optional<RoomModel> optionalRoom = iRoomRepository.findById(acceptInviteRequestDTO.codRoom());
+        Optional<UserModel> optionalUser = iUserModelRepository.findById(acceptInviteRequestDTO.codUser());
+        Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(acceptInviteRequestDTO.friendUsername());
+        if (!optionalUser.isPresent())
+            throw new NotFoundException("User not found of id " + acceptInviteRequestDTO.codUser());
+        if (!optionalRoom.isPresent())
+            throw new NotFoundException("Room not found of id " + acceptInviteRequestDTO.codRoom());
+        if (!optionalFriend.isPresent())
+            throw new NotFoundException("Friend not found of id " + acceptInviteRequestDTO.codRoom());
+        RoomModel room = optionalRoom.get();
+        UserModel user = optionalUser.get();
+        UserModel friend = optionalFriend.get();
+
+        Optional<LobbyModel> optionalLobby = iLobbyRepository.findById(acceptInviteRequestDTO.codLobby());
+        if(!optionalLobby.isPresent())
+            throw new NotFoundException("Did not find lobby with id: " + acceptInviteRequestDTO.codLobby());
+        LobbyModel lobby = optionalLobby.get();
+        return createBattle(lobby, user,room);
     }
 }

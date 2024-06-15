@@ -1,6 +1,6 @@
 package com.example.demo.dtos.friendship_battle;
 
-public record SendInviteRequestDTO(
+public record AcceptInviteRequestDTO(
         long codUser,
         String friendUsername,
         long codLobby,
