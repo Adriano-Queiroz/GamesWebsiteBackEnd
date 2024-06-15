@@ -2,9 +2,12 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dtos.InfoDTO;
+import com.example.demo.dtos.battle.IsInBattleDTO;
 import com.example.demo.dtos.user.*;
 import com.example.demo.models.user.AuthenticatedUser;
 import com.example.demo.models.user.UserModel;
+import com.example.demo.services.BattleService;
+import com.example.demo.services.GamesService;
 import com.example.demo.services.UserService;
 import com.example.demo.services.exceptions.AlreadyExistsException;
 import com.example.demo.services.exceptions.InternalErrorException;
@@ -19,10 +22,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
 
-    UserService userService;
+    private UserService userService;
+    private BattleService battleService;
 
-    public UserController(UserService userService){
+    public UserController(UserService userService, BattleService battleService){
         this.userService = userService;
+        this.battleService = battleService;
     }
 
 
@@ -62,6 +67,8 @@ public class UserController {
                 .build();
         return ResponseEntity.status(200).header(HttpHeaders.SET_COOKIE, cookie.toString()).body(new InfoDTO("User logged out"));
     }
-
-
+    @GetMapping("/user/isInBattle/{codUser}")
+    public ResponseEntity<IsInBattleDTO> isInBattle(@PathVariable long codUser) throws NotFoundException {
+        return ResponseEntity.ok(battleService.isInBattle(codUser));
+    }
 }
