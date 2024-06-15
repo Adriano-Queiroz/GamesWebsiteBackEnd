@@ -4,8 +4,7 @@ import com.example.demo.dtos.friendship.*;
 //import com.example.demo.models.friend_request.FriendRequestModel;
 import com.example.demo.dtos.friendship_battle.AcceptInviteRequestDTO;
 import com.example.demo.dtos.friendship_battle.SendInviteRequestDTO;
-import com.example.demo.dtos.invites.GetInvitesResponseDTO;
-import com.example.demo.dtos.invites.InviteDTO;
+import com.example.demo.dtos.invites.*;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
 import com.example.demo.dtos.user.UserDTO;
 import com.example.demo.models.invite.InviteModel;
@@ -210,8 +209,20 @@ public class FriendshipController {
                 invite.getRoom()
         );
     }
-
-
+    @DeleteMapping("/rejectInvite")
+    public ResponseEntity<RejectInviteResponseDTO> rejectInvite(@RequestBody RejectInviteRequestDTO rejectInviteRequestDTO) throws NotFoundException {
+        Optional<InviteModel> optionalInvite = iInviteRepository.findById(rejectInviteRequestDTO.codInvite());
+        if(!optionalInvite.isPresent())
+            throw new NotFoundException("Convite não encontrado");
+        InviteModel invite = optionalInvite.get();
+        LobbyModel lobby = invite.getLobby();
+        messagingTemplate.convertAndSend("/topic/lobby/"+lobby.getCodLobby(),
+                new RejectInviteMessageDTO(true,invite.getUserAccept().getUsername())
+                );
+        iInviteRepository.delete(invite);
+        iLobbyRepository.delete(lobby);
+        return ResponseEntity.ok(new RejectInviteResponseDTO("Convite rejeitado com sucesso"));
+    }
 
         @GetMapping("/getInvites/{codUser}")
     public ResponseEntity<GetInvitesResponseDTO> getInvites(@PathVariable long codUser){
