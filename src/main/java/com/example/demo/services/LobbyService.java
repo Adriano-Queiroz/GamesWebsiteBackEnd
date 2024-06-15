@@ -7,16 +7,14 @@ import com.example.demo.dtos.friendship_battle.SendInviteResponseDTO;
 import com.example.demo.dtos.lobby.FriendsLobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
-import com.example.demo.models.InviteModel;
+import com.example.demo.models.invite.InviteModel;
 import com.example.demo.models.battle.BattleModel;
-import com.example.demo.models.game.GameType;
 import com.example.demo.models.lobby.LobbyModel;
 import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.*;
 import com.example.demo.services.exceptions.NotFoundException;
 import com.example.demo.services.sockets.WebSocketService;
-import com.example.demo.services.tictactoe.TicTacToeLogicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -34,6 +32,7 @@ public class LobbyService {
     IRoomRepository iRoomRepository;
     WebSocketService webSocketService;
     private GamesService gamesService;
+    private IInviteRepository iInviteRepository;
 
     @Autowired
     public LobbyService(ILobbyRepository iLobbyRepository,
@@ -42,7 +41,9 @@ public class LobbyService {
                         IBattleRepository iBattleRepository,
                         IRoomRepository iRoomRepository,
                         WebSocketService webSocketService,
-                        GamesService gamesService) {
+                        GamesService gamesService,
+                        IInviteRepository iInviteRepository
+                        ) {
         this.iLobbyRepository = iLobbyRepository;
         this.iGameRepository = iGameRepository;
         this.iUserModelRepository = iUserModelRepository;
@@ -50,6 +51,7 @@ public class LobbyService {
         this.iRoomRepository = iRoomRepository;
         this.webSocketService = webSocketService;
         this.gamesService = gamesService;
+        this.iInviteRepository = iInviteRepository;
     }
 
     public long deleteLobby(long codUser){
@@ -200,35 +202,22 @@ public class LobbyService {
         UserModel friend = optionalFriend.get();
         if(sendInviteRequestDTO.codLobby() < 0){
             LobbyModel lobby = createLobby(user,room,friend);
+            invite.setLobby(lobby);
+            iInviteRepository.save(invite);
             messagingTemplate.convertAndSend(
                     "/topic/invites/" + friend.getCodUser(),
-                    new SendInviteResponseDTO(invite.getCodInvite(), user.getUsername(),lobby.getCodLobby()));
+                    new SendInviteResponseDTO(invite.getCodInvite(), user.getUsername(),lobby.getCodLobby(),room.getBet(),room.getGame().getGameType().toString()));
             return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,"",-1));
         }
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findById(sendInviteRequestDTO.codLobby());
         if(!optionalLobby.isPresent())
             throw new NotFoundException("Did not find lobby with id: " + sendInviteRequestDTO.codLobby());
         LobbyModel lobby = optionalLobby.get();
+
         return createBattle(lobby, friend,room);
     }
-    public ResponseEntity<LobbyResponseDTO> getLobby(AcceptInviteRequestDTO acceptInviteRequestDTO) throws NotFoundException {
-        Optional<RoomModel> optionalRoom = iRoomRepository.findById(acceptInviteRequestDTO.codRoom());
-        Optional<UserModel> optionalUser = iUserModelRepository.findById(acceptInviteRequestDTO.codUser());
-        Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(acceptInviteRequestDTO.friendUsername());
-        if (!optionalUser.isPresent())
-            throw new NotFoundException("User not found of id " + acceptInviteRequestDTO.codUser());
-        if (!optionalRoom.isPresent())
-            throw new NotFoundException("Room not found of id " + acceptInviteRequestDTO.codRoom());
-        if (!optionalFriend.isPresent())
-            throw new NotFoundException("Friend not found of id " + acceptInviteRequestDTO.codRoom());
-        RoomModel room = optionalRoom.get();
-        UserModel user = optionalUser.get();
-        UserModel friend = optionalFriend.get();
+    public ResponseEntity<LobbyResponseDTO> getLobby(UserModel user, UserModel friend, LobbyModel lobby, RoomModel room) throws NotFoundException {
 
-        Optional<LobbyModel> optionalLobby = iLobbyRepository.findById(acceptInviteRequestDTO.codLobby());
-        if(!optionalLobby.isPresent())
-            throw new NotFoundException("Did not find lobby with id: " + acceptInviteRequestDTO.codLobby());
-        LobbyModel lobby = optionalLobby.get();
         return createBattle(lobby, user,room);
     }
 }

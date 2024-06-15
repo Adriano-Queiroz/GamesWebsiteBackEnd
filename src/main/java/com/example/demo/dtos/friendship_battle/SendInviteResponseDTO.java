@@ -3,6 +3,8 @@ package com.example.demo.dtos.friendship_battle;
 public record SendInviteResponseDTO(
         long codInvite,
         String friendUsername,
-        long codLobby
+        long codLobby,
+        double bet,
+        String game
 ) {
 }
