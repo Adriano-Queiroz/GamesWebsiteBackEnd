@@ -119,7 +119,7 @@ public class LobbyService {
         RoomModel room = optionalRoom.get();
         //GameModel game = room.getGame();
         UserModel newUser = optionalUser.get();
-        Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomOrderByCodLobbyDesc(room);
+        Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomAndFriendInvitedIsNullOrderByCodLobbyDesc(room);
         if (!optionalLobby.isPresent()) {
             LobbyModel lobby = createLobby(newUser,room,null);
             return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,"",-1));
