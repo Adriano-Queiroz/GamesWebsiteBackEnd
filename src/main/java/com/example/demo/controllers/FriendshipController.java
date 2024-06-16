@@ -17,6 +17,7 @@ import com.example.demo.repositories.*;
 import com.example.demo.services.LobbyService;
 import com.example.demo.services.exceptions.AlreadyExistsException;
 import com.example.demo.services.exceptions.AlreadyFriendsException;
+import com.example.demo.services.exceptions.InvalidRequestException;
 import com.example.demo.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,13 +50,15 @@ public class FriendshipController {
     @Autowired
     private ILobbyRepository iLobbyRepository;
     @PostMapping("/solicitation")
-    public ResponseEntity<FriendshipSolicitationResponseDTO> friendRequest(@RequestBody FriendshipSolicitationRequestDTO friendshipSolicitationRequestDTO) throws NotFoundException, AlreadyExistsException, AlreadyFriendsException {
+    public ResponseEntity<FriendshipSolicitationResponseDTO> friendRequest(@RequestBody FriendshipSolicitationRequestDTO friendshipSolicitationRequestDTO) throws NotFoundException, AlreadyExistsException, AlreadyFriendsException, InvalidRequestException {
         UserModel user = iUserModelRepository.findById(friendshipSolicitationRequestDTO.codUser()).get();
         Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(friendshipSolicitationRequestDTO.friendUsername());
 
         if(!optionalFriend.isPresent())
-            throw new NotFoundException("Friend not found");
+            throw new NotFoundException("User não encontrado");
         UserModel friend = optionalFriend.get();
+        if(friend.getCodUser()==user.getCodUser())
+            throw new InvalidRequestException("Não pode enviar um pedido de amizade para você mesmo");
         Optional<FriendshipModel> possibleFriendships = iFriendshipRepository.findFirstByIsAcceptedAndUserRequestAndAndUserAccept(
                 false,
                 user,
@@ -67,7 +70,7 @@ public class FriendshipController {
                 user
         );
         if(possibleFriendships.isPresent() || possibleFriendshipsTurnedAround.isPresent())
-            throw new AlreadyExistsException("Ja existe um pedido de amizade entre vocês");
+            throw new AlreadyExistsException("Já existe um pedido de amizade entre vocês");
         possibleFriendships = iFriendshipRepository.findFirstByIsAcceptedAndUserRequestAndAndUserAccept(
                 true,
                 user,
