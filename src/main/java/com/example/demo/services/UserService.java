@@ -2,20 +2,28 @@
 package com.example.demo.services;
 
 import com.example.demo.Auth_Pipeline.UsersDomain;
+import com.example.demo.boards.TicTacToeBoard;
+import com.example.demo.dtos.battle.BattleDTO;
+import com.example.demo.mappers.BoardMapper;
+import com.example.demo.models.battle.BattleModel;
+import com.example.demo.models.game.GameType;
 import com.example.demo.models.token.TokenModel;
 import com.example.demo.models.user.AuthenticatedUser;
 import com.example.demo.models.user.PasswordValidationInfo;
 import com.example.demo.models.user.TokenValidationInfo;
 import com.example.demo.models.user.UserModel;
+import com.example.demo.repositories.IBattleRepository;
 import com.example.demo.repositories.ITokenRepository;
 import com.example.demo.repositories.IUserModelRepository;
 import com.example.demo.services.exceptions.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserService {
@@ -24,12 +32,21 @@ public class UserService {
     private ITokenRepository tokenRepository;
     private UsersDomain usersDomain;
     private Clock clock;
+    private IBattleRepository iBattleRepository;
+    private GamesService gamesService;
 
-    public UserService(IUserModelRepository userRepository, ITokenRepository tokenRepository, UsersDomain usersDomain, Clock clock) {
+    public UserService(IUserModelRepository userRepository,
+                       ITokenRepository tokenRepository,
+                       UsersDomain usersDomain,
+                       Clock clock,
+                       IBattleRepository iBattleRepository,
+                       GamesService gamesService) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.usersDomain = usersDomain;
         this.clock = clock;
+        this.iBattleRepository = iBattleRepository;
+        this.gamesService = gamesService;
     }
 
     public UserModel getUserById(long id) throws NotFoundException {
@@ -109,7 +126,30 @@ public class UserService {
     }
 
 
-
+    public ResponseEntity<BattleDTO> getBattleContext(long codUser) throws NotFoundException {
+        Optional<UserModel> optionalUser = userRepository.findById(codUser);
+        if(!optionalUser.isPresent())
+            throw new NotFoundException("User não encontrado");
+        UserModel user = optionalUser.get();
+        Optional<BattleModel> optionalBattle = iBattleRepository.findFirstByPlayer1(user);
+        if(!optionalBattle.isPresent())
+            optionalBattle = iBattleRepository.findFirstByPlayer2(user);
+        if(!optionalBattle.isPresent())
+            throw new NotFoundException("Partida não encontrada");
+        BattleModel battle = optionalBattle.get();
+        String board = battle.getBoard();
+        String[][] boardArray = ((TicTacToeBoard)
+                BoardMapper.getBoard(GameType.TICTACTOE, board))
+                .getBoard();
+        return ResponseEntity.ok(new BattleDTO(
+                board,
+                gamesService.getPossibleMoves(boardArray,battle.getRoom().getGame().getGameType()),
+                battle.getCodBattle(),
+                battle.getStatus().toString(),
+                battle.getPlayer1().getCodUser() == codUser,
+                false
+        ));
+    }
 }
 
 

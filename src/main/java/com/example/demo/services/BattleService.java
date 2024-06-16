@@ -43,7 +43,9 @@ public class BattleService {
                     board,
                     gamesService.getPossibleMoves(boardArray,battle.getRoom().getGame().getGameType()),
                     battle.getCodBattle(),
-                    battle.swapStatus().toString()
+                    battle.getStatus().toString(),
+                    battle.getPlayer1().getCodUser() == codUser,
+                    true
             ));
         }
          return new IsInBattleDTO(false,null);

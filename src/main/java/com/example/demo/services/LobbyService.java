@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.InviteType;
 import com.example.demo.PlayersTuple;
 import com.example.demo.dtos.friendship_battle.AcceptInviteRequestDTO;
 import com.example.demo.dtos.friendship_battle.SendInviteRequestDTO;
@@ -204,9 +205,16 @@ public class LobbyService {
             LobbyModel lobby = createLobby(user,room,friend);
             invite.setLobby(lobby);
             iInviteRepository.save(invite);
+            String gameString = room.getGame().getGameType().toString();
             messagingTemplate.convertAndSend(
                     "/topic/invites/" + friend.getCodUser(),
-                    new SendInviteResponseDTO(invite.getCodInvite(), user.getUsername(),lobby.getCodLobby(),room.getBet(),room.getGame().getGameType().toString()));
+                    new SendInviteResponseDTO(invite.getCodInvite()
+                            , user.getUsername(),
+                            lobby.getCodLobby(),
+                            room.getBet(),
+                            gameString,
+                            InviteType.INVITE,
+                            "Recebeu um Convite para jogar"));
             return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,"",-1));
         }
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findById(sendInviteRequestDTO.codLobby());

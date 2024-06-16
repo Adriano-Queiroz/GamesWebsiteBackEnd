@@ -4,6 +4,8 @@ public record BattleDTO(
         String board,
         String possibleMoves,
         long codBattle,
-        String status
+        String status,
+        boolean isPlayer1,
+        boolean hasReturned
 ) {
 }

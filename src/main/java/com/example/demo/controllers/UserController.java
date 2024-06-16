@@ -2,6 +2,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dtos.InfoDTO;
+import com.example.demo.dtos.battle.BattleDTO;
 import com.example.demo.dtos.battle.IsInBattleDTO;
 import com.example.demo.dtos.battle.LeaveBattleRequestDTO;
 import com.example.demo.dtos.user.*;
@@ -18,6 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @RestController
@@ -77,5 +80,9 @@ public class UserController {
         return ResponseEntity.ok(battleService.leaveBattle(
                 leaveBattleRequestDTO.codUser(),
                 leaveBattleRequestDTO.player()));
+    }
+    @GetMapping("/user/getBattleContext/{codUser}")
+    public ResponseEntity<BattleDTO> getBattleContext(@PathVariable long codUser) throws NotFoundException {
+        return userService.getBattleContext(codUser);
     }
 }
