@@ -8,8 +8,10 @@ import com.example.demo.dtos.tictactoe.EndGameResponseDTO;
 import com.example.demo.mappers.BoardMapper;
 import com.example.demo.models.battle.BattleModel;
 import com.example.demo.models.game.GameType;
+import com.example.demo.models.history.HistoryModel;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IBattleRepository;
+import com.example.demo.repositories.IHistoryRepository;
 import com.example.demo.repositories.IUserModelRepository;
 import com.example.demo.services.exceptions.NotFoundException;
 import com.example.demo.services.tictactoe.TicTacToeService;
@@ -30,6 +32,8 @@ public class BattleService {
     @Autowired
     private TicTacToeService ticTacToeService;
     @Autowired
+    private IHistoryRepository iHistoryRepository;
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     public IsInBattleDTO isInBattle(long codUser) throws NotFoundException {
@@ -48,7 +52,27 @@ public class BattleService {
                     true
             ));
         }
-         return new IsInBattleDTO(false,null);
+            Optional<UserModel> optionalUser = iUserModelRepository.findById(codUser);
+            if(!optionalUser.isPresent())
+                throw new NotFoundException("User não encontrado");
+            Optional<HistoryModel> optionalHistory = iHistoryRepository.findLatestHistoryByUser(optionalUser.get());
+            if(!optionalHistory.isPresent())
+                throw new NotFoundException("História não encontrada");
+            HistoryModel history = optionalHistory.get();
+            String board = history.getBoard();
+            String[][] boardArray = ((TicTacToeBoard)
+                BoardMapper.getBoard(GameType.TICTACTOE, board))
+                .getBoard();
+            return new IsInBattleDTO(false,
+                    new BattleDTO(
+                            board,
+                            gamesService.getPossibleMoves(boardArray,history.getRoom().getGame().getGameType()),
+                            history.getCodBattle(),
+                            history.getStatus().toString(),
+                            history.getPlayer1().getCodUser() == codUser,
+                            true
+                    ));
+
     }
 
     public String leaveBattle(long codUser,String player) throws NotFoundException {

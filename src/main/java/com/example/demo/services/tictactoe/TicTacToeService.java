@@ -5,8 +5,10 @@ import com.example.demo.dtos.tictactoe.EndGameResponseDTO;
 import com.example.demo.dtos.tictactoe.MakeMoveResponseDTO;
 import com.example.demo.models.battle.BattleModel;
 import com.example.demo.models.battle.Status;
+import com.example.demo.models.history.HistoryModel;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IBattleRepository;
+import com.example.demo.repositories.IHistoryRepository;
 import com.example.demo.repositories.IUserModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -16,10 +18,12 @@ import org.springframework.stereotype.Service;
 public class TicTacToeService {
     IBattleRepository iBattleRepository;
     IUserModelRepository iUserModelRepository;
+    IHistoryRepository iHistoryRepository;
     @Autowired
-    public TicTacToeService(IBattleRepository iBattleRepository, IUserModelRepository iUserModelRepository){
+    public TicTacToeService(IBattleRepository iBattleRepository, IUserModelRepository iUserModelRepository, IHistoryRepository iHistoryRepository){
         this.iBattleRepository = iBattleRepository;
         this.iUserModelRepository = iUserModelRepository;
+        this.iHistoryRepository = iHistoryRepository;
     }
 
     public void treatFinishedGame(Tuple hasFinishedTuple, SimpMessagingTemplate messagingTemplate, long codBattle){
@@ -37,6 +41,14 @@ public class TicTacToeService {
         BattleModel battle = iBattleRepository.findById(codBattle).get();
         UserModel user1 = battle.getPlayer1();
         UserModel user2 = battle.getPlayer2();
+        HistoryModel history = new HistoryModel();
+        history.setPlayer1(user1);
+        history.setPlayer2(user2);
+        history.setCodBattle(battle.getCodBattle());
+        history.setRoom(battle.getRoom());
+        history.setStatus(battle.getStatus());
+        history.setBoard(battle.getBoard());
+        iHistoryRepository.save(history);
 
         treatBets(Status.valueOf(status),user1,user2,battle);
     }
