@@ -18,4 +18,7 @@ public class UserRoleModel {
     @OneToMany(mappedBy = "userRole")
     private List<UserModel> userList;
 
+    @Enumerated(EnumType.STRING)
+    private UserRoles userRole;
+
 }

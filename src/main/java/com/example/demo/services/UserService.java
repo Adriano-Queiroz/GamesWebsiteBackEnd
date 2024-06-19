@@ -15,7 +15,9 @@ import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IBattleRepository;
 import com.example.demo.repositories.ITokenRepository;
 import com.example.demo.repositories.IUserModelRepository;
+import com.example.demo.repositories.IUserRoleModelRepository;
 import com.example.demo.services.exceptions.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -34,19 +36,22 @@ public class UserService {
     private Clock clock;
     private IBattleRepository iBattleRepository;
     private GamesService gamesService;
+    private IUserRoleModelRepository iUserRoleModelRepository;
 
     public UserService(IUserModelRepository userRepository,
                        ITokenRepository tokenRepository,
                        UsersDomain usersDomain,
                        Clock clock,
                        IBattleRepository iBattleRepository,
-                       GamesService gamesService) {
+                       GamesService gamesService,
+                       IUserRoleModelRepository iUserRoleModelRepository) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.usersDomain = usersDomain;
         this.clock = clock;
         this.iBattleRepository = iBattleRepository;
         this.gamesService = gamesService;
+        this.iUserRoleModelRepository = iUserRoleModelRepository;
     }
 
     public UserModel getUserById(long id) throws NotFoundException {
@@ -66,6 +71,7 @@ public class UserService {
         user.setEmail(email);
         user.setPasswordValidationInfo(passwordValidationInfo.validationInfo());
         user.setBalance(0.0);
+        user.setUserRole(iUserRoleModelRepository.findById(2L).get());
         return userRepository.save(user);
 
     }

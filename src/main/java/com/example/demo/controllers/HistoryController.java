@@ -47,4 +47,21 @@ public class HistoryController {
                         history.getPlayer1().getCodUser() == codUser
                 ));
     }
+    @GetMapping("/getByBattle/{codBattle}")
+    public ResponseEntity<HistoryDTO> getByCodBattle(@PathVariable long codBattle) throws NotFoundException {
+        Optional<HistoryModel> optionalHistory = iHistoryRepository.findFirstByCodBattle(codBattle);
+        if(!optionalHistory.isPresent())
+            throw new NotFoundException("História não encontrada");
+        HistoryModel history = optionalHistory.get();
+        String board = history.getBoard();
+        String[][] boardArray = ((TicTacToeBoard)
+                BoardMapper.getBoard(GameType.TICTACTOE, board))
+                .getBoard();
+        return ResponseEntity.ok(new HistoryDTO(
+                board,
+                history.getCodBattle(),
+                history.getStatus().toString(),
+                false
+        ));
+    }
 }
