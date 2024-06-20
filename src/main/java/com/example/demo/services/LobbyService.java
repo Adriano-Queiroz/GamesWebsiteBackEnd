@@ -2,12 +2,15 @@ package com.example.demo.services;
 
 import com.example.demo.InviteType;
 import com.example.demo.PlayersTuple;
+import com.example.demo.boards.TicTacToeBoard;
 import com.example.demo.dtos.friendship_battle.AcceptInviteRequestDTO;
 import com.example.demo.dtos.friendship_battle.SendInviteRequestDTO;
 import com.example.demo.dtos.friendship_battle.SendInviteResponseDTO;
 import com.example.demo.dtos.lobby.FriendsLobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyRequestDTO;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
+import com.example.demo.mappers.BoardMapper;
+import com.example.demo.models.game.GameType;
 import com.example.demo.models.invite.InviteModel;
 import com.example.demo.models.battle.BattleModel;
 import com.example.demo.models.lobby.LobbyModel;
@@ -16,6 +19,7 @@ import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.*;
 import com.example.demo.services.exceptions.NotFoundException;
 import com.example.demo.services.sockets.WebSocketService;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -123,7 +127,19 @@ public class LobbyService {
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomAndFriendInvitedIsNullOrderByCodLobbyDesc(room);
         if (!optionalLobby.isPresent()) {
             LobbyModel lobby = createLobby(newUser,room,null);
-            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,"",-1));
+            boolean isPlayer1 = Math.random() < 0.5;
+            String board = gamesService.getEmptyBoard(lobby.getRoom().getGame().getGameType());
+            if(!isPlayer1){
+                Gson gson = new Gson();
+                board = gson.toJson(gamesService.makeBotMove(
+                         ((TicTacToeBoard)
+                        BoardMapper.getBoard(GameType.TICTACTOE, board))
+                        .getBoard(),
+                        "X",
+                        GameType.TICTACTOE
+                ));
+            }
+            return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), isPlayer1,board,-1));
         }
         LobbyModel lobby = optionalLobby.get();
         return createBattle(lobby,newUser,room);
