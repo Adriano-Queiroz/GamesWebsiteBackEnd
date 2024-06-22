@@ -29,13 +29,7 @@ public class TicTacToeService {
     public void treatFinishedGame(Tuple hasFinishedTuple, SimpMessagingTemplate messagingTemplate, long codBattle){
         Status status = (hasFinishedTuple.winner().equals("X") ? Status.P1_WON :
                 hasFinishedTuple.winner().equals("O") ? Status.P2_WON : Status.DRAW);
-        messagingTemplate.convertAndSend(
-                "/topic/battle/" + codBattle +"/X",
-                new EndGameResponseDTO(status.toString()));
 
-        messagingTemplate.convertAndSend(
-                "/topic/battle/" + codBattle +"/O",
-                new EndGameResponseDTO(status.toString()));
         
         BattleModel battle = iBattleRepository.findById(codBattle).get();
         UserModel user1 = battle.getPlayer1();
@@ -50,6 +44,13 @@ public class TicTacToeService {
         iHistoryRepository.save(history);
 
         treatBets(status,user1,user2,battle);
+        messagingTemplate.convertAndSend(
+                "/topic/battle/" + codBattle +"/X",
+                new EndGameResponseDTO(status.toString(), battle.getBoard()));
+
+        messagingTemplate.convertAndSend(
+                "/topic/battle/" + codBattle +"/O",
+                new EndGameResponseDTO(status.toString(), battle.getBoard()));
     }
     public Status RestTreatFinishedGame(Tuple hasFinishedTuple, long codBattle){
         Status status = (hasFinishedTuple.winner().equals("X") ? Status.P1_WON :
