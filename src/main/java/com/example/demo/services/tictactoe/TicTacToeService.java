@@ -27,16 +27,15 @@ public class TicTacToeService {
     }
 
     public void treatFinishedGame(Tuple hasFinishedTuple, SimpMessagingTemplate messagingTemplate, long codBattle){
-        String status = (hasFinishedTuple.winner().equals("X") ? Status.P1_WON :
-                hasFinishedTuple.winner().equals("O") ? Status.P2_WON : Status.DRAW)
-                .toString();
+        Status status = (hasFinishedTuple.winner().equals("X") ? Status.P1_WON :
+                hasFinishedTuple.winner().equals("O") ? Status.P2_WON : Status.DRAW);
         messagingTemplate.convertAndSend(
                 "/topic/battle/" + codBattle +"/X",
-                new EndGameResponseDTO(status));
+                new EndGameResponseDTO(status.toString()));
 
         messagingTemplate.convertAndSend(
                 "/topic/battle/" + codBattle +"/O",
-                new EndGameResponseDTO(status));
+                new EndGameResponseDTO(status.toString()));
         
         BattleModel battle = iBattleRepository.findById(codBattle).get();
         UserModel user1 = battle.getPlayer1();
@@ -46,11 +45,11 @@ public class TicTacToeService {
         history.setPlayer2(user2);
         history.setCodBattle(battle.getCodBattle());
         history.setRoom(battle.getRoom());
-        history.setStatus(battle.getStatus());
+        history.setStatus(status);
         history.setBoard(battle.getBoard());
         iHistoryRepository.save(history);
 
-        treatBets(Status.valueOf(status),user1,user2,battle);
+        treatBets(status,user1,user2,battle);
     }
     public Status RestTreatFinishedGame(Tuple hasFinishedTuple, long codBattle){
         Status status = (hasFinishedTuple.winner().equals("X") ? Status.P1_WON :
