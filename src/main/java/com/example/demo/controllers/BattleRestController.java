@@ -111,6 +111,8 @@ public class BattleRestController {
         else
             battle.setPlayer2(user);
         battle.setRoom(room);
+        String emptyBoard = gamesService.getEmptyBoard(room.getGame().getGameType());
+        battle.setBoard(emptyBoard);
         iBattleRepository.save(battle);
         iLobbyRepository.delete(optionalLobby.get());
         return ResponseEntity.ok(new CreateBattleResponseDTO(battle.getCodBattle()));

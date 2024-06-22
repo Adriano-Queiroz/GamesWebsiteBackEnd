@@ -180,6 +180,8 @@ public class LobbyService {
         battle.setPlayer1(playersTuple.player1());
         battle.setPlayer2(playersTuple.player2());
         battle.setRoom(room);
+        String emptyBoard = gamesService.getEmptyBoard(room.getGame().getGameType());
+        battle.setBoard(emptyBoard);
         iBattleRepository.save(battle);
     }
 
