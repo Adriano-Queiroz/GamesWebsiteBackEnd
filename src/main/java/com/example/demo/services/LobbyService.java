@@ -17,6 +17,7 @@ import com.example.demo.models.lobby.LobbyModel;
 import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.*;
+import com.example.demo.services.exceptions.NotEnoughFundsException;
 import com.example.demo.services.exceptions.NotFoundException;
 import com.example.demo.services.sockets.WebSocketService;
 import com.google.gson.Gson;
@@ -114,7 +115,7 @@ public class LobbyService {
         LobbyModel lobby = optionalLobby.get();
         return createBattle(lobby, friend,room);
     }
-    public ResponseEntity<LobbyResponseDTO> getLobby(LobbyRequestDTO lobbyRequestDTO) throws NotFoundException {
+    public ResponseEntity<LobbyResponseDTO> getLobby(LobbyRequestDTO lobbyRequestDTO) throws NotFoundException, NotEnoughFundsException {
         Optional<RoomModel> optionalRoom = iRoomRepository.findById(lobbyRequestDTO.codRoom());
         Optional<UserModel> optionalUser = iUserModelRepository.findById(lobbyRequestDTO.codUser());
         if (!optionalUser.isPresent())
@@ -124,6 +125,8 @@ public class LobbyService {
         RoomModel room = optionalRoom.get();
         //GameModel game = room.getGame();
         UserModel newUser = optionalUser.get();
+        if(room.getBet()>newUser.getBalance())
+            throw new NotEnoughFundsException("Não tem dinheiro suficiente para este quarto");
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomAndFriendInvitedIsNullOrderByCodLobbyDesc(room);
         if (!optionalLobby.isPresent()) {
             LobbyModel lobby = createLobby(newUser,room,null);

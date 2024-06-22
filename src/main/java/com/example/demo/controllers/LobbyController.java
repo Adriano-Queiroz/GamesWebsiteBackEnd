@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.lobby.*;
 import com.example.demo.services.LobbyService;
+import com.example.demo.services.exceptions.NotEnoughFundsException;
 import com.example.demo.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class LobbyController {
     }
 
     @PostMapping
-    public ResponseEntity<LobbyResponseDTO> getLobby(@RequestBody LobbyRequestDTO lobbyRequestDTO) throws NotFoundException {
+    public ResponseEntity<LobbyResponseDTO> getLobby(@RequestBody LobbyRequestDTO lobbyRequestDTO) throws NotFoundException, NotEnoughFundsException {
         return lobbyService.getLobby(lobbyRequestDTO);
     }
     @DeleteMapping("/delete")

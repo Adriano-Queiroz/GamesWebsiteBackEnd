@@ -38,6 +38,10 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDTO> handleAlreadyFriendsException(AlreadyFriendsException e) {
         return ResponseEntity.status(409).body(new ErrorDTO(e.getMessage()));
     }
+    @ExceptionHandler(NotEnoughFundsException.class)
+    public ResponseEntity<ErrorDTO> handleNotEnoughFundsException(NotEnoughFundsException e) {
+        return ResponseEntity.status(403).body(new ErrorDTO(e.getMessage()));
+    }
 
     @ExceptionHandler(InternalErrorException.class)
     public ResponseEntity<ErrorDTO> handleInternalErrorException(InternalErrorException e) {
