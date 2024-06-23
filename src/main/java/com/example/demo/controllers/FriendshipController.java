@@ -16,10 +16,7 @@ import com.example.demo.models.user.UserModel;
 //import com.example.demo.repositories.IFriendRequestRepository;
 import com.example.demo.repositories.*;
 import com.example.demo.services.LobbyService;
-import com.example.demo.services.exceptions.AlreadyExistsException;
-import com.example.demo.services.exceptions.AlreadyFriendsException;
-import com.example.demo.services.exceptions.InvalidRequestException;
-import com.example.demo.services.exceptions.NotFoundException;
+import com.example.demo.services.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -164,21 +161,27 @@ public class FriendshipController {
         return ResponseEntity.ok(new FriendsResponseDTO(userDTOList));
     }
     @PostMapping("/invite")
-    public ResponseEntity<LobbyResponseDTO> sendInvite(@RequestBody SendInviteRequestDTO sendInviteRequestDTO) throws NotFoundException {
+    public ResponseEntity<LobbyResponseDTO> sendInvite(@RequestBody SendInviteRequestDTO sendInviteRequestDTO) throws NotFoundException, NotEnoughFundsException {
         InviteModel invite = new InviteModel();
         UserModel user = iUserModelRepository.findById(sendInviteRequestDTO.codUser()).get();
         Optional<UserModel> optionalFriend = iUserModelRepository.findByUsername(sendInviteRequestDTO.friendUsername());
         Optional<RoomModel> optionalRoom = iRoomRepository.findById(sendInviteRequestDTO.codRoom());
-        if (!optionalFriend.isPresent())
-            throw new NotFoundException("Friend not found");
         if(!optionalRoom.isPresent())
             throw new NotFoundException("Room not found");
+        RoomModel room = optionalRoom.get();
+        if(user.getBalance() < room.getBet())
+            throw new NotEnoughFundsException("Você não tem dinheiro suficiente, deposite");
+
+        if (!optionalFriend.isPresent())
+            throw new NotFoundException("Amigo não encontrado");
+
+
         UserModel friend = optionalFriend.get();
 
         invite.setUserAccept(friend);
         invite.setUserRequest(user);
         invite.setIsAccepted(false);
-        invite.setRoom(optionalRoom.get());
+        invite.setRoom(room);
         iInviteRepository.save(invite);
         return lobbyService.getLobby(sendInviteRequestDTO,invite, messagingTemplate);
     }
@@ -186,12 +189,14 @@ public class FriendshipController {
 
 
     @PostMapping("/acceptInvite")
-    public ResponseEntity<LobbyResponseDTO> acceptInvite(@RequestBody AcceptInviteRequestDTO acceptInviteRequestDTO) throws NotFoundException {
+    public ResponseEntity<LobbyResponseDTO> acceptInvite(@RequestBody AcceptInviteRequestDTO acceptInviteRequestDTO) throws NotFoundException, NotEnoughFundsException {
         Optional<InviteModel> optionalInvite = iInviteRepository.findById(acceptInviteRequestDTO.codInvite());
 
         if(!optionalInvite.isPresent())
             throw new NotFoundException("Convite expirado ou eliminado pelo amigo");
         InviteModel invite = optionalInvite.get();
+        if(invite.getUserAccept().getBalance() < invite.getRoom().getBet())
+            throw new NotEnoughFundsException("Você não tem dinheiro suficiente, deposite");
         iInviteRepository.delete(invite);
         return lobbyService.createBattle(invite.getLobby(),
                 invite.getUserAccept(),
