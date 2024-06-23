@@ -9,9 +9,10 @@ public record LobbyResponseDTO(
         boolean isPlayer1,
         String board,
         String status,
-        long codBattle
+        long codBattle,
+        boolean isFirstMove
 ) {
     public LobbyResponseDTO(String message, boolean isSecondPlayer, long codLobby, boolean isPlayer1, String board, long codBattle) {
-        this(message, isSecondPlayer, codLobby, isPlayer1, board, String.valueOf(Status.P1_TURN), codBattle);
+        this(message, isSecondPlayer, codLobby, isPlayer1, board, String.valueOf(Status.P1_TURN), codBattle, true);
     }
 }

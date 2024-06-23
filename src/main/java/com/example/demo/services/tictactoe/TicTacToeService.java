@@ -62,6 +62,14 @@ public class TicTacToeService {
         battle.setStatus(status);
         treatBets(status,user1,user2,battle);
         //iBattleRepository.save(battle);
+        HistoryModel history = new HistoryModel();
+        history.setBoard(battle.getBoard());
+        history.setPlayer1(battle.getPlayer1());
+        history.setPlayer2(battle.getPlayer2());
+        history.setCodBattle(battle.getCodBattle());
+        history.setStatus(status);
+        history.setRoom(battle.getRoom());
+        iHistoryRepository.save(history);
         return status;
     }
     public void treatUnfinishedGame(SimpMessagingTemplate messagingTemplate, long codBattle, String player, MakeMoveResponseDTO responseDTO){
