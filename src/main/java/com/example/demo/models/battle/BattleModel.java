@@ -8,8 +8,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
 
 @Entity
 @Table(name = "battle")
@@ -55,6 +57,10 @@ public class BattleModel {
     @ManyToOne
     @JoinColumn(name = "cod_room")
     private RoomModel room;
+
+    private LocalDateTime lastMoveDateTime;
+    @Transient
+    private Timer timer;
 
     public Status swapStatus(){
         if(status.equals(Status.P1_TURN))

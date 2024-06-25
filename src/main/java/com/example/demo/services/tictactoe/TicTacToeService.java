@@ -73,6 +73,7 @@ public class TicTacToeService {
         return status;
     }
     public void treatUnfinishedGame(SimpMessagingTemplate messagingTemplate, long codBattle, String player, MakeMoveResponseDTO responseDTO){
+
         messagingTemplate.convertAndSend(
                 "/topic/battle/" + codBattle +"/" + player,
                 responseDTO);

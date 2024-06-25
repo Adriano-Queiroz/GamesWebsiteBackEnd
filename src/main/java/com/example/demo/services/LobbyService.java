@@ -39,6 +39,7 @@ public class LobbyService {
     WebSocketService webSocketService;
     private GamesService gamesService;
     private IInviteRepository iInviteRepository;
+    private BattleService battleService;
 
     @Autowired
     public LobbyService(ILobbyRepository iLobbyRepository,
@@ -48,7 +49,8 @@ public class LobbyService {
                         IRoomRepository iRoomRepository,
                         WebSocketService webSocketService,
                         GamesService gamesService,
-                        IInviteRepository iInviteRepository
+                        IInviteRepository iInviteRepository,
+                        BattleService battleService
                         ) {
         this.iLobbyRepository = iLobbyRepository;
         this.iGameRepository = iGameRepository;
@@ -58,6 +60,7 @@ public class LobbyService {
         this.webSocketService = webSocketService;
         this.gamesService = gamesService;
         this.iInviteRepository = iInviteRepository;
+        this.battleService = battleService;
     }
 
     public long deleteLobby(long codUser){
@@ -155,6 +158,7 @@ public class LobbyService {
         PlayersTuple playersTuple = randomizePlayers(oldUser, newUser);
         setBattle(playersTuple, battle, room);
         iLobbyRepository.delete(lobby);
+        //battleService.receiveMessage(battle.getCodBattle());
         return sendMessagesAfterOpponentFound(
                 playersTuple.player1(),
                 playersTuple.player2(),

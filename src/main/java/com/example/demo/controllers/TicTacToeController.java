@@ -8,6 +8,8 @@ import com.example.demo.mappers.BoardMapper;
 import com.example.demo.models.game.GameType;
 import com.example.demo.repositories.IInviteRepository;
 import com.example.demo.repositories.IUserModelRepository;
+import com.example.demo.services.BattleService;
+import com.example.demo.services.GamesService;
 import com.example.demo.services.tictactoe.TicTacToeLogicService;
 import com.example.demo.services.tictactoe.TicTacToeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,10 @@ public class TicTacToeController {
     private IInviteRepository iInviteRepository;
     @Autowired
     private IUserModelRepository iUserModelRepository;
+    @Autowired
+    private GamesService gamesService;
+    @Autowired
+    private BattleService battleService;
 
     @MessageMapping("/move")
     public void makeMove(@RequestBody MakeMoveRequestDTO makeMoveRequestDTO) throws Exception {
@@ -41,13 +47,16 @@ public class TicTacToeController {
                 .getBoard());
 
         if(!hasFinishedTuple.hasFinished()){
+            //battleService.receiveMessage(responseDTO.codBattle());
             ticTacToeService.treatUnfinishedGame(
                     messagingTemplate,
                     responseDTO.codBattle(),
                     makeMoveRequestDTO.player(),
                     responseDTO
             );
+
         }else{
+            //battleService.shutdown(responseDTO.codBattle());
             ticTacToeService.treatFinishedGame(
                     hasFinishedTuple,
                     messagingTemplate,
