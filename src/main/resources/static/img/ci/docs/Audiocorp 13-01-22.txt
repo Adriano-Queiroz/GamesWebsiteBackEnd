@@ -1,0 +1,18 @@
+1 - evitar duplicação de nomes da produção
+
+2 - qd o diretor cadastra o personagem informar diferente...
+
+3 - filtro de relatório
+
+4 - evitar sabado e domingo na data de termino;
+
+5 - cadastrar feriados (usar na definição das datas dos prazos )
+
+5  esquemista: ordenar ordem dos loops no relatório;
+
+6 - agrupar episódios (verificar voucher)
+
+
+8 - selecionar todos os voucher (diretor)
+
+9  - redirect para lista de produção após finalizar o voucher 100%  (diretor)

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook API Example</title>
+</head>
+<body>
+    <h1>Facebook API Example</h1>
+    <button id="fetch-data">Fetch Data</button>
+    <pre id="output"></pre>
+
+    <script>
+        // Seu token da API do Facebook
+        const fbToken = 'EAAIc3uHyVZB4BO4oKy1jmcFszTYtWiOlo7BcrOJQZCI3W86fFJyAnZCc8x7bey1ZAzHlo2KYHtDfxiL6AQIx9iM8H2sZAmkPbgxcVHfGtoKO6ECyerKCvBUr4ZBm9WHRkh6txK4iBrIB5hKpepsUdEEigABo4r8ZBLTxO73eBPQVGfx0Fkz07ZBxZAFr2dWdKA2eWwgZDZD';
+
+        // Função para buscar dados da API
+        document.getElementById('fetch-data').addEventListener('click', () => {
+            fetch(`https://graph.facebook.com/v12.0/me?access_token=${fbToken}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Erro:', error));
+        });
+    </script>
+</body>
+</html>

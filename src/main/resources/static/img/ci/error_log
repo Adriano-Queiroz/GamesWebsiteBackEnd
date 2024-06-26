@@ -1,0 +1,109 @@
+[13-May-2024 21:56:06 UTC] PHP Warning:  require_once(/home/raspeiganhei/public_html/ci/system/core/CodeIgniter.php): failed to open stream: No such file or directory in /home/raspeiganhei/public_html/ci/index.php on line 315
+[13-May-2024 21:56:06 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/raspeiganhei/public_html/ci/system/core/CodeIgniter.php' (include_path='.:/opt/cpanel/ea-php71/root/usr/share/pear') in /home/raspeiganhei/public_html/ci/index.php on line 315
+[15-May-2024 00:18:00 UTC] PHP Fatal error:  require(): Failed opening required '/home/raspeiganhei/public_html/ci/includes/mercadopago/lib/mercadopago/vendor/composer/platform_check.php' (include_path='.:/opt/cpanel/ea-php71/root/usr/share/pear') in /home/raspeiganhei/public_html/ci/includes/mercadopago/lib/mercadopago/vendor/composer/autoload_real.php on line 25
+[15-May-2024 00:22:58 UTC] PHP Fatal error:  require(): Failed opening required '/home/raspeiganhei/public_html/ci/includes/mercadopago/lib/mercadopago/vendor/composer/platform_check.php' (include_path='.:/opt/cpanel/ea-php71/root/usr/share/pear') in /home/raspeiganhei/public_html/ci/includes/mercadopago/lib/mercadopago/vendor/composer/autoload_real.php on line 25
+[15-May-2024 00:23:56 UTC] PHP Fatal error:  require(): Failed opening required '/home/raspeiganhei/public_html/ci/includes/mercadopago/lib/mercadopago/vendor/composer/platform_check.php' (include_path='.:/opt/cpanel/ea-php71/root/usr/share/pear') in /home/raspeiganhei/public_html/ci/includes/mercadopago/lib/mercadopago/vendor/composer/autoload_real.php on line 25
+[15-May-2024 00:23:59 UTC] PHP Fatal error:  require(): Failed opening required '/home/raspeiganhei/public_html/ci/includes/mercadopago/lib/mercadopago/vendor/composer/platform_check.php' (include_path='.:/opt/cpanel/ea-php71/root/usr/share/pear') in /home/raspeiganhei/public_html/ci/includes/mercadopago/lib/mercadopago/vendor/composer/autoload_real.php on line 25
+[15-May-2024 19:42:05 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"15-05-2024T19:42:07UTC;a7f19fe5-3a2d-4985-adc6-c08c72769604"}]}
+[27-May-2024 20:36:46 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"27-05-2024T20:36:47UTC;ce3e1292-908c-4261-8c5a-039180d6f653"}]}
+[27-May-2024 20:50:55 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"27-05-2024T20:50:56UTC;9f6c501b-3e7e-4335-bb44-55447326c0a0"}]}
+[27-May-2024 20:53:24 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"27-05-2024T20:53:24UTC;88bdc2d8-d877-4b07-a333-538a209daef6"}]}
+[27-May-2024 20:54:50 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"27-05-2024T20:54:51UTC;808e9798-5636-4f6c-b08d-5891a2d8f51e"}]}
+[27-May-2024 21:57:26 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"27-05-2024T21:57:26UTC;19c2ad06-8e2d-4a56-9adb-847f4289ed95"}]}
+[27-May-2024 21:58:23 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"27-05-2024T21:58:24UTC;bd5adc92-3c90-4bc8-b1c4-a16fba3e9787"}]}
+[27-May-2024 21:59:58 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"27-05-2024T21:59:58UTC;c2d10090-7c0f-4bbf-a34c-489c6e88f3e0"}]}
+[27-May-2024 22:00:43 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"27-05-2024T22:00:44UTC;d354a983-c5c9-4ff8-95de-d428b94330f5"}]}
+[28-May-2024 02:06:26 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"28-05-2024T02:06:27UTC;206ef008-607c-48dc-8b28-00e05eceeb5e"}]}
+[31-May-2024 00:45:01 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[31-May-2024 19:11:59 America/Recife] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/raspeiganhei/public_html/ci/application/controllers/Admin.php on line 449
+[31-May-2024 19:42:31 America/Recife] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 229376 bytes) in /home/raspeiganhei/public_html/ci/system/database/drivers/mysqli/mysqli_driver.php on line 307
+[31-May-2024 19:47:03 America/Recife] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 225280 bytes) in /home/raspeiganhei/public_html/ci/system/database/drivers/mysqli/mysqli_driver.php on line 307
+[31-May-2024 20:11:22 America/Recife] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/raspeiganhei/public_html/ci/system/database/drivers/mysqli/mysqli_result.php on line 229
+[31-May-2024 20:11:22 America/Recife] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 32768 bytes) in /home/raspeiganhei/public_html/ci/system/core/Exceptions.php on line 1
+[31-May-2024 20:11:49 America/Recife] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) in /home/raspeiganhei/public_html/ci/system/database/drivers/mysqli/mysqli_result.php on line 229
+[03-Jun-2024 09:45:01 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[03-Jun-2024 15:51:58 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T15:52:02UTC;aa614920-e343-4f5a-9e44-3ee7bcad0066"}]}
+[03-Jun-2024 15:52:39 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T15:52:43UTC;13f4723b-47a5-45c5-be58-2dd1a61b4b4d"}]}
+[03-Jun-2024 15:52:58 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T15:53:02UTC;1874c9a1-6fa8-4a3c-ab1e-b540b235acdd"}]}
+[03-Jun-2024 15:53:03 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T15:53:07UTC;7faaa17f-89b0-4067-af89-5b1426a6a505"}]}
+[03-Jun-2024 15:55:16 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T15:55:20UTC;5cbbd9c2-f9b8-4a86-b6f4-72a7361ceeb8"}]}
+[03-Jun-2024 15:31:03 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[03-Jun-2024 19:08:26 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T19:08:30UTC;218b114a-2052-4c6a-8acd-f2911fa4c402"}]}
+[03-Jun-2024 20:33:48 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T20:33:48UTC;319485b6-05e8-41c5-ac33-6293dc8a2d1f"}]}
+[03-Jun-2024 20:57:17 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T20:57:18UTC;7f76e579-4122-456a-a398-5c8f249c0899"}]}
+[03-Jun-2024 21:15:32 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T21:15:32UTC;bc69bcf2-0085-418b-81be-d50bd0f02d3a"}]}
+[03-Jun-2024 21:16:08 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T21:16:09UTC;60709986-2a82-46c4-907b-11002a869177"}]}
+[03-Jun-2024 18:45:01 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[03-Jun-2024 22:33:17 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T22:33:17UTC;1a279dfd-994a-47aa-8d9b-54ff64049e4b"}]}
+[03-Jun-2024 22:35:16 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"03-06-2024T22:35:17UTC;a98354ef-a4a0-457d-9a72-0807603d5826"}]}
+[04-Jun-2024 00:45:02 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[04-Jun-2024 06:44:03 America/Recife] {"status":503,"message":"upstream connect error or disconnect/reset before headers. reset reason: connection failure, transport failure reason: delayed connect error: 111"}
+
+[04-Jun-2024 06:45:02 America/Recife] {"message":"local_rate_limited","status":429}
+
+[04-Jun-2024 06:47:02 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[04-Jun-2024 06:47:07 America/Recife] upstream connect error or disconnect/reset before headers. reset reason: connection timeout
+[04-Jun-2024 06:48:01 America/Recife] no healthy upstream
+[04-Jun-2024 06:49:13 America/Recife] {"message":"internal_error","error":null,"status":500,"cause":[]}
+[04-Jun-2024 12:22:59 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T12:23:00UTC;2cf3f139-a2a2-4ca6-9249-d74d2ca69f8e"}]}
+[04-Jun-2024 09:46:03 America/Recife] {"message":"internal_error","error":null,"status":500,"cause":[]}
+[04-Jun-2024 09:47:01 America/Recife] no healthy upstream
+[04-Jun-2024 09:48:02 America/Recife] no healthy upstream
+[04-Jun-2024 09:49:02 America/Recife] no healthy upstream
+[04-Jun-2024 12:51:01 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T12:51:02UTC;56113203-b7f7-4b5e-a043-ac08c7ded327"}]}
+[04-Jun-2024 12:45:02 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[04-Jun-2024 12:56:02 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[04-Jun-2024 17:06:38 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:06:39UTC;6bf08cbd-18a0-4963-b15f-033ce562e925"}]}
+[04-Jun-2024 17:21:16 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:21:17UTC;cb9c2dbd-0f4d-4147-9356-2addb2a7749b"}]}
+[04-Jun-2024 17:21:49 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:21:50UTC;02c55f22-bd49-4d0c-90af-3fd56b79c869"}]}
+[04-Jun-2024 17:21:54 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:21:55UTC;31089a98-8c92-45fa-b1c3-ec7155a95249"}]}
+[04-Jun-2024 17:23:54 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:23:55UTC;91d622ae-fe78-48fc-9a01-4eff12e9d45a"}]}
+[04-Jun-2024 17:24:05 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:24:06UTC;e645529a-c7f0-4d1a-bd27-2ceb6698b738"}]}
+[04-Jun-2024 17:27:49 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:27:50UTC;10fb9eb8-d857-4c02-a6b2-ae96b39dda1f"}]}
+[04-Jun-2024 17:28:15 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:28:16UTC;95faf587-8900-41be-9433-8f84fb21e548"}]}
+[04-Jun-2024 17:33:31 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:33:32UTC;ccc2e969-8daf-47b1-9e06-f08bfb6469e0"}]}
+[04-Jun-2024 17:33:51 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T17:33:52UTC;8aab14f3-aaa8-4210-a64d-612b7f0a32a1"}]}
+[04-Jun-2024 15:46:02 America/Recife] {"message":"local_rate_limited","status":429}
+
+[04-Jun-2024 22:40:55 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T22:40:56UTC;5233ab94-f602-4fe1-9c74-52d6b2d7b498"}]}
+[04-Jun-2024 20:12:02 America/Recife] {"message":"unknown_error","error":"","status":400,"cause":[]}
+[04-Jun-2024 20:12:02 America/Recife] {"message":"Unauthorized use of live credentials","error":"unauthorized","status":401,"cause":[{"code":7,"description":"Unauthorized use of live credentials","data":"04-06-2024T23:12:03UTC;d0bbbd74-57f0-4032-aff9-7b8130ce36df"}]}
+[04-Jun-2024 23:12:56 UTC] {"message":"unknown_error","error":"","status":400,"cause":[]}
+[04-Jun-2024 23:12:56 UTC] {"path":"/payments","blocked_by":"PolicyAgent","message":"At least one policy returned UNAUTHORIZED.","status":403,"code":"PA_UNAUTHORIZED_RESULT_FROM_POLICIES"}
+
+[04-Jun-2024 20:13:02 America/Recife] {"message":"unknown_error","error":"","status":400,"cause":[]}
+[04-Jun-2024 20:13:02 America/Recife] {"message":"Unauthorized use of live credentials","error":"unauthorized","status":401,"cause":[{"code":7,"description":"Unauthorized use of live credentials","data":"04-06-2024T23:13:03UTC;1a059ca9-e8a6-4b76-adc8-80e0cedb2b13"}]}
+[04-Jun-2024 23:14:59 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T23:15:00UTC;e136f155-c527-4495-aff6-42dcb7fd9726"}]}
+[04-Jun-2024 23:24:26 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T23:24:27UTC;b9fb6f01-7447-48ef-890a-bd70716ad2e7"}]}
+[04-Jun-2024 23:30:12 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T23:30:13UTC;5b170e95-ef8f-40aa-89bd-a15cc0885964"}]}
+[04-Jun-2024 23:30:59 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T23:31:00UTC;14af38cb-f0a6-4247-bc0f-9bb932df270c"}]}
+[04-Jun-2024 23:31:46 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T23:31:48UTC;6275feba-9211-436b-817a-0365e6b285e3"}]}
+[04-Jun-2024 23:45:23 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T23:45:24UTC;1ffe7d4a-fb0f-4ce3-b983-4bbf6b8af8ee"}]}
+[04-Jun-2024 23:46:46 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T23:46:47UTC;c4c5c6da-ef77-4101-97d8-81b3ad0bccc6"}]}
+[04-Jun-2024 23:46:57 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T23:46:58UTC;4386b512-4d53-431b-bd23-e6e9f5f25e86"}]}
+[04-Jun-2024 23:50:15 UTC] {"message":"Header X-Idempotency-Key can’t be null","error":"bad_request","status":400,"cause":[{"code":4292,"description":"Header X-Idempotency-Key can’t be null","data":"04-06-2024T23:50:17UTC;79696aba-12b3-4c25-ae3b-e6739698a879"}]}
+[04-Jun-2024 21:45:06 America/Recife] upstream connect error or disconnect/reset before headers. reset reason: connection timeout
+[05-Jun-2024 00:47:03 America/Recife] {"status":429,"message":"local_rate_limited"}
+
+[05-Jun-2024 00:48:05 America/Recife] {"message":"local_rate_limited","status":429}
+
+[05-Jun-2024 00:49:04 America/Recife] {"message":"local_rate_limited","status":429}
+
+[05-Jun-2024 06:47:02 America/Recife] no healthy upstream
+[05-Jun-2024 06:47:02 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[05-Jun-2024 06:48:02 America/Recife] no healthy upstream
+[05-Jun-2024 06:49:02 America/Recife] no healthy upstream
+[05-Jun-2024 09:46:04 America/Recife] upstream connect error or disconnect/reset before headers. reset reason: connection timeout
+[05-Jun-2024 09:48:02 America/Recife] {"status":429,"message":"local_rate_limited"}
+
+[05-Jun-2024 09:49:03 America/Recife] {"message":"local_rate_limited","status":429}
+
+[05-Jun-2024 12:46:02 America/Recife] {"error": "resource not found", "message":"Si quieres conocer los recursos de la API que se encuentran disponibles visita el Sitio de Desarrolladores de MercadoLibre (https://developers.mercadopago.com)"}
+[05-Jun-2024 16:45:38 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"05-06-2024T16:45:40UTC;59ab3ae6-0b8b-41ba-97a2-d408d9527462"}]}
+[05-Jun-2024 17:47:55 UTC] PHP Fatal error:  Cannot redeclare Usuarios::redes() in /home/raspeiganhei/public_html/ci/application/controllers/adm/Usuarios.php on line 1482
+[05-Jun-2024 17:48:52 UTC] PHP Fatal error:  Cannot redeclare Usuarios::redes() in /home/raspeiganhei/public_html/ci/application/controllers/adm/Usuarios.php on line 1482
+[05-Jun-2024 17:49:12 UTC] PHP Fatal error:  Cannot redeclare Usuarios::redes() in /home/raspeiganhei/public_html/ci/application/controllers/adm/Usuarios.php on line 1482
+[05-Jun-2024 17:49:45 UTC] PHP Fatal error:  Cannot redeclare Usuarios::redes() in /home/raspeiganhei/public_html/ci/application/controllers/adm/Usuarios.php on line 1482
+[05-Jun-2024 15:48:03 America/Recife] no healthy upstream
+[05-Jun-2024 20:39:27 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"05-06-2024T20:39:28UTC;8e597d18-b8c4-4e44-a452-296eedf0658a"}]}
+[05-Jun-2024 20:39:51 UTC] {"message":"transaction_amount attribute can't be null","error":"bad_request","status":400,"cause":[{"code":4002,"description":"transaction_amount attribute can't be null","data":"05-06-2024T20:39:53UTC;0266adec-714b-495e-ad0f-cd4116e3da47"}]}
