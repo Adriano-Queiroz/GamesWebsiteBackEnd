@@ -9,6 +9,7 @@ public class FinanceController {
 
     @GetMapping("/saques")
     public String saques(Model model) {
+        model.addAttribute("message", "Hello, Mambo!");
         return "saques";
     }
     @GetMapping("/depositos")
