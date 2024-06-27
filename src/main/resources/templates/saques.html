@@ -41,9 +41,6 @@
 <script src="js/base/loader.js"></script>
 </head>
 <body>
-<h1 th:text="${message}"></h1>    <h1 th:text="${message}"></h1>    <h1 th:text="${message}"></h1>    <h1 th:text="${message}"></h1>    <h1 th:text="${message}"></h1>
-<
-
 
 <div id="root">
 <div id="nav" class="nav-container d-flex">
@@ -56,7 +53,7 @@
 <div class="user-container d-flex">
 <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 <img class="profile" alt="profile" src="img/profile/perfil.png">
-<div class="name">Augusto Queiroz</div>
+<div class="name" th:text="${user.username}"></div>
 </a>
 <div class="dropdown-menu dropdown-menu-end user-menu wide">
 
