@@ -34,16 +34,18 @@ public class TicTacToeService {
         BattleModel battle = iBattleRepository.findById(codBattle).get();
         UserModel user1 = battle.getPlayer1();
         UserModel user2 = battle.getPlayer2();
+        double moneyGained = treatBets(status,user1,user2,battle);
         HistoryModel history = new HistoryModel();
+
         history.setPlayer1(user1);
         history.setPlayer2(user2);
         history.setCodBattle(battle.getCodBattle());
         history.setRoom(battle.getRoom());
         history.setStatus(status);
         history.setBoard(battle.getBoard());
+        history.setMoneyGained(moneyGained);
         iHistoryRepository.save(history);
 
-        treatBets(status,user1,user2,battle);
         messagingTemplate.convertAndSend(
                 "/topic/battle/" + codBattle +"/X",
                 new EndGameResponseDTO(status.toString(), battle.getBoard()));
@@ -60,7 +62,7 @@ public class TicTacToeService {
         UserModel user1 = battle.getPlayer1();
         UserModel user2 = battle.getPlayer2();
         battle.setStatus(status);
-        treatBets(status,user1,user2,battle);
+        double moneygained = treatBets(status,user1,user2,battle);
         //iBattleRepository.save(battle);
         HistoryModel history = new HistoryModel();
         history.setBoard(battle.getBoard());
@@ -69,6 +71,7 @@ public class TicTacToeService {
         history.setCodBattle(battle.getCodBattle());
         history.setStatus(status);
         history.setRoom(battle.getRoom());
+        history.setMoneyGained(moneygained);
         iHistoryRepository.save(history);
         return status;
     }
@@ -98,7 +101,7 @@ public class TicTacToeService {
         iUserModelRepository.save(user1);
         iBattleRepository.delete(battle);
     }
-    public void treatBets(Status status, UserModel user1, UserModel user2, BattleModel battle){
+    public double treatBets(Status status, UserModel user1, UserModel user2, BattleModel battle){
 
         double housePercentage = battle.getRoom().getGame().getHousePercentage();
         double bet = battle.getRoom().getBet();
@@ -106,11 +109,11 @@ public class TicTacToeService {
         double houseAmount = bet - betToContabilize;
         if(user1 == null){
             treatNullUser1(user2,status,battle, bet, betToContabilize,houseAmount);
-            return;
+            return houseAmount;
         }
         if(user2 == null){
             treatNullUser2(user1,status,battle,bet,betToContabilize,houseAmount);
-            return;
+            return houseAmount;
         }
         if(status==Status.P1_WON){
             System.out.println("P1 Won");
@@ -128,5 +131,6 @@ public class TicTacToeService {
         iUserModelRepository.save(user1);
         iUserModelRepository.save(user2);
         iBattleRepository.delete(battle);
+        return houseAmount;
     }
 }

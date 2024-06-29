@@ -41,6 +41,7 @@ public class HistoryModel {
     private RoomModel room;
 
     private LocalDateTime createdAt;
+    private double moneyGained;
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

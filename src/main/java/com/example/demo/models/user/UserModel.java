@@ -32,6 +32,7 @@ public class UserModel {
     private String email;
 
     private String passwordValidationInfo;
+    private String password;
 
     @ManyToOne
     @JoinColumn(name = "cod_user_role")
@@ -64,5 +65,6 @@ public class UserModel {
     public int hashCode() {
         return Objects.hash(codUser);
     }
+
 
 }

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React with SockJS and Stomp</title>
+    <!-- Include Babel for JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Include React and ReactDOM from CDN -->
+    <script src="https://unpkg.com/react/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js" crossorigin></script>
+    <!-- Include SockJS and Stomp from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <!-- Include TailSpin for loading spinner -->
+</head>
+<body>
+<!-- Root element for React -->
+<div id="root"></div>
+
+<!-- React code -->
+<script type="text/babel">
+    const { useEffect, useState, useRef } = React;
+    //const { TailSpin } = window['react-loader-spinner'];
+
+    // Placeholder functions for the missing imports
+    const converter = (board) => board; // change this: Replace with actual converter function
+    //const useSession = () => ({ id: /*[[${userId}]]*/ }); // change this: Replace with actual useSession hook
+    const giveup = async (userId, opponent) => {}; // change this: Replace with actual giveup function
+    const toastError = (msg) => alert(msg); // change this: Replace with actual toast methods
+    const toastInfo = (msg) => alert(msg);
+    const toastSuccess = (msg) => alert(msg);
+    const fetchBattleContext = async (userId) => ({ board: '', status: 'P1_TURN' }); // change this: Replace with actual fetchBattleContext function
+    const getHistory = async (codBattle) => ({ board: '', status: 'DRAW' }); // change this: Replace with actual getHistory function
+    const getLobby = async (codRoom, navigate, user) => {}; // change this: Replace with actual getLobby function
+
+    function Modal({ children }) {
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+                <div className="flex flex-col items-center bg-white p-4 rounded">
+                    {children}
+                </div>
+            </div>
+        );
+    }
+
+    function BoardComponent({ isConnected, isTurn, isPlayer1, board, handleClick, handleGiveup, isFinished, textToShowIfFinished, playAgain }) {
+        return (
+            <main className="pt-8 text-center">
+                <h1 className="mb-8 text-3xl font-bold uppercase">Tic Tac Toe</h1>
+                {isConnected ? (
+                    <div>
+                        <h3 className="text-xl mb-4">{!isFinished ? (isTurn ? 'Sua vez' : 'Vez do adversário') : textToShowIfFinished} ({isPlayer1 ? 'X' : 'O'})</h3>
+                        <div className="flex flex-col items-center mb-8">
+                            <div className="grid grid-cols-3 gap-2">
+                                {board.map((row, rowIndex) =>
+                                    row.map((square, colIndex) => (
+                                        <button
+                                            key={`${rowIndex}-${colIndex}`}
+                                            onClick={handleClick.bind(this,rowIndex, colIndex)}
+                                        >
+                                            {square}
+                                        </button>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                        {isFinished ? (
+                            <button
+                                className="px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300"
+                                onClick={playAgain}
+                            >
+                                Jogar Novamente
+                            </button>
+                        ) : (
+                            <button
+                                className="px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300"
+                                onClick={handleGiveup}
+                            >
+                                Desistir da partida
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    <Modal>
+                        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+                            <div className="bg-white p-4 rounded">
+                                <p className="mt-4">Iniciando o jogo...</p>
+                            </div>
+                        </div>
+                    </Modal>
+                )}
+            </main>
+        );
+    }
+
+    function Lobby({ codRoom, result, codBattle }) {
+        console.log("we here")
+        const socketRef = useRef(null);
+        const stompClientRef = useRef(null);
+        const [isConnected, setIsConnected] = useState(false);
+        const isPlayer1 = result.isPlayer1;
+        const player = isPlayer1 ? 'X' : 'O';
+        const opponent = !isPlayer1 ? 'X' : 'O';
+        const [isTurn, setIsTurn] = useState(result.status === 'P1_TURN' && isPlayer1 || result.status === 'P2_TURN' && !isPlayer1);
+        const hasReturned = result.hasReturned;
+        const [isFinished, setIsFinished] = useState(false);
+        const [textToShowIfFinished, setTextToShowIfFinished] = useState('');
+        console.log("hasReturned:" + hasReturned);
+
+        async function fetchHistory() {
+            return await getHistory(result.codBattle);
+        }
+
+        const [board, setBoard] = useState(result.board ? converter(result.board) : []);
+        const treatFinishedGame = (status) => {
+            console.log("STATUS");
+            console.log(status);
+            if (status === 'DRAW') {
+                setIsFinished(true);
+                setTextToShowIfFinished("Empate ");
+                toastInfo('Empate');
+            } else if (status === 'P1_WON' && isPlayer1 || status === 'P2_WON' && !isPlayer1) {
+                setIsFinished(true);
+                setTextToShowIfFinished("Vitória");
+                toastSuccess('Você ganhou');
+            } else {
+                setIsFinished(true);
+                setTextToShowIfFinished("Derrota");
+                toastError('Você perdeu');
+            }
+        };
+
+        useEffect(() => {
+            socketRef.current = new SockJS('http://localhost:9000/ws');
+            stompClientRef.current = Stomp.over(socketRef.current);
+
+            stompClientRef.current.connect({}, async function (frame) {
+                console.log('Connected: ' + frame);
+                setIsConnected(true);
+                if (hasReturned) {
+                    await getBattleContext();
+                }
+
+                stompClientRef.current.subscribe(`/topic/battle/${result.codBattle}/${opponent}`, function (message) {
+                    const response = JSON.parse(message.body);
+                    if (response.hasTimedOut) {
+                        treatFinishedGame(response.status);
+                        return;
+                    }
+                    console.log('response:', response);
+                    setBoard(JSON.parse(response.board));
+                    if (response.status === 'P2_WON' || response.status === 'P1_WON' || response.status === 'DRAW') {
+                        stompClientRef.current.disconnect(() => console.log('Disconnected'));
+                        treatFinishedGame(response.status);
+                        return;
+                    }
+                    setIsTurn(response.status === 'P1_TURN' && isPlayer1 || response.status === 'P2_TURN' && !isPlayer1);
+                });
+            });
+
+            return () => {
+                console.log('Disconnecting');
+                stompClientRef.current.disconnect(() => console.log('Disconnected'));
+            };
+        }, []);
+
+        const handleClick = (rowIndex, colIndex) => {
+            if (!isTurn) return;
+            if (board[rowIndex][colIndex] === "X" || board[rowIndex][colIndex] === "O") return;
+            if (!isTurn || !isConnected) return;
+
+            const newBoard = board.map((row, rIdx) =>
+                row.map((col, cIdx) => {
+                    if (rIdx === rowIndex && cIdx === colIndex && col === '') {
+                        return player;
+                    }
+                    return col;
+                })
+            );
+            setBoard(newBoard);
+
+            stompClientRef.current.send('/ticktacktoe/move', {}, JSON.stringify({
+                player,
+                board: JSON.stringify(newBoard),
+                codBattle: result.codBattle,
+                codUser: user.id
+            }));
+            setIsTurn(false);
+        };
+
+        async function handleGiveup() {
+            if (!isTurn) {
+                toastError("Espere a sua vez para desistir");
+                return;
+            }
+            await giveup(user.id, opponent);
+            treatFinishedGame(isPlayer1 ? "P2_WON" : "P1_WON");
+        }
+
+        const playAgain = async () => {
+            navigate("/waiting");
+            await getLobby(codRoom, navigate, user);
+        };
+
+        return (
+            <BoardComponent
+                isConnected={isConnected}
+                isFinished={isFinished}
+                textToShowIfFinished={textToShowIfFinished}
+                isTurn={isTurn}
+                isPlayer1={isPlayer1}
+                board={board}
+                handleGiveup={handleGiveup}
+                handleClick={handleClick}
+                playAgain={playAgain}
+            />
+        );
+    }
+
+    // Retrieve model attributes from Thymeleaf
+    const codRoom = [[${codRoom}]] ;
+    const codUser = [[${codUser}]]
+    const result = {
+
+        codBattle: [[${codBattle}]] ,
+        isPlayer1: [[${isPlayer1}]] ,
+        status: '[[${status}]]' ,
+        hasReturned: [[${hasReturned}]] ,
+        board: '[[${board}]]'
+    };
+    ReactDOM.render(
+        <Lobby codRoom={codRoom} result={result} codUser = {codUser} />,
+        document.getElementById('root')
+    );
+</script>
+</body>
+</html>

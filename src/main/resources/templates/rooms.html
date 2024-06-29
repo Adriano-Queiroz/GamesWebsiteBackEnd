@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React with SockJS and Stomp</title>
+    <!-- Include Babel for JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Include React and ReactDOM from CDN -->
+    <script src="https://unpkg.com/react/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js" crossorigin></script>
+    <!-- Include SockJS and Stomp from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <!-- Include TailSpin for loading spinner -->
+    <script src="https://cdn.jsdelivr.net/npm/react-loader-spinner@4.3.3/dist/umd/react-loader-spinner.min.js"></script>
+
+    <!-- Thymeleaf script injection for roomsData -->
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        const roomsData = /*[[${rooms}]]*/ '[[${rooms}]]';
+        /*]]>*/
+        /*<![CDATA[*/
+        //const codUser = /*[[${codUser}]]*/ '[[${codUser}]]';
+        /*]]>*/
+    </script>
+</head>
+<body>
+<!-- Root element for React -->
+<div id="root"></div>
+
+<!-- React code -->
+<script type="text/babel">
+    const { useEffect, useState } = React;
+
+    function App({ rooms }) {
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+
+        useEffect(() => {
+            setLoading(false); // Simulating fetched rooms from Thymeleaf data
+        }, []);
+
+        const goToLobby = async(result)  => {
+            return await fetch('/fe_lobby', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    codRoom: result.codRoom,
+                    isPlayer1: result.isPlayer1,
+                    status: result.status,
+                    board: result.board,
+                    codBattle: result.codBattle,
+                    hasReturned: result.hasReturned
+                })
+            });
+            if (response.ok) {
+                const redirectUrl = response.url;
+                window.location.href = redirectUrl;
+            } else {
+                const responseJson = await response.json();
+                throw new Error(responseJson.error);
+            }
+        }
+        const getLobby = async (codRoom) => {
+            try {
+                const response = await fetch('/lobby', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        codRoom: codRoom,
+                        codUser: 1
+                    })
+                });
+                if (!response.ok) {
+                    const responseJson = await response.json();
+                    throw new Error(responseJson.error);
+                }
+
+                const result = await response.json();
+                const codBattle = result.codBattle;
+
+                if (!result.isSecondPlayer) {
+                    // WebSocket communication
+                    const socket = new SockJS('http://localhost:9000/ws');
+                    const stompClient = Stomp.over(socket);
+
+                    stompClient.connect({}, function (frame) {
+                        console.log('Connected: ' + frame);
+
+                        stompClient.subscribe(`/topic/lobby/${result.codLobby}`, function (message) {
+                            const result = JSON.parse(message.body);
+                            console.log('Received message:', result);
+                            stompClient.disconnect();
+
+                            // Navigate to lobby or battle page as per your application logic
+                            // Example navigation, replace with your logic
+
+                            window.location.href = '/lobby?codRoom=' + codRoom + '&codBattle=' +
+                                result.codBattle + '&isPlayer1=' + result.isPlayer1 +
+                                '&status=' + result.status + '&board=' + result.board + '&hasReturned=' + false;
+
+
+                            //console.log(goToLobby(result));
+                        });
+                    }, function (error) {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    console.log("Already second player, navigating to lobby");
+
+                    window.location.href = '/lobby?codRoom=' + codRoom + '&codBattle=' +
+                        result.codBattle + '&isPlayer1=' + result.isPlayer1 +
+                        '&status=' + result.status + '&board=' + result.board + '&hasReturned=' + false;
+
+
+                     //console.log(goToLobby(result));
+                    //window.location.href='/lobby'
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        if (loading) {
+            return (
+                <div className="loader">
+                    <h1>loading</h1>
+                </div>
+            );
+        }
+
+        if (error) {
+            return <div>Error: {error.message}</div>;
+        }
+
+        const handleRoomButtonClick = (codRoom) => {
+            // Example function to handle room button click
+            console.log(codRoom);
+            getLobby(codRoom);
+        };
+
+        return (
+            <div className="room-buttons">
+                {rooms.map((room) => (
+                    <button
+                        key={room.codRoom}
+                        className="room-button"
+                        onClick={handleRoomButtonClick.bind(this, room.codRoom)}
+                    >
+                        {room.bet}
+                    </button>
+                ))}
+            </div>
+        );
+    }
+
+    // Render the React component
+    ReactDOM.render(<App rooms={roomsData} />, document.getElementById('root'));
+</script>
+</body>
+</html>
