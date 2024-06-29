@@ -50,11 +50,12 @@ public class BattleService {
 
     public IsInBattleDTO isInBattle(long codUser) throws NotFoundException {
         BattleModel battle = getBattle(codUser);
-        if(battle != null){
-            String board = battle.getBoard();
-            String[][] boardArray = ((TicTacToeBoard)
-                    BoardMapper.getBoard(GameType.TICTACTOE, board))
-                    .getBoard();
+        if(battle == null)
+            return new IsInBattleDTO(false,null,-1);
+        String board = battle.getBoard();
+        String[][] boardArray = ((TicTacToeBoard)
+                BoardMapper.getBoard(GameType.TICTACTOE, board))
+                .getBoard();
 
             return new IsInBattleDTO(true
                     ,new BattleDTO(
@@ -63,18 +64,22 @@ public class BattleService {
                     battle.getCodBattle(),
                     battle.getStatus().toString(),
                     battle.getPlayer1().getCodUser() == codUser,
-                    true)
-                    ,Duration.between(battle.getLastMoveDateTime(),LocalDateTime.now()).getSeconds()
+                    true),
+                    -1
+                    //,Duration.between(battle.getLastMoveDateTime(),LocalDateTime.now()).getSeconds()
+
+
             );
-        }
+            /*
             Optional<UserModel> optionalUser = iUserModelRepository.findById(codUser);
             if(!optionalUser.isPresent())
                 throw new NotFoundException("User não encontrado");
-            Optional<HistoryModel> optionalHistory = iHistoryRepository.findLatestHistoryByUser(optionalUser.get());
-            if(!optionalHistory.isPresent())
-                throw new NotFoundException("História não encontrada");
-            HistoryModel history = optionalHistory.get();
-            String board = history.getBoard();
+
+            //Optional<HistoryModel> optionalHistory = iHistoryRepository.findLatestHistoryByUser(optionalUser.get());
+            //if(!optionalHistory.isPresent())
+              //  throw new NotFoundException("História não encontrada");
+            //HistoryModel history = optionalHistory.get();
+            //String board = history.getBoard();
             String[][] boardArray = ((TicTacToeBoard)
                 BoardMapper.getBoard(GameType.TICTACTOE, board))
                 .getBoard();
@@ -89,6 +94,8 @@ public class BattleService {
                     ,Duration.between(battle.getLastMoveDateTime(),LocalDateTime.now()).getSeconds()
             );
 
+
+             */
     }
 
     public String leaveBattle(long codUser,String player) throws NotFoundException {

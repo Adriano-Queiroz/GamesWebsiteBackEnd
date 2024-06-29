@@ -12,7 +12,8 @@
     <!-- Include SockJS and Stomp from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-    <!-- Include TailSpin for loading spinner -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
 </head>
 <body>
 <!-- Root element for React -->
@@ -20,19 +21,89 @@
 
 <!-- React code -->
 <script type="text/babel">
+
     const { useEffect, useState, useRef } = React;
+
     //const { TailSpin } = window['react-loader-spinner'];
 
     // Placeholder functions for the missing imports
     //const converter = (board) => board; // change this: Replace with actual converter function
     //const useSession = () => ({ id: /*[[${userId}]]*/ }); // change this: Replace with actual useSession hook
-    const giveup = async (userId, opponent) => {}; // change this: Replace with actual giveup function
+    const giveup = async (codUser, player) => {
+        try{
+            const response = await fetch(`/user/leaveBattle`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    codUser: codUser,
+                    player: player
+                })
+            });
+            const result = await response.json();
+            console.log(response);
+            console.log(result);
+            if(!response.ok)
+                throw new Error(result.error)
+            return result;
+        }catch(error){
+            console.log(error);
+        }
+    }; // change this: Replace with actual giveup function
     const toastError = (msg) => alert(msg); // change this: Replace with actual toast methods
     const toastInfo = (msg) => alert(msg);
-    const toastSuccess = (msg) => alert(msg);
+    const toastSuccess = (msg) => {
+        alert(msg);
+    }
     const fetchBattleContext = async (userId) => ({ board: '', status: 'P1_TURN' }); // change this: Replace with actual fetchBattleContext function
     const getHistory = async (codBattle) => ({ board: '', status: 'DRAW' }); // change this: Replace with actual getHistory function
-    const getLobby = async (codRoom, navigate, user) => {}; // change this: Replace with actual getLobby function
+    const getLobby = async (codRoom, codUser) => {
+        console.log("codRoom: "+ codRoom);
+        try {
+            const response = await fetch('/lobby', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    codRoom: codRoom,
+                    codUser: codUser
+                })
+            });
+            if (!response.ok) {
+                const responseJson = await response.json();
+                throw new Error(responseJson.error);
+            }
+
+            const result = await response.json();
+            const codBattle = result.codBattle;
+
+            if (!result.isSecondPlayer) {
+                // WebSocket communication
+                const socket = new SockJS('http://localhost:9000/ws');
+                const stompClient = Stomp.over(socket);
+
+                stompClient.connect({}, function (frame) {
+                    console.log('Connected: ' + frame);
+
+                    stompClient.subscribe(`/topic/lobby/${result.codLobby}`, function (message) {
+                        const result = JSON.parse(message.body);
+                        console.log('Received message:', result);
+                        stompClient.disconnect();
+                        window.location.href = '/lobby?codBattle=' + result.codBattle
+                    });
+                }, function (error) {
+                    console.error('Error:', error);
+                });
+            } else {
+                console.log("Already second player, navigating to lobby");
+                window.location.href = '/lobby?codBattle=' + result.codBattle
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     function Modal({ children }) {
         return (
@@ -45,6 +116,10 @@
     }
 
     function BoardComponent({ isConnected, isTurn, isPlayer1, board, handleClick, handleGiveup, isFinished, textToShowIfFinished, playAgain }) {
+        function squareColor(square) {
+            return square === 'X' ? 'text-pink-500' : square === 'O' ? 'text-blue-400' : ''
+        }
+
         return (
             <main className="pt-8 text-center">
                 <h1 className="mb-8 text-3xl font-bold uppercase">Tic Tac Toe</h1>
@@ -57,6 +132,7 @@
                                     row.map((square, colIndex) => (
                                         <button
                                             key={`${rowIndex}-${colIndex}`}
+                                            className={`border border-white w-24 h-24 flex items-center justify-center text-4xl cursor-pointer ${squareColor(square)}`}
                                             onClick={handleClick.bind(this,rowIndex, colIndex)}
                                         >
                                             {square}
@@ -200,8 +276,8 @@
         }
 
         const playAgain = async () => {
-            navigate("/waiting");
-            await getLobby(codRoom, navigate, user);
+            //navigate("/waiting");
+            await getLobby(codRoom, codUser);
         };
 
         return (
@@ -220,18 +296,25 @@
     }
 
     // Retrieve model attributes from Thymeleaf
-    const codRoom = [[${codRoom}]] ;
-    const codUser = [[${codUser}]]
-    const boardToTranslate = '[[${board}]]';
 
+    const codRoom = [[${codRoom}]];
+    const codUser = [[${codUser}]];
+
+    const boardToTranslate = '[[${board}]]';
+    const possibleMovesToTranslate = '[[${possibleMoves}]]'
+console.log("codRoom:" +codRoom);
+console.log("codUser:" + codUser)
     const result = {
 
         codBattle: [[${codBattle}]] ,
         isPlayer1: [[${isPlayer1}]] ,
         status: '[[${status}]]' ,
         hasReturned: [[${hasReturned}]] ,
-        board: boardToTranslate.replace(/&quot;/g, '"')
+        board: boardToTranslate.replace(/&quot;/g, '"'),
+        possibleMoves: possibleMovesToTranslate.replace(/&quot;/g, '"')
     };
+
+
     ReactDOM.render(
         <Lobby codRoom={codRoom} result={result} codUser = {codUser} />,
         document.getElementById('root')

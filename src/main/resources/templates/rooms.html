@@ -21,7 +21,7 @@
         const roomsData = /*[[${rooms}]]*/ '[[${rooms}]]';
         /*]]>*/
         /*<![CDATA[*/
-        //const codUser = /*[[${codUser}]]*/ '[[${codUser}]]';
+        const codUser = /*[[${codUser}]]*/ [[${codUser}]];
         /*]]>*/
     </script>
 </head>
@@ -41,30 +41,7 @@
             setLoading(false); // Simulating fetched rooms from Thymeleaf data
         }, []);
 
-        const goToLobby = async(result)  => {
-            return await fetch('/fe_lobby', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    codRoom: result.codRoom,
-                    isPlayer1: result.isPlayer1,
-                    status: result.status,
-                    board: result.board,
-                    codBattle: result.codBattle,
-                    hasReturned: result.hasReturned
-                })
-            });
-            if (response.ok) {
-                const redirectUrl = response.url;
-                window.location.href = redirectUrl;
-            } else {
-                const responseJson = await response.json();
-                throw new Error(responseJson.error);
-            }
-        }
-        const getLobby = async (codRoom) => {
+        const getLobby = async (codRoom,codUser) => {
             try {
                 const response = await fetch('/lobby', {
                     method: 'POST',
@@ -73,7 +50,7 @@
                     },
                     body: JSON.stringify({
                         codRoom: codRoom,
-                        codUser: 1
+                        codUser: codUser
                     })
                 });
                 if (!response.ok) {
@@ -96,26 +73,14 @@
                             const result = JSON.parse(message.body);
                             console.log('Received message:', result);
                             stompClient.disconnect();
-
-                            // Navigate to lobby or battle page as per your application logic
-                            // Example navigation, replace with your logic
-
                             window.location.href = '/lobby?codBattle=' + result.codBattle
-
-
-                            //console.log(goToLobby(result));
                         });
                     }, function (error) {
                         console.error('Error:', error);
                     });
                 } else {
                     console.log("Already second player, navigating to lobby");
-
                     window.location.href = '/lobby?codBattle=' + result.codBattle
-
-
-                     //console.log(goToLobby(result));
-                    //window.location.href='/lobby'
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -137,7 +102,7 @@
         const handleRoomButtonClick = (codRoom) => {
             // Example function to handle room button click
             console.log(codRoom);
-            getLobby(codRoom);
+            getLobby(codRoom,codUser);
         };
 
         return (
@@ -156,7 +121,7 @@
     }
 
     // Render the React component
-    ReactDOM.render(<App rooms={roomsData} />, document.getElementById('root'));
+    ReactDOM.render(<App rooms={roomsData} codUser={codUser}/>, document.getElementById('root'));
 </script>
 </body>
 </html>
