@@ -100,9 +100,7 @@
                             // Navigate to lobby or battle page as per your application logic
                             // Example navigation, replace with your logic
 
-                            window.location.href = '/lobby?codRoom=' + codRoom + '&codBattle=' +
-                                result.codBattle + '&isPlayer1=' + result.isPlayer1 +
-                                '&status=' + result.status + '&board=' + result.board + '&hasReturned=' + false;
+                            window.location.href = '/lobby?codBattle=' + result.codBattle
 
 
                             //console.log(goToLobby(result));
@@ -113,9 +111,7 @@
                 } else {
                     console.log("Already second player, navigating to lobby");
 
-                    window.location.href = '/lobby?codRoom=' + codRoom + '&codBattle=' +
-                        result.codBattle + '&isPlayer1=' + result.isPlayer1 +
-                        '&status=' + result.status + '&board=' + result.board + '&hasReturned=' + false;
+                    window.location.href = '/lobby?codBattle=' + result.codBattle
 
 
                      //console.log(goToLobby(result));

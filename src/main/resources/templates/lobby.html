@@ -24,7 +24,7 @@
     //const { TailSpin } = window['react-loader-spinner'];
 
     // Placeholder functions for the missing imports
-    const converter = (board) => board; // change this: Replace with actual converter function
+    //const converter = (board) => board; // change this: Replace with actual converter function
     //const useSession = () => ({ id: /*[[${userId}]]*/ }); // change this: Replace with actual useSession hook
     const giveup = async (userId, opponent) => {}; // change this: Replace with actual giveup function
     const toastError = (msg) => alert(msg); // change this: Replace with actual toast methods
@@ -111,8 +111,9 @@
         async function fetchHistory() {
             return await getHistory(result.codBattle);
         }
-
-        const [board, setBoard] = useState(result.board ? converter(result.board) : []);
+        console.log(result);
+        console.log(result.board);
+        const [board, setBoard] = useState(result.board ? JSON.parse(result.board) : []);
         const treatFinishedGame = (status) => {
             console.log("STATUS");
             console.log(status);
@@ -184,7 +185,7 @@
                 player,
                 board: JSON.stringify(newBoard),
                 codBattle: result.codBattle,
-                codUser: user.id
+                codUser: codUser
             }));
             setIsTurn(false);
         };
@@ -194,7 +195,7 @@
                 toastError("Espere a sua vez para desistir");
                 return;
             }
-            await giveup(user.id, opponent);
+            await giveup(codUser, opponent);
             treatFinishedGame(isPlayer1 ? "P2_WON" : "P1_WON");
         }
 
@@ -221,13 +222,15 @@
     // Retrieve model attributes from Thymeleaf
     const codRoom = [[${codRoom}]] ;
     const codUser = [[${codUser}]]
+    const boardToTranslate = '[[${board}]]';
+
     const result = {
 
         codBattle: [[${codBattle}]] ,
         isPlayer1: [[${isPlayer1}]] ,
         status: '[[${status}]]' ,
         hasReturned: [[${hasReturned}]] ,
-        board: '[[${board}]]'
+        board: boardToTranslate.replace(/&quot;/g, '"')
     };
     ReactDOM.render(
         <Lobby codRoom={codRoom} result={result} codUser = {codUser} />,

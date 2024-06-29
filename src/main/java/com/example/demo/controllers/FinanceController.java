@@ -2,14 +2,17 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.FE.Battle.BattleRequestDTO;
 import com.example.demo.dtos.user.loginDTO;
+import com.example.demo.models.battle.BattleModel;
 import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.AuthenticatedUser;
+import com.example.demo.repositories.IBattleRepository;
 import com.example.demo.repositories.IGameRepository;
 import com.example.demo.repositories.IRoomRepository;
 import com.example.demo.services.UserService;
 import com.example.demo.services.exceptions.InternalErrorException;
 import com.example.demo.services.exceptions.InvalidUsernameOrPasswordException;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,8 @@ public class FinanceController {
     private final UserService userService;
     private IRoomRepository iRoomRepository;
     private IGameRepository iGameRepository;
+    @Autowired
+    private IBattleRepository iBattleRepository;
 
     public FinanceController(UserService userService, IRoomRepository iRoomRepository, IGameRepository iGameRepository) {
         this.userService = userService;
@@ -78,23 +83,22 @@ public class FinanceController {
     }
     @GetMapping("/lobby")
     public String getLobby(
-                            @RequestParam String codRoom,
                            @RequestParam long codBattle,
-                          @RequestParam boolean isPlayer1,
-                          @RequestParam String status,
-                          @RequestParam String board,
-                          @RequestParam boolean hasReturned,
                           //HttpSession session
                            Model model) {
         //if(session.getAttribute("user") == null)
          //   return "redirect:/login";
         //AuthenticatedUser user = (AuthenticatedUser) session.getAttribute("user");
-        model.addAttribute("codRoom", codRoom);
-        model.addAttribute("isPlayer1", isPlayer1);
-        model.addAttribute("status", status);
-        model.addAttribute("board", board);
+        long codUser = 1;
+        BattleModel battle = iBattleRepository.findById(codBattle).get();
+        System.out.println("board");
+        System.out.println(battle.getBoard());
+        model.addAttribute("codRoom", battle.getRoom().getCodRoom());
+        model.addAttribute("isPlayer1", battle.getPlayer1().getCodUser() == codUser);
+        model.addAttribute("status", battle.getStatus());
+        model.addAttribute("board", battle.getBoard());
         model.addAttribute("codBattle",codBattle);
-        model.addAttribute("hasReturned", hasReturned);
+        model.addAttribute("hasReturned", false);
         model.addAttribute("codUser",1);
         System.out.println("mambo");
         return "lobby";
