@@ -13,7 +13,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
 </head>
 <body>
 <!-- Root element for React -->
@@ -21,16 +20,10 @@
 
 <!-- React code -->
 <script type="text/babel">
-
     const { useEffect, useState, useRef } = React;
 
-    //const { TailSpin } = window['react-loader-spinner'];
-
-    // Placeholder functions for the missing imports
-    //const converter = (board) => board; // change this: Replace with actual converter function
-    //const useSession = () => ({ id: /*[[${userId}]]*/ }); // change this: Replace with actual useSession hook
     const giveup = async (codUser, player) => {
-        try{
+        try {
             const response = await fetch(`/user/leaveBattle`, {
                 method: 'DELETE',
                 headers: {
@@ -44,10 +37,10 @@
             const result = await response.json();
             console.log(response);
             console.log(result);
-            if(!response.ok)
+            if (!response.ok)
                 throw new Error(result.error)
             return result;
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
     }; // change this: Replace with actual giveup function
@@ -59,7 +52,7 @@
     const fetchBattleContext = async (userId) => ({ board: '', status: 'P1_TURN' }); // change this: Replace with actual fetchBattleContext function
     const getHistory = async (codBattle) => ({ board: '', status: 'DRAW' }); // change this: Replace with actual getHistory function
     const getLobby = async (codRoom, codUser) => {
-        console.log("codRoom: "+ codRoom);
+        console.log("codRoom: " + codRoom);
         try {
             const response = await fetch('/lobby', {
                 method: 'POST',
@@ -115,7 +108,38 @@
         );
     }
 
-    function BoardComponent({ isConnected, isTurn, isPlayer1, board, handleClick, handleGiveup, isFinished, textToShowIfFinished, playAgain }) {
+    function Timer({ onReset }) {
+        const [time, setTime] = useState(15);
+
+        useEffect(() => {
+            const interval = setInterval(() => {
+                setTime(prevTime => {
+                    if (prevTime > 0) {
+                        return prevTime - 1;
+                    } else {
+                        clearInterval(interval);
+                        return 0;
+                    }
+                });
+            }, 1000);
+
+            return () => clearInterval(interval);
+        }, []);
+
+        useEffect(() => {
+            if (onReset) {
+                onReset.current = (amount) => setTime(amount);
+            }
+        }, [onReset]);
+
+        return (
+            <div className="mb-4 text-xl">
+                Time left: {time}s
+            </div>
+        );
+    }
+
+    function BoardComponent({ isConnected, isTurn, isPlayer1, board, handleClick, handleGiveup, isFinished, textToShowIfFinished, playAgain, resetTimer }) {
         function squareColor(square) {
             return square === 'X' ? 'text-pink-500' : square === 'O' ? 'text-blue-400' : ''
         }
@@ -123,6 +147,7 @@
         return (
             <main className="pt-8 text-center">
                 <h1 className="mb-8 text-3xl font-bold uppercase">Tic Tac Toe</h1>
+                <Timer onReset={resetTimer} />
                 {isConnected ? (
                     <div>
                         <h3 className="text-xl mb-4">{!isFinished ? (isTurn ? 'Sua vez' : 'Vez do adversário') : textToShowIfFinished} ({isPlayer1 ? 'X' : 'O'})</h3>
@@ -133,7 +158,7 @@
                                         <button
                                             key={`${rowIndex}-${colIndex}`}
                                             className={`border border-white w-24 h-24 flex items-center justify-center text-4xl cursor-pointer ${squareColor(square)}`}
-                                            onClick={handleClick.bind(this,rowIndex, colIndex)}
+                                            onClick={handleClick.bind(this, rowIndex, colIndex)}
                                         >
                                             {square}
                                         </button>
@@ -182,6 +207,7 @@
         const hasReturned = result.hasReturned;
         const [isFinished, setIsFinished] = useState(false);
         const [textToShowIfFinished, setTextToShowIfFinished] = useState('');
+        const resetTimerRef = useRef(null);
         console.log("hasReturned:" + hasReturned);
 
         async function fetchHistory() {
@@ -195,16 +221,35 @@
             console.log(status);
             if (status === 'DRAW') {
                 setIsFinished(true);
-                setTextToShowIfFinished("Empate ");
-                toastInfo('Empate');
-            } else if (status === 'P1_WON' && isPlayer1 || status === 'P2_WON' && !isPlayer1) {
+                setTextToShowIfFinished("Empate!");
+                toastInfo("Deu velha!");
+            } else if ((status === 'P1_WON' && isPlayer1) || (status === 'P2_WON' && !isPlayer1)) {
                 setIsFinished(true);
-                setTextToShowIfFinished("Vitória");
-                toastSuccess('Você ganhou');
+                setTextToShowIfFinished("Vitória!");
+                toastSuccess("Você venceu!");
             } else {
                 setIsFinished(true);
-                setTextToShowIfFinished("Derrota");
-                toastError('Você perdeu');
+                setTextToShowIfFinished("Derrota!");
+                toastError("Você perdeu!");
+            }
+        };
+
+        const getBattleContext = async () => {
+            try {
+                const response = await fetch(`/battle/context`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ codBattle: result.codBattle, codUser: codUser })
+                });
+                const result = await response.json();
+                console.log(result);
+                const newBoard = JSON.parse(result.board);
+                setBoard(newBoard);
+                setIsTurn(result.status === 'P1_TURN' && isPlayer1 || result.status === 'P2_TURN' && !isPlayer1);
+            } catch (error) {
+                console.error('Error:', error);
             }
         };
 
@@ -232,6 +277,7 @@
                         treatFinishedGame(response.status);
                         return;
                     }
+                    if (resetTimerRef.current) resetTimerRef.current(15); // Change 15 to any desired amount
                     setIsTurn(response.status === 'P1_TURN' && isPlayer1 || response.status === 'P2_TURN' && !isPlayer1);
                 });
             });
@@ -264,6 +310,7 @@
                 codUser: codUser
             }));
             setIsTurn(false);
+            if (resetTimerRef.current) resetTimerRef.current(15); // Change 15 to any desired amount
         };
 
         async function handleGiveup() {
@@ -291,6 +338,7 @@
                 handleGiveup={handleGiveup}
                 handleClick={handleClick}
                 playAgain={playAgain}
+                resetTimer={resetTimerRef}
             />
         );
     }
@@ -302,21 +350,19 @@
 
     const boardToTranslate = '[[${board}]]';
     const possibleMovesToTranslate = '[[${possibleMoves}]]'
-console.log("codRoom:" +codRoom);
-console.log("codUser:" + codUser)
+    console.log("codRoom:" + codRoom);
+    console.log("codUser:" + codUser)
     const result = {
-
-        codBattle: [[${codBattle}]] ,
-        isPlayer1: [[${isPlayer1}]] ,
-        status: '[[${status}]]' ,
-        hasReturned: [[${hasReturned}]] ,
+        codBattle: [[${codBattle}]],
+        isPlayer1: [[${isPlayer1}]],
+        status: '[[${status}]]',
+        hasReturned: [[${hasReturned}]],
         board: boardToTranslate.replace(/&quot;/g, '"'),
         possibleMoves: possibleMovesToTranslate.replace(/&quot;/g, '"')
     };
 
-
     ReactDOM.render(
-        <Lobby codRoom={codRoom} result={result} codUser = {codUser} />,
+        <Lobby codRoom={codRoom} result={result} codUser={codUser} />,
         document.getElementById('root')
     );
 </script>

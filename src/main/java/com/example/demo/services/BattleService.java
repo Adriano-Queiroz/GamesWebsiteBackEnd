@@ -119,7 +119,7 @@ public class BattleService {
             public void run() {
                 executeAction(battle);
             }
-        }, 10000);
+        }, 16000);
 
         battleTimers.put(battle.getCodBattle(), timer);
         iBattleRepository.save(battle);
