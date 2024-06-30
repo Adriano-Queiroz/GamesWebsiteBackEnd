@@ -109,7 +109,7 @@
     }
 
     function Timer({ onReset }) {
-        const [time, setTime] = useState(15);
+        const [time, setTime] = useState(result.timerSeconds);
 
         useEffect(() => {
             const interval = setInterval(() => {
@@ -147,7 +147,7 @@
         return (
             <main className="pt-8 text-center">
                 <h1 className="mb-8 text-3xl font-bold uppercase">Tic Tac Toe</h1>
-                <Timer onReset={resetTimer} />
+                {!isFinished ? <Timer onReset={resetTimer} /> : ""}
                 {isConnected ? (
                     <div>
                         <h3 className="text-xl mb-4">{!isFinished ? (isTurn ? 'Sua vez' : 'Vez do adversário') : textToShowIfFinished} ({isPlayer1 ? 'X' : 'O'})</h3>
@@ -358,7 +358,8 @@
         status: '[[${status}]]',
         hasReturned: [[${hasReturned}]],
         board: boardToTranslate.replace(/&quot;/g, '"'),
-        possibleMoves: possibleMovesToTranslate.replace(/&quot;/g, '"')
+        possibleMoves: possibleMovesToTranslate.replace(/&quot;/g, '"'),
+        timerSeconds: [[${seconds}]]
     };
 
     ReactDOM.render(

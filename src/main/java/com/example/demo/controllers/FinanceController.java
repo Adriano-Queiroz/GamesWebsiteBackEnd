@@ -27,6 +27,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -82,7 +84,7 @@ public class FinanceController {
         IsInBattleDTO isInBattleDTO = battleService.isInBattle(codUser);
         if(isInBattleDTO.isInBattle())
             return getLobby(isInBattleDTO.result().codBattle(),session,model);
-        List<RoomModel> roomList = iRoomRepository.findAllByGame(iGameRepository.findById(1L).get());
+        List<RoomModel> roomList = iRoomRepository.findAllByGame(iGameRepository.findById(1L).get()); //todo trocar para ser o game que carreguei
         model.addAttribute("rooms", roomList);
         model.addAttribute("codUser",codUser);
 
@@ -123,8 +125,39 @@ public class FinanceController {
         model.addAttribute("board", board);
         model.addAttribute("codBattle",codBattle);
         model.addAttribute("hasReturned", false);
+        model.addAttribute("possibleMoves",
+                gamesService.getPossibleMoves(boardArray,battle.getRoom().getGame().getGameType()));
+        model.addAttribute("codUser",codUser);
+        model.addAttribute("seconds",
+                15 - Duration.between(battle.getLastMoveDateTime(),LocalDateTime.now()).getSeconds());
+
+        return "lobby";
+    }
+    public String getLobby(
+            @RequestParam long codBattle,
+            long seconds,
+            HttpSession session,
+            Model model) {
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
+        UserModel user = (UserModel) session.getAttribute("user");
+        long codUser = user.getCodUser();
+        BattleModel battle = iBattleRepository.findById(codBattle).get();
+        System.out.println("board");
+        System.out.println(battle.getBoard());
+        String board = battle.getBoard();
+        String[][] boardArray = ((TicTacToeBoard)
+                BoardMapper.getBoard(GameType.TICTACTOE, board))
+                .getBoard();
+        model.addAttribute("codRoom", battle.getRoom().getCodRoom());
+        model.addAttribute("isPlayer1", battle.getPlayer1().getCodUser() == codUser);
+        model.addAttribute("status", battle.getStatus());
+        model.addAttribute("board", board);
+        model.addAttribute("codBattle",codBattle);
+        model.addAttribute("hasReturned", false);
         model.addAttribute("possibleMoves", gamesService.getPossibleMoves(boardArray,battle.getRoom().getGame().getGameType()));
         model.addAttribute("codUser",codUser);
+        model.addAttribute("seconds", seconds);
 
         return "lobby";
     }

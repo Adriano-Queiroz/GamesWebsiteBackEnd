@@ -109,7 +109,6 @@ public class BattleService {
 
     private synchronized void resetTimer(BattleModel battle) {
         Timer timer = battleTimers.get(battle.getCodBattle());
-
         if (timer != null) {
             timer.cancel();
         }

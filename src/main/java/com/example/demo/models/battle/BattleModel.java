@@ -72,5 +72,9 @@ public class BattleModel {
         return status;
     }
 
-
+    @PreUpdate
+    @PrePersist
+    public void updateLastMoveDateTime() {
+        this.lastMoveDateTime = LocalDateTime.now(); // Update with current date/time
+    }
 }
