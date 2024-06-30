@@ -131,20 +131,24 @@ public class LobbyService {
         if(room.getBet()>newUser.getBalance())
             throw new NotEnoughFundsException("Não tem dinheiro suficiente para este quarto");
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomAndFriendInvitedIsNullOrderByCodLobbyDesc(room);
+        String board = gamesService.getEmptyBoard(room.getGame().getGameType());
         if (!optionalLobby.isPresent()) {
-            LobbyModel lobby = createLobby(newUser,room,null);
             boolean isPlayer1 = Math.random() < 0.5;
-            String board = gamesService.getEmptyBoard(lobby.getRoom().getGame().getGameType());
+            LobbyModel lobby = createLobby(newUser,room,null);
+
             if(!isPlayer1){
                 Gson gson = new Gson();
                 board = gson.toJson(gamesService.makeBotMove(
-                         ((TicTacToeBoard)
-                        BoardMapper.getBoard(GameType.TICTACTOE, board))
-                        .getBoard(),
+                        ((TicTacToeBoard)
+                                BoardMapper.getBoard(GameType.TICTACTOE, board))
+                                .getBoard(),
                         "X",
                         GameType.TICTACTOE
                 ));
+                lobby.setFirstMoveBoard(board);
+                iLobbyRepository.save(lobby);
             }
+
             return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), isPlayer1,board,-1));
         }
         LobbyModel lobby = optionalLobby.get();

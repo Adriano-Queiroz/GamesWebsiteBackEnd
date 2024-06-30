@@ -114,7 +114,7 @@ public class BattleRestController {
         String emptyBoard = gamesService.getEmptyBoard(room.getGame().getGameType());
         battle.setBoard(emptyBoard);
         iBattleRepository.save(battle);
-        iLobbyRepository.delete(optionalLobby.get());
+        //iLobbyRepository.delete(optionalLobby.get()); comentado para funcionar na mudança de fe na be
         return ResponseEntity.ok(new CreateBattleResponseDTO(battle.getCodBattle()));
     }
 }

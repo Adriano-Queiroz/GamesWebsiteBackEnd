@@ -4,6 +4,7 @@ import com.example.demo.models.game.GameModel;
 import com.example.demo.models.invite.InviteModel;
 import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.UserModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,8 @@ public class LobbyModel {
     @Id
     @GeneratedValue
     private Long codLobby;
-
+    @JsonIgnore
+    private String firstMoveBoard;
     @ManyToOne
     @JoinColumn(name = "cod_user")
     private UserModel user;

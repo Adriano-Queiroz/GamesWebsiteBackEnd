@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React with SockJS and Stomp</title>
+    <!-- Include Babel for JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Include React and ReactDOM from CDN -->
+    <script src="https://unpkg.com/react/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js" crossorigin></script>
+    <!-- Include SockJS and Stomp from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Root element for React -->
+<div id="root"></div>
+
+<!-- React code -->
+<script type="text/babel">
+    const { useEffect, useState, useRef } = React;
+
+    const giveup = async (codUser, player) => {
+        try {
+            const response = await fetch(`/user/leaveBattle`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    codUser: codUser,
+                    player: player
+                })
+            });
+            const result = await response.json();
+            console.log(response);
+            console.log(result);
+            if (!response.ok)
+                throw new Error(result.error)
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
+    }; // change this: Replace with actual giveup function
+    const sendMove = async (player, board, codBattle, codUser) => {
+
+        try{
+            const response = await fetch('/rest_battle/move', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    player:player,
+                    board: board,
+                    codBattle: codBattle,
+                    codUser: codUser
+                })
+            })
+
+            const result = await response.json();
+            console.log("Hello");
+            console.log(response);
+            console.log(result);
+            if(!response.ok)
+                throw new Error(result.error)
+            return result
+        }catch(error){
+            return error;
+        }
+
+    }
+    const toastError = (msg) => alert(msg); // change this: Replace with actual toast methods
+    const toastInfo = (msg) => alert(msg);
+    const toastSuccess = (msg) => {
+        alert(msg);
+    }
+    const botPlayInterval = [2,4];
+
+    const getRandomNumber = () => {
+        const [min, max] = botPlayInterval;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    const fetchBattleContext = async (userId) => ({ board: '', status: 'P1_TURN' }); // change this: Replace with actual fetchBattleContext function
+    const getHistory = async (codBattle) => ({ board: '', status: 'DRAW' }); // change this: Replace with actual getHistory function
+    const getLobby = async (codRoom, codUser) => {
+        console.log("codRoom: " + codRoom);
+        try {
+            const response = await fetch('/lobby', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    codRoom: codRoom,
+                    codUser: codUser
+                })
+            });
+            if (!response.ok) {
+                const responseJson = await response.json();
+                throw new Error(responseJson.error);
+            }
+
+            const result = await response.json();
+            const codBattle = result.codBattle;
+
+            if (!result.isSecondPlayer) {
+                // WebSocket communication
+                const socket = new SockJS('http://localhost:9000/ws');
+                const stompClient = Stomp.over(socket);
+
+                stompClient.connect({}, function (frame) {
+                    console.log('Connected: ' + frame);
+
+                    stompClient.subscribe(`/topic/lobby/${result.codLobby}`, function (message) {
+                        const result = JSON.parse(message.body);
+                        console.log('Received message:', result);
+                        stompClient.disconnect();
+                        window.location.href = '/lobby?codBattle=' + result.codBattle
+                    });
+                }, function (error) {
+                    console.error('Error:', error);
+                });
+            } else {
+                console.log("Already second player, navigating to lobby");
+                window.location.href = '/lobby?codBattle=' + result.codBattle
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    function Modal({ children }) {
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
+                <div className="flex flex-col items-center bg-white p-4 rounded">
+                    {children}
+                </div>
+            </div>
+        );
+    }
+
+    function Timer({ onReset }) {
+        const [time, setTime] = useState(result.timerSeconds);
+
+        useEffect(() => {
+            const interval = setInterval(() => {
+                setTime(prevTime => {
+                    if (prevTime > 0) {
+                        return prevTime - 1;
+                    } else {
+                        clearInterval(interval);
+                        return 0;
+                    }
+                });
+            }, 1000);
+
+            return () => clearInterval(interval);
+        }, []);
+
+        useEffect(() => {
+            if (onReset) {
+                onReset.current = (amount) => setTime(amount);
+            }
+        }, [onReset]);
+
+        return (
+            <div className="mb-4 text-xl">
+                Time left: {time}s
+            </div>
+        );
+    }
+
+    function BoardComponent({ isConnected, isTurn, isPlayer1, board, handleClick, handleGiveup, isFinished, textToShowIfFinished, playAgain, resetTimer }) {
+        function squareColor(square) {
+            return square === 'X' ? 'text-pink-500' : square === 'O' ? 'text-blue-400' : ''
+        }
+
+        return (
+            <main className="pt-8 text-center">
+                <h1 className="mb-8 text-3xl font-bold uppercase">Tic Tac Toe</h1>
+                {!isFinished ? <Timer onReset={resetTimer} /> : ""}
+                {isConnected ? (
+                    <div>
+                        <h3 className="text-xl mb-4">{!isFinished ? (isTurn ? 'Sua vez' : 'Vez do adversário') : textToShowIfFinished} ({isPlayer1 ? 'X' : 'O'})</h3>
+                        <div className="flex flex-col items-center mb-8">
+                            <div className="grid grid-cols-3 gap-2">
+                                {board.map((row, rowIndex) =>
+                                    row.map((square, colIndex) => (
+                                        <button
+                                            key={`${rowIndex}-${colIndex}`}
+                                            className={`border border-white w-24 h-24 flex items-center justify-center text-4xl cursor-pointer ${squareColor(square)}`}
+                                            onClick={handleClick.bind(this, rowIndex, colIndex)}
+                                        >
+                                            {square}
+                                        </button>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                        {isFinished ? (
+                            <button
+                                className="px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300"
+                                onClick={playAgain}
+                            >
+                                Jogar Novamente
+                            </button>
+                        ) : (
+                            <button
+                                className="px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300"
+                                onClick={handleGiveup}
+                            >
+                                Desistir da partida
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    <Modal>
+                        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+                            <div className="bg-white p-4 rounded">
+                                <p className="mt-4">Iniciando o jogo...</p>
+                            </div>
+                        </div>
+                    </Modal>
+                )}
+            </main>
+        );
+    }
+
+    function Lobby({ codRoom, result, codBattle, isFirstMove }) {
+        console.log("mamboo");
+        console.log(result.firstMoveBoard);
+
+        console.log("we here")
+        const socketRef = useRef(null);
+        const stompClientRef = useRef(null);
+        const [isConnected, setIsConnected] = useState(false);
+        const isPlayer1 = result.isPlayer1;
+        const player = isPlayer1 ? 'X' : 'O';
+        const opponent = !isPlayer1 ? 'X' : 'O';
+        const [isTurn, setIsTurn] = useState(result.status === 'P1_TURN' && isPlayer1 || result.status === 'P2_TURN' && !isPlayer1);
+        const hasReturned = result.hasReturned;
+        const [isFinished, setIsFinished] = useState(false);
+        const [textToShowIfFinished, setTextToShowIfFinished] = useState('');
+        const resetTimerRef = useRef(null);
+        const [resultado, setResultado] = useState(null)
+        const [waitTime, setWaitTime] = useState(getRandomNumber() * 1000);
+        console.log("hasReturned:" + hasReturned);
+        const [board, setBoard] = useState(result.board ? JSON.parse(result.board) : []);
+
+        const treatFinishedGame = (status) => {
+            if (status === 'DRAW') {
+                setIsFinished(true);
+                setTextToShowIfFinished("Empate ");
+            } else if (status === 'P1_WON' && isPlayer1 || status === 'P2_WON' && !isPlayer1) {
+                setIsFinished(true);
+                setTextToShowIfFinished("Vitória");
+                toastSuccess("Você Venceu");
+            } else {
+                setIsFinished(true);
+                setTextToShowIfFinished("Derrota");
+                toastError("Você Perdeu");
+            }
+        }
+
+        function isBoardFull() {
+            return board.every(row => row.every(square => square !== ""));
+        }
+
+        useEffect(() => {
+            if (result.isFirstMove && !isPlayer1) {
+                const timer = setTimeout(() => {
+                    console.log("result board:");
+                    console.log(result);
+                    setBoard(JSON.parse(result.firstMoveBoard));
+                    setIsTurn(!isPlayer1);
+                    result.isFirstMove = false;
+                }, waitTime);
+                return () => clearTimeout(timer);
+            }
+        }, [result, isPlayer1, waitTime]);
+
+        useEffect(() => {
+            const timer = setTimeout(() => {
+                if (resultado) {
+                    setBoard(JSON.parse(resultado.board));
+                    console.log(JSON.parse(resultado.board));
+                    if (["P2_WON", "P1_WON", "DRAW"].includes(resultado.status)) {
+                        setIsTurn(false);
+                        treatFinishedGame(resultado.status);
+                    } else {
+                        setIsTurn(true);
+                    }
+                }
+            }, waitTime);
+
+            return () => clearTimeout(timer);
+        }, [resultado, waitTime]);
+
+        useEffect(() => {
+            socketRef.current = new SockJS('http://localhost:9000/ws');
+            stompClientRef.current = Stomp.over(socketRef.current);
+
+            stompClientRef.current.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                setIsConnected(true);
+
+                stompClientRef.current.subscribe(`/topic/battle/${result.codBattle}/${opponent}`, function (message) {
+                    const response = JSON.parse(message.body);
+                    if (response.hasTimedOut) {
+                        treatFinishedGame(response.status);
+                        return;
+                    }
+                    console.log('response:', response);
+                    setBoard(JSON.parse(response.board));
+                    if (["P2_WON", "P1_WON", "DRAW"].includes(response.status)) {
+                        stompClientRef.current.disconnect(() => console.log('Disconnected'));
+                        treatFinishedGame(response.status);
+                        return;
+                    }
+                    setIsTurn(response.status === 'P1_TURN' && isPlayer1 || response.status === 'P2_TURN' && !isPlayer1);
+                });
+            });
+
+            return () => {
+                console.log('Disconnecting');
+                stompClientRef.current.disconnect(() => console.log('Disconnected'));
+            };
+        }, [result.codBattle, opponent, isPlayer1]);
+
+        const handleClick = async (rowIndex, colIndex) => {
+            if (!isTurn)
+                return;
+            setWaitTime(getRandomNumber() * 1000);
+            const newBoard = board.map((row, rIdx) =>
+                row.map((col, cIdx) => {
+                    if (rIdx === rowIndex && cIdx === colIndex && col === "") {
+                        return player;
+                    }
+                    return col;
+                })
+            );
+            setIsTurn(false);
+            setBoard(newBoard);
+            const answer = await sendMove(player, JSON.stringify(newBoard), result.codBattle, codUser);
+            if (["P2_WON", "P1_WON", "DRAW"].includes(answer.status)) {
+                setIsTurn(false);
+                if (answer.status === 'DRAW' && isBoardFull()) {
+                    setResultado(answer);
+                    toastInfo("Empate");
+                } else if (answer.status === 'P1_WON' && isPlayer1 || answer.status === 'P2_WON' && !isPlayer1) {
+                    treatFinishedGame(answer.status);
+                } else {
+                    setResultado(answer);
+                }
+            } else {
+                setResultado(answer);
+            }
+        };
+
+        async function handleGiveup() {
+            if (!isTurn) {
+                toastError("Espere a sua vez para desistir");
+                return;
+            }
+            await giveup(codUser, opponent);
+            treatFinishedGame(isPlayer1 ? "P2_WON" : "P1_WON");
+        }
+
+        const playAgain = async () => {
+            await getLobby(codRoom, codUser);
+        };
+
+        return (
+            <BoardComponent
+                isConnected={true}
+                isFinished={isFinished}
+                textToShowIfFinished={textToShowIfFinished}
+                isTurn={isTurn}
+                isPlayer1={isPlayer1}
+                board={board}
+                handleGiveup={handleGiveup}
+                handleClick={handleClick}
+                playAgain={playAgain}
+                resetTimer={resetTimerRef}
+            />
+        );
+    }
+
+    // Retrieve model attributes from Thymeleaf
+
+    const codRoom = [[${codRoom}]];
+    const codUser = [[${codUser}]];
+
+    const boardToTranslate = '[[${board}]]';
+    const possibleMovesToTranslate = '[[${possibleMoves}]]'
+    const firstMoveBoardToTranslate = '[[${firstMoveBoard}]]';
+    console.log("codRoom:" + codRoom);
+    console.log("codUser:" + codUser)
+    const result = {
+        codBattle: [[${codBattle}]],
+        isPlayer1: [[${isPlayer1}]],
+        status: '[[${status}]]',
+        hasReturned: [[${hasReturned}]],
+        board: boardToTranslate.replace(/&quot;/g, '"'),
+        possibleMoves: possibleMovesToTranslate.replace(/&quot;/g, '"'),
+        timerSeconds: [[${seconds}]],
+        isFirstMove: true,
+        firstMoveBoard: firstMoveBoardToTranslate.replace(/&quot;/g, '"'),
+    };
+
+    ReactDOM.render(
+        <Lobby codRoom={codRoom} result={result} codUser={codUser} />,
+        document.getElementById('root')
+    );
+</script>
+</body>
+</html>

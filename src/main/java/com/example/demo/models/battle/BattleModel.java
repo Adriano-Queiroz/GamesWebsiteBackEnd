@@ -24,6 +24,7 @@ public class BattleModel {
     private Long codBattle;
     @JsonIgnore
     private String board; // fiz isto assim para ser escalável, sabemos o tipo de board através do tipo de game
+    @JsonIgnore
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('P1_TURN', 'P2_TURN','P1_WON','P2_WON', 'DRAW')")
