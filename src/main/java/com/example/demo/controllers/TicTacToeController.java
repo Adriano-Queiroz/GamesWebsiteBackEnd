@@ -47,7 +47,7 @@ public class TicTacToeController {
                 .getBoard());
 
         if(!hasFinishedTuple.hasFinished()){
-            //battleService.receiveMessage(responseDTO.codBattle());
+            battleService.receiveMessage(responseDTO.codBattle());
             ticTacToeService.treatUnfinishedGame(
                     messagingTemplate,
                     responseDTO.codBattle(),
@@ -56,7 +56,7 @@ public class TicTacToeController {
             );
 
         }else{
-            //battleService.shutdown(responseDTO.codBattle());
+            battleService.shutdown(responseDTO.codBattle());
             ticTacToeService.treatFinishedGame(
                     hasFinishedTuple,
                     messagingTemplate,

@@ -158,7 +158,7 @@ public class LobbyService {
         PlayersTuple playersTuple = randomizePlayers(oldUser, newUser);
         setBattle(playersTuple, battle, room);
         iLobbyRepository.delete(lobby);
-        //battleService.receiveMessage(battle.getCodBattle());
+        battleService.receiveMessage(battle.getCodBattle());
         return sendMessagesAfterOpponentFound(
                 playersTuple.player1(),
                 playersTuple.player2(),

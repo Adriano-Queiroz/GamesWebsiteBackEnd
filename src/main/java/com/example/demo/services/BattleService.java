@@ -45,7 +45,7 @@ public class BattleService {
     private SimpMessagingTemplate messagingTemplate;
     private final Timer timer = new Timer();
     private TimerTask currentTask;
-    private final ConcurrentMap<Long, BattleModel> battleMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Long, Timer> battleTimers = new ConcurrentHashMap<>();
 
 
     public IsInBattleDTO isInBattle(long codUser) throws NotFoundException {
@@ -70,32 +70,7 @@ public class BattleService {
 
 
             );
-            /*
-            Optional<UserModel> optionalUser = iUserModelRepository.findById(codUser);
-            if(!optionalUser.isPresent())
-                throw new NotFoundException("User não encontrado");
 
-            //Optional<HistoryModel> optionalHistory = iHistoryRepository.findLatestHistoryByUser(optionalUser.get());
-            //if(!optionalHistory.isPresent())
-              //  throw new NotFoundException("História não encontrada");
-            //HistoryModel history = optionalHistory.get();
-            //String board = history.getBoard();
-            String[][] boardArray = ((TicTacToeBoard)
-                BoardMapper.getBoard(GameType.TICTACTOE, board))
-                .getBoard();
-            return new IsInBattleDTO(false,
-                    new BattleDTO(
-                            board,
-                            gamesService.getPossibleMoves(boardArray,history.getRoom().getGame().getGameType()),
-                            history.getCodBattle(),
-                            history.getStatus().toString(),
-                            history.getPlayer1().getCodUser() == codUser,
-                            true)
-                    ,Duration.between(battle.getLastMoveDateTime(),LocalDateTime.now()).getSeconds()
-            );
-
-
-             */
     }
 
     public String leaveBattle(long codUser,String player) throws NotFoundException {
@@ -133,34 +108,39 @@ public class BattleService {
     }
 
     private synchronized void resetTimer(BattleModel battle) {
-        if (battle.getTimer() != null) {
-            battle.getTimer().cancel();
+        Timer timer = battleTimers.get(battle.getCodBattle());
+
+        if (timer != null) {
+            timer.cancel();
         }
-        Timer timer = new Timer();
-        battle.setTimer(timer);
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 executeAction(battle);
             }
-        }, 16000);
+        }, 10000);
+
+        battleTimers.put(battle.getCodBattle(), timer);
+        iBattleRepository.save(battle);
+
     }
 
     private void executeAction(BattleModel battle) {
         if(battle.getStatus() == Status.P2_TURN){
-            ticTacToeService.treatFinishedGame(new Tuple(true,"O"),messagingTemplate,battle.getCodBattle());
-        }else if(battle.getStatus () == Status.P1_TURN){
             ticTacToeService.treatFinishedGame(new Tuple(true,"X"),messagingTemplate,battle.getCodBattle());
+        }else if(battle.getStatus () == Status.P1_TURN){
+            ticTacToeService.treatFinishedGame(new Tuple(true,"O"),messagingTemplate,battle.getCodBattle());
         }
     }
 
 
     public void shutdown(long codBattle) {
-        BattleModel battle = iBattleRepository.findById(codBattle).get();
-        if (battle.getTimer() != null)
-                battle.getTimer().cancel();
-
-
+        Timer timer = battleTimers.get(codBattle);
+        if (timer != null){
+            timer.cancel();
+            battleTimers.remove(codBattle);
+        }
     }
     /*
     public void startTimer(long codBattle){

@@ -39,6 +39,8 @@ public class BattleModel {
 
 
      */
+    @Version
+    private Long version;
     @ManyToOne
     @JoinColumn(name = "cod_player1" , referencedColumnName = "codUser")
     private UserModel player1;
