@@ -76,16 +76,49 @@
                 // WebSocket communication
                 const socket = new SockJS('http://localhost:9000/ws');
                 const stompClient = Stomp.over(socket);
+                let messageReceived = false;
 
                 stompClient.connect({}, function (frame) {
                     console.log('Connected: ' + frame);
 
                     stompClient.subscribe(`/topic/lobby/${result.codLobby}`, function (message) {
+                        messageReceived = true;
                         const result = JSON.parse(message.body);
                         console.log('Received message:', result);
                         stompClient.disconnect();
                         window.location.href = '/lobby?codBattle=' + result.codBattle
                     });
+                    const timeout = setTimeout(() => {
+                        if (!messageReceived) {
+                            console.log('No message received within 5 seconds, finalizing and sending request to delete lobby.');
+                            fetch(`/rest_battle/createBattle`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    codUser: codUser,
+                                    isPlayer1 : result.isPlayer1,
+                                    codLobby : result.codLobby
+                                })
+                            })
+                                .then(r => {
+                                    console.log("Response:");
+                                    console.log(r);
+                                    return r.json();  // Return the promise from r.json()
+                                })
+                                .then(data => {
+                                    console.log(data);  // This is the JSON data
+                                    stompClient.disconnect();
+                                    window.location.href = '/lobby?codBattle=' + data.codBattle
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                            //navigate("/battle", {state : {result }})
+
+                        }
+                    }, 5000);
                 }, function (error) {
                     console.error('Error:', error);
                 });
