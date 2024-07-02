@@ -97,14 +97,31 @@ public class BattleService {
         }
         return null;
     }
-    public synchronized void receiveMessage(Long codBattle) {
+    public synchronized void receiveMessage(Long codBattle, Long timeAdded) {
         BattleModel battle = iBattleRepository.findById(codBattle).get();
         if (battle == null) {
             System.out.println("Battle not found.");
             return;
         }
         System.out.println("Message received for battle " + codBattle + ". Timer reset.");
-        resetTimer(battle);
+        resetTimer(battle, timeAdded+1000);
+    }
+    private synchronized void resetTimer(BattleModel battle, Long timeAdded) {
+        Timer timer = battleTimers.get(battle.getCodBattle());
+        if (timer != null) {
+            timer.cancel();
+        }
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                executeAction(battle);
+            }
+        }, 16000 + timeAdded);
+
+        battleTimers.put(battle.getCodBattle(), timer);
+        iBattleRepository.save(battle);
+
     }
 
     private synchronized void resetTimer(BattleModel battle) {
@@ -123,6 +140,16 @@ public class BattleService {
         battleTimers.put(battle.getCodBattle(), timer);
         iBattleRepository.save(battle);
 
+    }
+
+    public synchronized void receiveMessage(Long codBattle) {
+        BattleModel battle = iBattleRepository.findById(codBattle).get();
+        if (battle == null) {
+            System.out.println("Battle not found.");
+            return;
+        }
+        System.out.println("Message received for battle " + codBattle + ". Timer reset.");
+        resetTimer(battle);
     }
 
     private void executeAction(BattleModel battle) {

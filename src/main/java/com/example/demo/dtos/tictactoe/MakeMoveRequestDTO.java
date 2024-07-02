@@ -4,6 +4,7 @@ public record MakeMoveRequestDTO(
         String player,
         String board,
         long codBattle,
-        long codUser
+        long codUser,
+        long waitTime
 ) {
 }

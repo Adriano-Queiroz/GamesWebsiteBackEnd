@@ -16,6 +16,7 @@ import com.example.demo.repositories.IBattleRepository;
 import com.example.demo.repositories.ILobbyRepository;
 import com.example.demo.repositories.IRoomRepository;
 import com.example.demo.repositories.IUserModelRepository;
+import com.example.demo.services.BattleService;
 import com.example.demo.services.GamesService;
 import com.example.demo.services.exceptions.NotFoundException;
 import com.example.demo.services.tictactoe.TicTacToeLogicService;
@@ -48,6 +49,8 @@ public class BattleRestController {
     private ILobbyRepository iLobbyRepository;
     @Autowired
     IRoomRepository iRoomRepository;
+    @Autowired
+    private BattleService battleService;
 
     @GetMapping("/getInfo/{codBattle}")
     public ResponseEntity<RestBattleResponseDTO> getInfo(@PathVariable long codBattle) throws NotFoundException {
@@ -77,7 +80,8 @@ public class BattleRestController {
         makeMoveRequestDTO = new MakeMoveRequestDTO(makeMoveRequestDTO.player(),
                 board,
                 makeMoveRequestDTO.codBattle(),
-                makeMoveRequestDTO.codUser());
+                makeMoveRequestDTO.codUser(),
+                makeMoveRequestDTO.waitTime());
         MakeMoveResponseDTO responseDTO =  ticTacToeLogicService.makeMove(makeMoveRequestDTO);
         Tuple hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
                 getBoard(GameType.TICTACTOE, responseDTO.board()))
@@ -90,7 +94,11 @@ public class BattleRestController {
                     responseDTO.codBattle(),
                     status.toString()
             );
+            battleService.shutdown(responseDTO.codBattle());
+        }else{
+            battleService.receiveMessage(responseDTO.codBattle(), makeMoveRequestDTO.waitTime());
         }
+
         return ResponseEntity.ok(responseDTO);
     }
     @DeleteMapping("/createBattle")
@@ -114,6 +122,7 @@ public class BattleRestController {
         String emptyBoard = gamesService.getEmptyBoard(room.getGame().getGameType());
         battle.setBoard(emptyBoard);
         iBattleRepository.save(battle);
+        battleService.receiveMessage(battle.getCodBattle(), 5000L);
         //iLobbyRepository.delete(optionalLobby.get()); comentado para funcionar na mudança de fe na be
         return ResponseEntity.ok(new CreateBattleResponseDTO(battle.getCodBattle()));
     }

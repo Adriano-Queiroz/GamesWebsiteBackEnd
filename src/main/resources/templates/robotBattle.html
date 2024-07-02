@@ -44,7 +44,7 @@
             console.log(error);
         }
     }; // change this: Replace with actual giveup function
-    const sendMove = async (player, board, codBattle, codUser) => {
+    const sendMove = async (player, board, codBattle, codUser, waitTime) => {
 
         try{
             const response = await fetch('/rest_battle/move', {
@@ -56,7 +56,8 @@
                     player:player,
                     board: board,
                     codBattle: codBattle,
-                    codUser: codUser
+                    codUser: codUser,
+                    waitTime: waitTime
                 })
             })
 
@@ -337,13 +338,12 @@
         useEffect(() => {
             socketRef.current = new SockJS('http://localhost:9000/ws');
             stompClientRef.current = Stomp.over(socketRef.current);
-
             stompClientRef.current.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
                 setIsConnected(true);
-
                 stompClientRef.current.subscribe(`/topic/battle/${result.codBattle}/${opponent}`, function (message) {
                     const response = JSON.parse(message.body);
+                    alert("inside subscribe");
                     if (response.hasTimedOut) {
                         treatFinishedGame(response.status);
                         return;
@@ -379,7 +379,7 @@
             );
             setIsTurn(false);
             setBoard(newBoard);
-            const answer = await sendMove(player, JSON.stringify(newBoard), result.codBattle, codUser);
+            const answer = await sendMove(player, JSON.stringify(newBoard), result.codBattle, codUser, waitTime);
             if (["P2_WON", "P1_WON", "DRAW"].includes(answer.status)) {
                 setIsTurn(false);
                 if (answer.status === 'DRAW' && isBoardFull()) {
