@@ -222,15 +222,15 @@
             if (status === 'DRAW') {
                 setIsFinished(true);
                 setTextToShowIfFinished("Empate!");
-                toastInfo("Deu velha!");
+                //toastInfo("Deu velha!");
             } else if ((status === 'P1_WON' && isPlayer1) || (status === 'P2_WON' && !isPlayer1)) {
                 setIsFinished(true);
                 setTextToShowIfFinished("Vitória!");
-                toastSuccess("Você venceu!");
+                //toastSuccess("Você venceu!");
             } else {
                 setIsFinished(true);
                 setTextToShowIfFinished("Derrota!");
-                toastError("Você perdeu!");
+                //toastError("Você perdeu!");
             }
         };
 

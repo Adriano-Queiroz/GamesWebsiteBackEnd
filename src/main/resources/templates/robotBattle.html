@@ -142,8 +142,8 @@
         );
     }
 
-    function Timer({ onReset }) {
-        const [time, setTime] = useState(result.timerSeconds);
+    function Timer({ resetTimer }) {
+        const [time, setTime] = useState(15);
 
         useEffect(() => {
             const interval = setInterval(() => {
@@ -161,14 +161,14 @@
         }, []);
 
         useEffect(() => {
-            if (onReset) {
-                onReset.current = (amount) => setTime(amount);
+            if (resetTimer) {
+                resetTimer.current = () => setTime(15);
             }
-        }, [onReset]);
+        }, [resetTimer]);
 
         return (
             <div className="mb-4 text-xl">
-                Time left: {time}s
+                Tempo para jogar: {time}s
             </div>
         );
     }
@@ -181,7 +181,7 @@
         return (
             <main className="pt-8 text-center">
                 <h1 className="mb-8 text-3xl font-bold uppercase">Tic Tac Toe</h1>
-                {!isFinished ? <Timer onReset={resetTimer} /> : ""}
+                {!isFinished ? <Timer resetTimer={resetTimer} /> : ""}
                 {isConnected ? (
                     <div>
                         <h3 className="text-xl mb-4">{!isFinished ? (isTurn ? 'Sua vez' : 'Vez do adversário') : textToShowIfFinished} ({isPlayer1 ? 'X' : 'O'})</h3>
@@ -192,7 +192,7 @@
                                         <button
                                             key={`${rowIndex}-${colIndex}`}
                                             className={`border border-white w-24 h-24 flex items-center justify-center text-4xl cursor-pointer ${squareColor(square)}`}
-                                            onClick={handleClick.bind(this, rowIndex, colIndex)}
+                                            onClick={handleClick.bind(this, rowIndex, colIndex, resetTimer)}
                                         >
                                             {square}
                                         </button>
@@ -257,11 +257,11 @@
             } else if (status === 'P1_WON' && isPlayer1 || status === 'P2_WON' && !isPlayer1) {
                 setIsFinished(true);
                 setTextToShowIfFinished("Vitória");
-                toastSuccess("Você Venceu");
+                //toastSuccess("Você Venceu");
             } else {
                 setIsFinished(true);
                 setTextToShowIfFinished("Derrota");
-                toastError("Você Perdeu");
+                //toastError("Você Perdeu");
             }
         }
 
@@ -278,6 +278,7 @@
                     setIsTurn(!isPlayer1);
                     result.isFirstMove = false;
                 }, waitTime);
+                resetTimerRef.current();
                 return () => clearTimeout(timer);
             }
         }, [result, isPlayer1, waitTime]);
@@ -293,6 +294,7 @@
                     } else {
                         setIsTurn(true);
                     }
+                    resetTimerRef.current();
                 }
             }, waitTime);
 
@@ -330,7 +332,7 @@
             };
         }, [result.codBattle, opponent, isPlayer1]);
 
-        const handleClick = async (rowIndex, colIndex) => {
+        const handleClick = async (rowIndex, colIndex, resetTimer) => {
             if (!isTurn)
                 return;
             setWaitTime(getRandomNumber() * 1000);
@@ -358,6 +360,7 @@
             } else {
                 setResultado(answer);
             }
+            resetTimer.current();
         };
 
         async function handleGiveup() {
