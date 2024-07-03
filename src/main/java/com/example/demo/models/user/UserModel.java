@@ -41,6 +41,11 @@ public class UserModel {
 
     private String phoneNumber;
 
+    private String forgotPasswordCode;
+
+    private int emailsSentInTheLastHour;
+
+
     @ManyToOne
     @JoinColumn(name = "cod_user_role")
     private UserRoleModel userRole;

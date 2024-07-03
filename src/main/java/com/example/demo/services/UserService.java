@@ -26,6 +26,7 @@ import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Component
 public class UserService {
@@ -37,6 +38,7 @@ public class UserService {
     private IBattleRepository iBattleRepository;
     private GamesService gamesService;
     private IUserRoleModelRepository iUserRoleModelRepository;
+    private EmailService emailService;
 
     public UserService(IUserModelRepository userRepository,
                        ITokenRepository tokenRepository,
@@ -44,7 +46,8 @@ public class UserService {
                        Clock clock,
                        IBattleRepository iBattleRepository,
                        GamesService gamesService,
-                       IUserRoleModelRepository iUserRoleModelRepository) {
+                       IUserRoleModelRepository iUserRoleModelRepository,
+                       EmailService emailService) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.usersDomain = usersDomain;
@@ -52,6 +55,7 @@ public class UserService {
         this.iBattleRepository = iBattleRepository;
         this.gamesService = gamesService;
         this.iUserRoleModelRepository = iUserRoleModelRepository;
+        this.emailService = emailService;
     }
 
     public UserModel getUserById(long id) throws NotFoundException {
@@ -59,10 +63,10 @@ public class UserService {
     }
 
     public UserModel createUser(String username, String email, String password, Long cpf, String phoneNumber) throws AlreadyExistsException {
-        if(userRepository.findByUsername(username).isPresent()){
+        if (userRepository.findByUsername(username).isPresent()) {
             throw new AlreadyExistsException("Username Já existe");
         }
-        if(!usersDomain.isSafePassword(password)){
+        if (!usersDomain.isSafePassword(password)) {
             throw new IllegalArgumentException("Password não é segura o suficiente");
         }
         PasswordValidationInfo passwordValidationInfo = usersDomain.createPasswordValidationInformation(password);
@@ -79,11 +83,11 @@ public class UserService {
     }
 
     public AuthenticatedUser login(String username, String password) throws InvalidUsernameOrPasswordException, InternalErrorException {
-        if(username.isBlank() || password.isBlank()){
+        if (username.isBlank() || password.isBlank()) {
             throw new InvalidUsernameOrPasswordException("Username and password must not be empty");
         }
         UserModel user = userRepository.findByUsername(username).orElseThrow(() -> new InvalidUsernameOrPasswordException("Invalid username or password"));
-        if(!usersDomain.validatePassword(password, new PasswordValidationInfo(user.getPasswordValidationInfo()))){
+        if (!usersDomain.validatePassword(password, new PasswordValidationInfo(user.getPasswordValidationInfo()))) {
             throw new InvalidUsernameOrPasswordException("Invalid username or password");
         }
         List<TokenModel> userTokens = tokenRepository.findByUser(user);
@@ -109,12 +113,13 @@ public class UserService {
         tokenRepository.save(token);
         return new AuthenticatedUser(user, tokenValue);
     }
+
     public AuthenticatedUser loginEmail(String email, String password) throws InvalidUsernameOrPasswordException, InternalErrorException {
-        if(email.isBlank() || password.isBlank()){
+        if (email.isBlank() || password.isBlank()) {
             throw new InvalidUsernameOrPasswordException("Username and password must not be empty");
         }
         UserModel user = userRepository.findByEmail(email).orElseThrow(() -> new InvalidUsernameOrPasswordException("Invalid username or password"));
-        if(!usersDomain.validatePassword(password, new PasswordValidationInfo(user.getPasswordValidationInfo()))){
+        if (!usersDomain.validatePassword(password, new PasswordValidationInfo(user.getPasswordValidationInfo()))) {
             throw new InvalidUsernameOrPasswordException("Invalid username or password");
         }
         List<TokenModel> userTokens = tokenRepository.findByUser(user);
@@ -147,15 +152,15 @@ public class UserService {
     }
 
     public UserModel getUserByToken(String token) throws AuthenticationException {
-        if(!usersDomain.canBeToken(token)){
+        if (!usersDomain.canBeToken(token)) {
             throw new IllegalArgumentException("Invalid Token");
         }
         TokenValidationInfo tokenValidationInfo = usersDomain.createTokenValidationInformation(token);
         TokenModel tokenModel = tokenRepository.findById(tokenValidationInfo.validationInfo()).orElseThrow(() -> new AuthenticationException("Invalid Token"));
-        if(!usersDomain.isTokenTimeValid(clock,tokenModel)){
+        if (!usersDomain.isTokenTimeValid(clock, tokenModel)) {
             tokenRepository.delete(tokenModel);
             throw new AuthenticationException("Invalid Token");
-        }else {
+        } else {
             tokenModel.setLastUsedAt(clock.instant());
             tokenRepository.save(tokenModel);
             return tokenModel.getUser();
@@ -167,13 +172,13 @@ public class UserService {
 
     public ResponseEntity<BattleDTO> getBattleContext(long codUser) throws NotFoundException {
         Optional<UserModel> optionalUser = userRepository.findById(codUser);
-        if(!optionalUser.isPresent())
+        if (!optionalUser.isPresent())
             throw new NotFoundException("User não encontrado");
         UserModel user = optionalUser.get();
         Optional<BattleModel> optionalBattle = iBattleRepository.findFirstByPlayer1(user);
-        if(!optionalBattle.isPresent())
+        if (!optionalBattle.isPresent())
             optionalBattle = iBattleRepository.findFirstByPlayer2(user);
-        if(!optionalBattle.isPresent())
+        if (!optionalBattle.isPresent())
             throw new NotFoundException("Partida não encontrada");
         BattleModel battle = optionalBattle.get();
         String board = battle.getBoard();
@@ -182,12 +187,37 @@ public class UserService {
                 .getBoard();
         return ResponseEntity.ok(new BattleDTO(
                 board,
-                gamesService.getPossibleMoves(boardArray,battle.getRoom().getGame().getGameType()),
+                gamesService.getPossibleMoves(boardArray, battle.getRoom().getGame().getGameType()),
                 battle.getCodBattle(),
                 battle.getStatus().toString(),
                 battle.getPlayer1().getCodUser() == codUser,
                 false
         ));
+    }
+
+    public void forgotPassword(String email) throws NotFoundException {
+        Optional<UserModel> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty())
+            throw new NotFoundException("Email errado");
+        UserModel user = optionalUser.get();
+        String code = generateRandomString(20);
+        user.setForgotPasswordCode(code);
+        emailService.sendSimpleEmail(email,"Recuperar Senha","Código para recuperar senha:" + code);
+        userRepository.save(user);
+    }
+
+    public String generateRandomString(int length) {
+
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder randomString = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            randomString.append(characters.charAt(index));
+        }
+
+        return randomString.toString();
     }
 }
 
