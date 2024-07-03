@@ -107,6 +107,37 @@ public class UserService {
         tokenRepository.save(token);
         return new AuthenticatedUser(user, tokenValue);
     }
+    public AuthenticatedUser loginEmail(String email, String password) throws InvalidUsernameOrPasswordException, InternalErrorException {
+        if(email.isBlank() || password.isBlank()){
+            throw new InvalidUsernameOrPasswordException("Username and password must not be empty");
+        }
+        UserModel user = userRepository.findByEmail(email).orElseThrow(() -> new InvalidUsernameOrPasswordException("Invalid username or password"));
+        if(!usersDomain.validatePassword(password, new PasswordValidationInfo(user.getPasswordValidationInfo()))){
+            throw new InvalidUsernameOrPasswordException("Invalid username or password");
+        }
+        List<TokenModel> userTokens = tokenRepository.findByUser(user);
+        int maxTokens = usersDomain.getMaxNumberOfTokensPerUser();
+
+        if (userTokens.size() >= maxTokens) {
+            // Sort tokens by createdAt
+            userTokens.sort(Comparator.comparing(TokenModel::getCreatedAt));
+
+            // Remove the oldest token(s) if necessary
+            for (int i = 0; i <= userTokens.size() - maxTokens; i++) {
+                tokenRepository.delete(userTokens.get(i));
+            }
+        }
+
+        String tokenValue = usersDomain.generateTokenValue();
+        Instant now = clock.instant();
+        TokenModel token = new TokenModel();
+        token.setTokenValidationInfo(usersDomain.createTokenValidationInformation(tokenValue).validationInfo());
+        token.setCreatedAt(now);
+        token.setLastUsedAt(now);
+        token.setUser(user);
+        tokenRepository.save(token);
+        return new AuthenticatedUser(user, tokenValue);
+    }
 
     public void logout(String token) {
         TokenValidationInfo tokenValidationInfo = usersDomain.createTokenValidationInformation(token);

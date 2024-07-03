@@ -27,10 +27,11 @@ public class UserModel {
     @GeneratedValue
     private Long codUser;
 
+    @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = true, nullable = false)
     private String email;
-
     private String passwordValidationInfo;
     private String password;
 

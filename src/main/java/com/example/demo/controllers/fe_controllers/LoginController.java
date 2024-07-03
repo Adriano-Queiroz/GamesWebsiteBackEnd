@@ -32,12 +32,12 @@ public class LoginController {
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("loginDTO", new loginDTO());
-        return "Loginxd";
+        return "login";
     }
 
     @PostMapping("/login")
     public String loginForm(@ModelAttribute("loginDTO") loginDTO loginUserInputDTO, HttpSession session) throws InvalidUsernameOrPasswordException, InternalErrorException {
-        AuthenticatedUser authenticatedUser = userService.login(loginUserInputDTO.getUsername(), loginUserInputDTO.getPassword());
+        AuthenticatedUser authenticatedUser = userService.login(loginUserInputDTO.getEmail(), loginUserInputDTO.getPassword());
         session.setAttribute("user", authenticatedUser.user());
         return "redirect:/";
     }
