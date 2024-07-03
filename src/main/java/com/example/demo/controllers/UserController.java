@@ -44,7 +44,11 @@ public class UserController {
 
     @PostMapping("user/create")
     public ResponseEntity<CreateUserOutputDTO> createUser(@RequestBody CreateUserInputDTO createUserInputDTO) throws AlreadyExistsException {
-        UserModel user = userService.createUser(createUserInputDTO.username(), createUserInputDTO.email(), createUserInputDTO.password());
+        UserModel user = userService.createUser(createUserInputDTO.username(),
+                createUserInputDTO.email(),
+                createUserInputDTO.password(),
+                createUserInputDTO.cpf(),
+                createUserInputDTO.phoneNumber());
         CreateUserOutputDTO createUserOutputDTO = new CreateUserOutputDTO(user.getCodUser(), user.getUsername(), user.getEmail());
         return ResponseEntity.status(201).body(createUserOutputDTO);
     }

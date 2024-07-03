@@ -23,14 +23,14 @@
 <link href="https://fonts.cdnfonts.com/css/gotham-ultra" rel="stylesheet">
 <link href="https://fonts.cdnfonts.com/css/gotham-book" rel="stylesheet">
 
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-THS8683X"
+<noscript><iframe src="https://www.googletagmanager.com/ns?id=GTM-THS8683X"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        '../www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
+        'www.googletagmanager.com/gtm5445?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-THS8683X');</script>
 
 <meta name="facebook-domain-verification" content="5rdpdzhi7ajzkb66t2a1apcp1zvni8" />
@@ -73,30 +73,30 @@
 <a href="javascript:history.back()">
 <svg class="absolute left-0" width="24px" height="24px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M19 9H3.661l5.997-5.246a1 1 0 00-1.316-1.506l-8 7c-.008.007-.011.018-.019.025a.975.975 0 00-.177.24c-.018.03-.045.054-.059.087a.975.975 0 000 .802c.014.033.041.057.059.088.05.087.104.17.177.239.008.007.011.018.019.025l8 7a.996.996 0 001.411-.095 1 1 0 00-.095-1.411L3.661 11H19a1 1 0 000-2z" fill="#000000"></path></g></svg>
 </a>
-<a href="index.html">
+<a href="index">
 <img class src="assets/images/branding/logo.png">
 </a>
 </div>
-<form method="POST" class="flex flex-col gap-2" action="https://x1jogos.com/register">
+<form method="POST" class="flex flex-col gap-2" action="/register">
 <input type="hidden" name="_token" value="vCGWSZlVROqU3ueFfWjwuK5sbXLMMkzFng4Ritru" autocomplete="off"> <p class="font-bold text-3xl mb-2 text-base-700">Registrar</p>
 <div class="flex flex-wrap md:flex-nowrap gap-2">
 <div class="w-full md:w-1/2 form-control">
-<input oninput="this.value = this.value.toUpperCase()" class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full" style="font-size: 17px !important; padding: 13px 20px; color: #474747!important; border-radius: 4px !important;" id="my_invite_code" type="text" name="my_invite_code" required="required" autofocus="autofocus" autocomplete="my_invite_code" placeholder="Apelido" pattern=".{4,20}" title="Seu apelido precisa de ter de 4 a 20 caracteres" minlength="4" maxlength="20">
+<input class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full" th:name="username" style="font-size: 17px !important; padding: 13px 20px; color: #474747!important; border-radius: 4px !important;" id="my_invite_code" type="text" name="my_invite_code" required="required" autofocus="autofocus" autocomplete="my_invite_code" placeholder="Username" pattern=".{4,20}" title="Seu apelido precisa de ter de 4 a 20 caracteres" minlength="4" maxlength="20">
 </div>
 <div class="w-full md:w-1/2 form-control">
-<input class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full" style="font-size: 17px !important; padding: 13px 20px; color: #474747!important; border-radius: 4px !important;" id="email" type="email" name="email" required="required" placeholder="Email">
+<input class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full" style="font-size: 17px !important; padding: 13px 20px; color: #474747!important; border-radius: 4px !important;" id="email" th:name="email" type="email" name="email" required="required" placeholder="Email">
 </div>
 </div>
 <div class="flex flex-wrap md:flex-nowrap gap-2">
 <div class="w-full md:w-1/2">
 <div class="form-control">
-<input oninput="numericMask(event)" class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full" style="font-size: 17px !important; padding: 13px 20px; color: #474747!important; border-radius: 4px !important;" id="cpf" type="text" name="cpf" required="required" minlength="11" maxlength="11" placeholder="CPF  (apenas números)">
+<input oninput="numericMask(event)" class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full" style="font-size: 17px !important; padding: 13px 20px; color: #474747!important; border-radius: 4px !important;" th:name="cpf" id="cpf" type="text" name="cpf" required="required" minlength="11" maxlength="11" placeholder="CPF  (apenas números)">
 </div>
 </div>
 <div class="w-full md:w-1/2">
 <div class="flex gap-2 flex-wrap md:flex-nowrap">
 <div class="form-control w-full">
-<input oninput="telMask(event)" class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full sp_celphones" style="font-size: 17px !important; padding: 13px 20px; color: #474747!important; border-radius: 4px !important; width: 100%;" id="phone" type="text" name="phone" required="required" minlength="16" maxlength="16" placeholder="Celular">
+<input oninput="telMask(event)" class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full sp_celphones" style="font-size: 17px !important; padding: 13px 20px; color: #474747!important; border-radius: 4px !important; width: 100%;" th:name="phoneNumber" id="phone" type="text" name="phone" required="required" minlength="16" maxlength="16" placeholder="Celular">
 </div>
 </div>
 </div>
@@ -104,22 +104,23 @@
 <div class="flex gap-2 flex-wrap md:flex-nowrap">
 <div class="w-full">
 <div class="form-control relative">
-<input class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 pr-14 text-black text-opacity-50 block mt-1 w-full" style=";" id="password" type="password" name="password" required="required" autocomplete="new-password" placeholder="Senha">
+<input class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 pr-14 text-black text-opacity-50 block mt-1 w-full" style=";" id="password" th:name="password" type="password" name="password" required="required" autocomplete="new-password" placeholder="Senha">
 <svg id="revealIcon" class="h-6 w-6 absolute top-[35%] right-4 cursor-pointer stroke-gray-400" onclick="togglePasswordInputType()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.0007 12C15.0007 13.6569 13.6576 15 12.0007 15C10.3439 15 9.00073 13.6569 9.00073 12C9.00073 10.3431 10.3439 9 12.0007 9C13.6576 9 15.0007 10.3431 15.0007 12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12.0012 5C7.52354 5 3.73326 7.94288 2.45898 12C3.73324 16.0571 7.52354 19 12.0012 19C16.4788 19 20.2691 16.0571 21.5434 12C20.2691 7.94291 16.4788 5 12.0012 5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg><svg id="concealIcon" class="h-6 w-6 absolute top-[35%] right-4 cursor-pointer stroke-gray-400 hidden" onclick="togglePasswordInputType()" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2.99902 3L20.999 21M9.8433 9.91364C9.32066 10.4536 8.99902 11.1892 8.99902 12C8.99902 13.6569 10.3422 15 11.999 15C12.8215 15 13.5667 14.669 14.1086 14.133M6.49902 6.64715C4.59972 7.90034 3.15305 9.78394 2.45703 12C3.73128 16.0571 7.52159 19 11.9992 19C13.9881 19 15.8414 18.4194 17.3988 17.4184M10.999 5.04939C11.328 5.01673 11.6617 5 11.9992 5C16.4769 5 20.2672 7.94291 21.5414 12C21.2607 12.894 20.8577 13.7338 20.3522 14.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
 </div>
 </div>
 </div>
 <div>
-<div class="form-control">
-<input oninput="this.value = this.value.toUpperCase()" class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full" style="font-size: 17px !important; padding: 13px 20px; color: black !important; border-radius: 4px !important;" id="invite_code" type="text" pattern=".{4,20}" title="O código de convite tem que ter no mínimo 4 e no máximo 20 caracteres." name="invite_code" autofocus="autofocus" placeholder="Código de Convite  (opcional)" minlength="4" maxlength="20">
-</div>
+
+    <!--<div class="form-control">
+    <input oninput="this.value = this.value.toUpperCase()" class="input text-base-600 placeholder:opacity-50 rounded-md shadow-sm !bg-slate-50 text-black text-opacity-50 block mt-1 w-full" style="font-size: 17px !important; padding: 13px 20px; color: black !important; border-radius: 4px !important;" id="invite_code" type="text" pattern=".{4,20}" title="O código de convite tem que ter no mínimo 4 e no máximo 20 caracteres." name="invite_code" autofocus="autofocus" placeholder="Código de Convite  (opcional)" minlength="4" maxlength="20">
+    </div>-->
 </div>
 <div class="mt-4">
 <label class="block font-bold text-sm text-base-700" for="terms">
 <div class="flex items-center">
 <input type="checkbox" class="rounded border-base-400 text-x1blue shadow-sm bg-base-400 !outline-none" name="terms" id="terms">
 <div class="ml-2 font-semibold text-base-700 text-opacity-70">
-Eu confirmo que tenho mais de 18 anos e concordo com os <a target="_blank" href class="underline">Termos de Uso</a> e <a target="_blank" href="privacy.html" class="underline">Política de Privacidade</a>
+Eu confirmo que tenho mais de 18 anos e concordo com os <a target="_blank" href class="underline">Termos de Uso</a> e <a target="_blank" href="privacy" class="underline">Política de Privacidade</a>
 </div>
 </div>
 </label>
@@ -128,7 +129,7 @@ Eu confirmo que tenho mais de 18 anos e concordo com os <a target="_blank" href 
 Registrar
 </button>
 <div class="flex items-center justify-center">
-<a class="text-sm text-base-700 text-opacity-70" href="login.html">
+<a class="text-sm text-base-700 text-opacity-70" href="login">
 Já possui uma conta?
 </a>
 </div>
@@ -183,7 +184,7 @@ Já possui uma conta?
                 n.queue=[];t=b.createElement(e);t.async=!0;
                 t.src=v;s=b.getElementsByTagName(e)[0];
                 s.parentNode.insertBefore(t,s)}(window, document,'script',
-                '../connect.facebook.net/en_US/fbevents.js');
+                'connect.facebook.net/en_US/fbevents.js');
                 fbq('init', '1450530865858659');
                 fbq('track', 'PageView');
                 </script>

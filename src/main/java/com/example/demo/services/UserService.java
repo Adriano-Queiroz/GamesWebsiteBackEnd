@@ -58,17 +58,19 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    public UserModel createUser(String username, String email, String password) throws AlreadyExistsException {
+    public UserModel createUser(String username, String email, String password, Long cpf, String phoneNumber) throws AlreadyExistsException {
         if(userRepository.findByUsername(username).isPresent()){
-            throw new AlreadyExistsException("Username already exists");
+            throw new AlreadyExistsException("Username Já existe");
         }
         if(!usersDomain.isSafePassword(password)){
-            throw new IllegalArgumentException("Password is not safe");
+            throw new IllegalArgumentException("Password não é segura o suficiente");
         }
         PasswordValidationInfo passwordValidationInfo = usersDomain.createPasswordValidationInformation(password);
         UserModel user = new UserModel();
         user.setUsername(username);
         user.setEmail(email);
+        user.setCpf(cpf);
+        user.setPhoneNumber(phoneNumber);
         user.setPasswordValidationInfo(passwordValidationInfo.validationInfo());
         user.setBalance(0.0);
         user.setUserRole(iUserRoleModelRepository.findById(1L).get());

@@ -32,8 +32,14 @@ public class UserModel {
 
     @Column(unique = true, nullable = false)
     private String email;
+
     private String passwordValidationInfo;
+
     private String password;
+
+    private Long cpf;
+
+    private String phoneNumber;
 
     @ManyToOne
     @JoinColumn(name = "cod_user_role")
