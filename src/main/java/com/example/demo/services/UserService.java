@@ -118,7 +118,9 @@ public class UserService {
         if (email.isBlank() || password.isBlank()) {
             throw new InvalidUsernameOrPasswordException("Username and password must not be empty");
         }
-        UserModel user = userRepository.findByEmail(email).orElseThrow(() -> new InvalidUsernameOrPasswordException("Invalid username or password"));
+        List<UserModel> userList = userRepository.findByEmail(email);
+        UserModel user = userList.get(0);
+        //UserModel user = userRepository.findByEmail(email).orElseThrow(() -> new InvalidUsernameOrPasswordException("Invalid username or password"));
         if (!usersDomain.validatePassword(password, new PasswordValidationInfo(user.getPasswordValidationInfo()))) {
             throw new InvalidUsernameOrPasswordException("Invalid username or password");
         }
@@ -195,13 +197,16 @@ public class UserService {
         ));
     }
 
-    public void forgotPassword(String email) throws NotFoundException {
-        Optional<UserModel> optionalUser = userRepository.findByEmail(email);
+    public void forgotPassword(String email) throws NotFoundException, MaxEmailsPerHourException {
+        List<UserModel> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty())
             throw new NotFoundException("Email errado");
-        UserModel user = optionalUser.get();
+        UserModel user = optionalUser.get(0);
+        if(user.getEmailsSentInTheLastHour()>=3)
+            throw new MaxEmailsPerHourException("Já enviou 3 emails na última hora, espere para podem enviar mais");
         String code = generateRandomString(20);
         user.setForgotPasswordCode(code);
+        user.setEmailsSentInTheLastHour(user.getEmailsSentInTheLastHour() + 1);
         emailService.sendSimpleEmail(email,"Recuperar Senha","Código para recuperar senha:" + code);
         userRepository.save(user);
     }
@@ -218,6 +223,18 @@ public class UserService {
         }
 
         return randomString.toString();
+    }
+
+    public void resetPassword(String email, String forgotPasswordCode, String newPassword) throws NotFoundException, InvalidRequestException {
+        List<UserModel> optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isEmpty())
+            throw new NotFoundException("Email incorreto");
+        UserModel user = optionalUser.get(0);
+        if(!user.getForgotPasswordCode().equals(forgotPasswordCode))
+            throw new InvalidRequestException("Código errado ou expirado");
+        PasswordValidationInfo passwordValidationInfo = usersDomain.createPasswordValidationInformation(newPassword);
+        user.setPasswordValidationInfo(passwordValidationInfo.validationInfo());
+        userRepository.save(user);
     }
 }
 

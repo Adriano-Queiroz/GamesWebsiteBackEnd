@@ -15,6 +15,10 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDTO> handleInvalidUsernameOrPasswordException(InvalidUsernameOrPasswordException e) {
         return ResponseEntity.status(400).body(new ErrorDTO(e.getMessage()));
     }
+    @ExceptionHandler(MaxEmailsPerHourException.class)
+    public ResponseEntity<ErrorDTO> handleMaxEmailsPerHourException(MaxEmailsPerHourException e) {
+        return ResponseEntity.status(429).body(new ErrorDTO(e.getMessage()));
+    }
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ErrorDTO> handleInvalidRequestException(InvalidRequestException e) {
         return ResponseEntity.status(400).body(new ErrorDTO(e.getMessage()));

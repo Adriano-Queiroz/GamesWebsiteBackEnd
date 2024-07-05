@@ -1,15 +1,13 @@
 package com.example.demo.controllers.fe_controllers;
 
 import com.example.demo.dtos.forgot_password.ForgotPasswordRequestDTO;
+import com.example.demo.dtos.reset_password.ResetPasswordRequestDTO;
 import com.example.demo.dtos.user.CreateUserInputDTO;
 import com.example.demo.dtos.user.loginDTO;
 import com.example.demo.models.user.AuthenticatedUser;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.services.UserService;
-import com.example.demo.services.exceptions.AlreadyExistsException;
-import com.example.demo.services.exceptions.InternalErrorException;
-import com.example.demo.services.exceptions.InvalidUsernameOrPasswordException;
-import com.example.demo.services.exceptions.NotFoundException;
+import com.example.demo.services.exceptions.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,11 +50,22 @@ public class AuthenticationController {
         return "redirect:/login";
     }
     @PostMapping("/forgot-password")
-    public void forgotPassword(@ModelAttribute ForgotPasswordRequestDTO forgotPasswordRequestDTO) throws NotFoundException {
+    public void forgotPassword(@ModelAttribute ForgotPasswordRequestDTO forgotPasswordRequestDTO) throws NotFoundException, MaxEmailsPerHourException {
         userService.forgotPassword(forgotPasswordRequestDTO.email());
     }
     @GetMapping("/forgot-password")
     public String forgotPassword(Model model){
         return "forgot-password";
+    }
+    @PostMapping("/reset-password")
+    public void resetPassword(@RequestBody ResetPasswordRequestDTO resetPasswordRequestDTO) throws NotFoundException, InvalidRequestException {
+        userService.resetPassword(resetPasswordRequestDTO.email(),
+                resetPasswordRequestDTO.forgotPasswordCode(),
+                resetPasswordRequestDTO.newPassword());
+    }
+    @GetMapping("/usuarios")
+    public String getVideos(Model model){
+
+        return "usuarios";
     }
 }
