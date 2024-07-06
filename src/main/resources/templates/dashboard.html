@@ -297,24 +297,25 @@
 <div class="col-12 col-xl-8 mb-8">
 <div class="card h-100-card">
 <div class="card-body d-flex flex-column justify-content-between">
-<form>
-<div class="text-alternate">Data Início</div>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="clock"></i>
-<input class="form-control" placeholder="08/05/2024">
-</div>
-<div class="text-alternate">Data Fim</div>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="clock"></i>
-<input class="form-control" placeholder="08/05/2024">
-</div>
-<a href="#" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-<i data-acorn-icon="search"></i>
-<span>Pesquisar</span>
-</a>
-</form>
+    <form th:action="@{/dashboard-date}" method="post">
+        <div class="text-alternate">Data Início</div>
+        <br>
+        <div class="mb-3 filled">
+            <i data-acorn-icon="clock"></i>
+            <input class="form-control" type="date" name="startDate" placeholder="08/05/2024">
+        </div>
+        <div class="text-alternate">Data Fim</div>
+        <br>
+        <div class="mb-3 filled">
+            <i data-acorn-icon="clock"></i>
+            <input class="form-control" type="date" name="endDate" placeholder="08/05/2024">
+        </div>
+        <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+            <i data-acorn-icon="search"></i>
+            <span>Pesquisar</span>
+        </button>
+    </form>
+
 </div>
 </div>
 </div>
@@ -409,7 +410,7 @@
 <div class="card">
 <div class="card-body">
 <div class="heading mb-0 d-flex justify-content-between lh-1-25 mb-3">
-<span>Recargas Efetuadas <br>(08/05/2024 - 08/05/2024)</span>
+<span>Recargas Efetuadas <br><span th:text="${startDate}"></span>  <span th:text="${endDate}"></span></span>
 <i data-acorn-icon="dollar" class="text-primary"></i>
 </div>
 <div class="text-small text-success mb-1">
@@ -422,13 +423,13 @@
 <div class="card">
 <div class="card-body">
 <div class="heading mb-0 d-flex justify-content-between lh-1-25 mb-3">
-<span>Raspadinhas Vendidas <br>(08/05/2024 - 08/05/2024)
+<span>Dinheiro ganho através de percentagens <br><span th:text="${startDate}"></span>  <span th:text="${endDate}"></span>
 </span>
 <i data-acorn-icon="dollar" class="text-primary"></i>
 </div>
 <div class="text-small text-success mb-1">
 </div>
-<div class="cta-1 text-primary">R$ 6.718,44</div>
+    <div class="cta-1 text-primary">R$ <span th:text="${moneyGained}" ></span></div>
 </div>
 </div>
 </div>
@@ -436,7 +437,7 @@
 <div class="card">
 <div class="card-body">
 <div class="heading mb-0 d-flex justify-content-between lh-1-25 mb-3">
-<span>Total Saques <br>(Desde o Inicio)</span>
+<span>Total Saques <br><span th:text="${startDate}"></span>  <span th:text="${endDate}"></span></span>
 <i data-acorn-icon="dollar" class="text-primary"></i>
 </div>
 <div class="text-small text-danger mb-1">
@@ -449,20 +450,20 @@
 <div class="card">
 <div class="card-body">
 <div class="heading mb-0 d-flex justify-content-between lh-1-25 mb-3">
-<span>Saldo Atual <br>Usuários
+<span>Saldo Atual Usuários <br> (Desde o Início)
 </span>
 <i data-acorn-icon="dollar" class="text-primary"></i>
 </div>
 <div class="text-small text-success mb-1">
 </div>
-<div class="cta-1 text-primary">R$ 6.718,44</div>
+    <div class="cta-1 text-primary">R$ <span th:text="${totalBalance}"> </span></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<h2 class="small-title">Recargas de 08/05/2024 - 08/05/2024</h2><br>
+    <h2 class="small-title">Recargas de <span th:text="${startDate}"></span> - <span th:text="${endDate}"></span>  </h2><br>
 
 <div class="row mb-2">
 <div class="col-sm-12 col-md-5 col-lg-3 col-xxl-2 mb-1">

@@ -34,5 +34,8 @@ public class InviteModel {
     @ManyToOne
     @JoinColumn(name = "cod_lobby")
     private LobbyModel lobby;
-
+    @PreRemove
+    private void preRemove() {
+        this.lobby = null; // Remove reference to prevent constraints violation
+    }
 }

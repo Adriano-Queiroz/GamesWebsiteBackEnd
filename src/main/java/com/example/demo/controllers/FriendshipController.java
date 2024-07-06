@@ -198,7 +198,7 @@ public class FriendshipController {
         invite.setUserRequest(user);
         invite.setIsAccepted(false);
         invite.setRoom(room);
-        iInviteRepository.save(invite);
+        //iInviteRepository.save(invite);
         return lobbyService.newCreateFriendsLobby(sendInviteRequestDTO,invite);
     }
 

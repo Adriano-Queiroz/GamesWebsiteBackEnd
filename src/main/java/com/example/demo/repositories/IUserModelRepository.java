@@ -12,9 +12,11 @@ import java.util.Optional;
 
 public interface IUserModelRepository extends JpaRepository<UserModel,Long> {
     Optional<UserModel> findByUsername(String username);
-    List<UserModel> findByEmail(String email);
+    Optional<UserModel> findFirstByEmail(String email);
     @Transactional
     @Modifying
     @Query("UPDATE UserModel u SET u.emailsSentInTheLastHour = 0")
     void resetEmailsSentInTheLastHour();
+    @Query("SELECT SUM(u.balance) FROM UserModel u")
+    double getTotalBalance();
 }

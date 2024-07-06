@@ -120,6 +120,8 @@ public class GameController {
         List<RoomModel> roomList = iRoomRepository.findAllByGame(iGameRepository.findById(1L).get()); //todo trocar para ser o game que carreguei
         model.addAttribute("rooms", roomList);
         model.addAttribute("codUser", codUser);
+        model.addAttribute("isFriendsRooms", false);
+
         return "rooms";
     }
 }

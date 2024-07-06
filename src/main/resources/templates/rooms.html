@@ -24,7 +24,7 @@
         const codUser = /*[[${codUser}]]*/ [[${codUser}]];
         /*]]>*/
         /*<![CDATA[*/
-        const isFriendsRooms = /*[[${codUser}]]*/ [[${isFriendsRooms}]];
+        const isFriendsRooms = /*[[${isFriendsRooms}]]*/ [[${isFriendsRooms}]];
         /*]]>*/
     </script>
 </head>
@@ -216,6 +216,7 @@
         const handleRoomButtonClick = (codRoom) => {
             // Example function to handle room button click
             console.log(codRoom);
+            alert(isFriendsRooms);
             if(isFriendsRooms)
                 getFriendsLobby(codRoom,codUser)
             else
