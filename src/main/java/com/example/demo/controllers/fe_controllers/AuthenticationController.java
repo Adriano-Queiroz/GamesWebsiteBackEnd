@@ -26,12 +26,11 @@ public class AuthenticationController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        model.addAttribute("loginDTO", new loginDTO());
         return "login";
     }
 
     @PostMapping("/login")
-    public String loginForm(@ModelAttribute("loginDTO") loginDTO loginUserInputDTO, HttpSession session) throws InvalidUsernameOrPasswordException, InternalErrorException {
+    public String loginForm(@ModelAttribute loginDTO loginUserInputDTO, HttpSession session) throws InvalidUsernameOrPasswordException, InternalErrorException {
         AuthenticatedUser authenticatedUser = userService.loginEmail(loginUserInputDTO.getEmail(), loginUserInputDTO.getPassword());
         session.setAttribute("user", authenticatedUser.user());
         return "redirect:/";
@@ -63,9 +62,5 @@ public class AuthenticationController {
                 resetPasswordRequestDTO.forgotPasswordCode(),
                 resetPasswordRequestDTO.newPassword());
     }
-    @GetMapping("/usuarios")
-    public String getVideos(Model model){
 
-        return "usuarios";
-    }
 }
