@@ -1,10 +1,7 @@
 package com.example.demo.models.global;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,12 +12,16 @@ import lombok.Setter;
 public class GlobalModel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name",unique = true)
     private String name;
 
     @Column(name = "value")
-    private String value;
+    private Double value;
+
+    @Column(name = "active")
+    private Boolean active;
 
 }

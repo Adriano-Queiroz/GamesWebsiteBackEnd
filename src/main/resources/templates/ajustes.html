@@ -48,7 +48,7 @@
 <div class="user-container d-flex">
 <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 <img class="profile" alt="profile" src="img/profile/perfil.png">
-<div class="name">Augusto Queiroz</div>
+<div class="name" th:text="${user.username}" ></div>
 </a>
 <div class="dropdown-menu dropdown-menu-end user-menu wide">
 
@@ -297,14 +297,14 @@
 <img src="img/illustration/boas-vindas.png" class="theme-filter" alt="email icon">
 </div>
     <div class="col-12 col-sm">
-        <form action="/changeBonusBoasVindas" method="post">
+        <form action="/changeBonusBoasVindas" method="POST">
             <a href="#" class="heading mb-2 d-inline-block">Bônus de Boas Vindas</a>
             <p>
                 <span class="text-small text-muted">ATIVADO / DESATIVADO</span>
                 <br>
             <div class="mb-3 filled">
                 <i data-acorn-icon="clock"></i>
-                <input class="form-control" th:name="bonus" name="status" placeholder="Ativado">
+            <span class="form-control" name="status">Ativado</span>
             </div>
             </p>
             <p>
@@ -312,7 +312,7 @@
                 <br>
             <div class="mb-3 filled">
                 <i data-acorn-icon="money"></i>
-                <input class="form-control" name="bonus_value" placeholder="1.00">
+                <input class="form-control" th:name="value" name="bonus_value" th:placeholder ="${BonusBoasVindas}">
             </div>
             </p>
             <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
