@@ -12,7 +12,10 @@ import java.util.Optional;
 public interface ILobbyRepository extends JpaRepository<LobbyModel,Long> {
     //Optional<LobbyModel> findFirstByGameOrderByCodLobbyDesc(GameModel game);
     Optional<LobbyModel> findFirstByRoomAndFriendInvitedIsNullOrderByCodLobbyDesc(RoomModel room);
+    Optional<LobbyModel> findFirstByRoomAndFriendInvitedIsNullAndIsFriendsLobbyFalseOrderByCodLobbyDesc(RoomModel room);
+
     Optional<LobbyModel> findFirstByUserOrderByCodLobbyDesc(UserModel user);
+    Optional<LobbyModel> findFirstByInviteCode(String inviteCode);
     //Optional<LobbyModel> findFirstByInviteIdOrderByCodLobby(long inviteId);
 
 }

@@ -177,7 +177,6 @@ public class FriendshipController {
 
 
         UserModel friend = optionalFriend.get();
-
         invite.setUserAccept(friend);
         invite.setUserRequest(user);
         invite.setIsAccepted(false);
@@ -185,7 +184,26 @@ public class FriendshipController {
         iInviteRepository.save(invite);
         return lobbyService.getLobby(sendInviteRequestDTO,invite, messagingTemplate);
     }
+    @PostMapping("/newInvite")
+    public ResponseEntity<LobbyResponseDTO> newInvite(@RequestBody SendInviteRequestDTO sendInviteRequestDTO) throws NotFoundException, NotEnoughFundsException {
+        InviteModel invite = new InviteModel();
+        UserModel user = iUserModelRepository.findById(sendInviteRequestDTO.codUser()).get();
+        Optional<RoomModel> optionalRoom = iRoomRepository.findById(sendInviteRequestDTO.codRoom());
+        if(!optionalRoom.isPresent())
+            throw new NotFoundException("Room not found");
+        RoomModel room = optionalRoom.get();
+        if(user.getBalance() < room.getBet())
+            throw new NotEnoughFundsException("Você não tem dinheiro suficiente, deposite");
 
+        invite.setUserRequest(user);
+        invite.setIsAccepted(false);
+        invite.setRoom(room);
+        iInviteRepository.save(invite);
+        return lobbyService.newCreateFriendsLobby(sendInviteRequestDTO,invite);
+    }
+
+    //@PostMapping("/newInvite")
+    //public ResponseEntity<LobbyResponseDTO> sendInvite(@RequestBody )
 
 
     @PostMapping("/acceptInvite")

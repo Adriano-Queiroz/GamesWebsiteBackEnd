@@ -27,6 +27,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class LobbyService {
@@ -130,7 +131,7 @@ public class LobbyService {
         UserModel newUser = optionalUser.get();
         if(room.getBet()>newUser.getBalance())
             throw new NotEnoughFundsException("Não tem dinheiro suficiente para este quarto");
-        Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomAndFriendInvitedIsNullOrderByCodLobbyDesc(room);
+        Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByRoomAndFriendInvitedIsNullAndIsFriendsLobbyFalseOrderByCodLobbyDesc(room);
         String board = gamesService.getEmptyBoard(room.getGame().getGameType());
         if (!optionalLobby.isPresent()) {
             boolean isPlayer1 = Math.random() < 0.5;
@@ -156,6 +157,22 @@ public class LobbyService {
     }
 
     public ResponseEntity<LobbyResponseDTO> createBattle(LobbyModel lobby, UserModel newUser,RoomModel room){
+
+        UserModel oldUser = lobby.getUser();
+        BattleModel battle = new BattleModel();
+        PlayersTuple playersTuple = randomizePlayers(oldUser, newUser);
+        setBattle(playersTuple, battle, room);
+        iLobbyRepository.delete(lobby);
+        battleService.receiveMessage(battle.getCodBattle());
+        return ResponseEntity.ok(sendMessagesAfterOpponentFound(
+                playersTuple.player1(),
+                playersTuple.player2(),
+                oldUser,
+                newUser,
+                lobby,
+                battle.getCodBattle()));
+    }
+    public LobbyResponseDTO newCreateBattle(LobbyModel lobby, UserModel newUser,RoomModel room){
 
         UserModel oldUser = lobby.getUser();
         BattleModel battle = new BattleModel();
@@ -196,7 +213,7 @@ public class LobbyService {
         iBattleRepository.save(battle);
     }
 
-    public ResponseEntity<LobbyResponseDTO> sendMessagesAfterOpponentFound(UserModel player1, UserModel player2, UserModel oldUser, UserModel newUser, LobbyModel lobby, long codBattle) {
+    public LobbyResponseDTO sendMessagesAfterOpponentFound(UserModel player1, UserModel player2, UserModel oldUser, UserModel newUser, LobbyModel lobby, long codBattle) {
         boolean isOldUserPlayer1 = player1.equals(oldUser);
         String emptyBoard = gamesService.getEmptyBoard(lobby.getGame().getGameType());
         LobbyResponseDTO lobbyResponseDTO = new LobbyResponseDTO(
@@ -208,13 +225,14 @@ public class LobbyService {
                 codBattle
         );
         webSocketService.sendMessage("/topic/lobby/" + lobby.getCodLobby(), lobbyResponseDTO);
-        return ResponseEntity.ok(new LobbyResponseDTO("Found Opponent, game is about to begin",
+        lobbyResponseDTO = new LobbyResponseDTO("Found Opponent, game is about to begin",
                 true,
                 lobby.getCodLobby(),
                 !isOldUserPlayer1,
                 emptyBoard,
                 codBattle
-        ));
+        );
+        return lobbyResponseDTO;
     }
 
     public ResponseEntity<LobbyResponseDTO> getLobby(SendInviteRequestDTO sendInviteRequestDTO, InviteModel invite, SimpMessagingTemplate messagingTemplate) throws NotFoundException {
@@ -232,6 +250,7 @@ public class LobbyService {
         UserModel friend = optionalFriend.get();
         if(sendInviteRequestDTO.codLobby() < 0){
             LobbyModel lobby = createLobby(user,room,friend);
+            lobby.setFriendsLobby(true);
             invite.setLobby(lobby);
             iInviteRepository.save(invite);
             String gameString = room.getGame().getGameType().toString();
@@ -257,4 +276,37 @@ public class LobbyService {
 
         return createBattle(lobby, user,room);
     }
+
+    public ResponseEntity<LobbyResponseDTO> newCreateFriendsLobby(SendInviteRequestDTO sendInviteRequestDTO, InviteModel invite) throws NotFoundException {
+        Optional<RoomModel> optionalRoom = iRoomRepository.findById(sendInviteRequestDTO.codRoom());
+        Optional<UserModel> optionalUser = iUserModelRepository.findById(sendInviteRequestDTO.codUser());
+        if (!optionalUser.isPresent())
+            throw new NotFoundException("User not found of id " + sendInviteRequestDTO.codUser());
+        if (!optionalRoom.isPresent())
+            throw new NotFoundException("Room not found of id " + sendInviteRequestDTO.codRoom());
+        RoomModel room = optionalRoom.get();
+        UserModel user = optionalUser.get();
+        LobbyModel lobby = createLobby(user,room,null);
+        lobby.setFriendsLobby(true);
+        lobby.setInviteCode(generateInviteCode(20));
+        iLobbyRepository.save(lobby);
+        invite.setLobby(lobby);
+        iInviteRepository.save(invite);
+
+        return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), false,"",-1));
+    }
+    public String generateInviteCode(int length) {
+
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder randomString = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            randomString.append(characters.charAt(index));
+        }
+
+        return randomString.toString();
+    }
+
 }

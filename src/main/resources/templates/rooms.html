@@ -23,6 +23,9 @@
         /*<![CDATA[*/
         const codUser = /*[[${codUser}]]*/ [[${codUser}]];
         /*]]>*/
+        /*<![CDATA[*/
+        const isFriendsRooms = /*[[${codUser}]]*/ [[${isFriendsRooms}]];
+        /*]]>*/
     </script>
 </head>
 <body>
@@ -40,6 +43,83 @@
         useEffect(() => {
             setLoading(false); // Simulating fetched rooms from Thymeleaf data
         }, []);
+
+        const getFriendsLobby = async (codRoom,codUser) => {
+
+            try {
+                const response = await fetch(`/friendship/newInvite`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        codRoom: codRoom,
+                        codUser: codUser,
+                        friendUsername: "",
+                        codLobby:-1
+                    })
+                });
+                if (!response.ok)
+                    throw new Error("Error fetching lobby");
+
+                const result = await response.json();
+                const codBattle = result.codBattle;
+                console.log("is Second Player: " + result.isSecondPlayer);
+                if (!result.isSecondPlayer) {
+                    // WebSocket communication
+                    const socket = new SockJS(`http://localhost:9000/ws`);
+                    const stompClient = Stomp.over(socket);
+                    let messageReceived = false;
+
+                    stompClient.connect({}, function (frame) {
+                        console.log('Connected: ' + frame);
+
+                        stompClient.subscribe(`/topic/lobby/` + result.codLobby, function (message) {
+                            messageReceived = true;
+                            const result = JSON.parse(message.body);
+                            console.log('Received message:', message.body);
+                            stompClient.disconnect();
+                            const number = 1;
+                            //clearTimeout(timeout); // Clear the timeout if we received a message
+                            //navigate('/lobby', {state: { result, codBattle }});
+                            window.location.href = '/lobby?codBattle=' + result.codBattle
+
+                        });
+
+                        // Set a timeout to finalize if no message is received within 5 seconds
+                        /*
+                        const timeout = setTimeout(() => {
+                            if (!messageReceived) {
+                                console.log('No message received within 5 seconds, finalizing and sending request to delete lobby.');
+                                fetch(`api/lobby/delete`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        codUser: user.id // Replace with a valid user ID if necessary
+                                    })
+                                });
+                                stompClient.disconnect();
+                            }
+                       }, 15000);
+
+                         */
+                    }, function (error) {
+                        console.error('Error:', error);
+                    });
+                }else{
+                    console.log("MAMBO");
+                    //navigate('/lobby', {state: { result }});
+                    window.location.href = '/lobby?codBattle=' + result.codBattle
+
+                    //navigate('/rooms');
+                }
+            } catch (error) {
+                alert(error);
+            }
+        }
+
 
         const getLobby = async (codRoom,codUser) => {
             try {
@@ -136,7 +216,10 @@
         const handleRoomButtonClick = (codRoom) => {
             // Example function to handle room button click
             console.log(codRoom);
-            getLobby(codRoom,codUser);
+            if(isFriendsRooms)
+                getFriendsLobby(codRoom,codUser)
+            else
+                getLobby(codRoom,codUser);
         };
 
         return (
@@ -155,7 +238,7 @@
     }
 
     // Render the React component
-    ReactDOM.render(<App rooms={roomsData} codUser={codUser}/>, document.getElementById('root'));
+    ReactDOM.render(<App rooms={roomsData} codUser={codUser} isFriendsRooms={isFriendsRooms}/>, document.getElementById('root'));
 </script>
 </body>
 </html>
