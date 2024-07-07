@@ -304,7 +304,7 @@
                 <br>
             <div class="mb-3 filled">
                 <i data-acorn-icon="clock"></i>
-            <span class="form-control" name="status">Ativado</span>
+            <span class="form-control" name="status" th:text ="${BonusBoasVindas.active}?'Ativado': 'Desativado' " ></span>
             </div>
             </p>
             <p>
@@ -312,7 +312,7 @@
                 <br>
             <div class="mb-3 filled">
                 <i data-acorn-icon="money"></i>
-                <input class="form-control" th:name="value" name="bonus_value" th:placeholder ="${BonusBoasVindas}">
+                <input class="form-control" th:name="value" name="bonus_value" th:placeholder ="${BonusBoasVindas.value}">
             </div>
             </p>
             <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
@@ -335,29 +335,31 @@
 <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
 <img src="img/illustration/recarga.png" class="theme-filter" alt="email icon">
 </div>
-<div class="col-12 col-sm">
-<a href="#" class="heading mb-2 d-inline-block">Bônus de Recarga Diária</a>
-<p>
-<span class="text-small text-muted">ATIVADO / DESATIVADO</span>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="clock"></i>
-<input class="form-control" placeholder="Desativado">
-</div>
-</p>
-<p>
-<span class="text-small text-muted">BÔNUS DE RECARGA (%)</span>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="money"></i>
-<input class="form-control" placeholder="100.00">
-</div>
-</p>
-<a href="#" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-<i data-acorn-icon="edit-square"></i>
-<span>Alterar</span>
-</a>
-</div>
+    <div class="col-12 col-sm">
+        <form action="/changeBonusRecargaDiaria" method="POST">
+            <a href="#" class="heading mb-2 d-inline-block">Bônus de Recarga Diária</a>
+            <p>
+                <span class="text-small text-muted">ATIVADO / DESATIVADO</span>
+                <br>
+            <div class="mb-3 filled">
+                <i data-acorn-icon="clock"></i>
+            <span class="form-control" name="status" th:text ="${BonusRecargaDiaria.active}?'Ativado': 'Desativado' " ></span>
+            </div>
+            </p>
+            <p>
+                <span class="text-small text-muted">BÔNUS DE RECARGA (%)</span>
+                <br>
+            <div class="mb-3 filled">
+                <i data-acorn-icon="money"></i>
+                <input class="form-control" th:name="value" name="bonus_value" th:placeholder="${BonusRecargaDiaria.value}">
+            </div>
+            </p>
+            <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                <i data-acorn-icon="edit-square"></i>
+                <span>Alterar</span>
+            </button>
+        </form>
+    </div>
 </div>
 </div>
 </div>
@@ -372,29 +374,31 @@
 <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
 <img src="img/illustration/primeira-recarga.png" class="theme-filter" alt="email icon">
 </div>
-<div class="col-12 col-sm">
-<a href="#" class="heading mb-2 d-inline-block">Bônus na Primeira Recarga</a>
-<p>
-<span class="text-small text-muted">ATIVADO / DESATIVADO</span>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="clock"></i>
-<input class="form-control" placeholder="Desativado">
-</div>
-</p>
-<p>
-<span class="text-small text-muted">BÔNUS DE RECARGA (%)</span>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="money"></i>
-<input class="form-control" placeholder="100.00">
-</div>
-</p>
-<a href="#" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-<i data-acorn-icon="edit-square"></i>
-<span>Alterar</span>
-</a>
-</div>
+    <div class="col-12 col-sm">
+        <form action="/changeBonusPrimeiraRecarga" method="POST">
+            <a href="#" class="heading mb-2 d-inline-block">Bônus na Primeira Recarga</a>
+            <p>
+                <span class="text-small text-muted">ATIVADO / DESATIVADO</span>
+                <br>
+            <div class="mb-3 filled">
+                <i data-acorn-icon="clock"></i>
+                <span class="form-control" name="status" th:text="${BonusPrimeiraRecarga.active} ? 'Ativado' : 'Desativado'"></span>
+            </div>
+            </p>
+            <p>
+                <span class="text-small text-muted">BÔNUS DE RECARGA (%)</span>
+                <br>
+            <div class="mb-3 filled">
+                <i data-acorn-icon="money"></i>
+                <input class="form-control" th:name="value" name="bonus_value" th:placeholder="${BonusPrimeiraRecarga.value}">
+            </div>
+            </p>
+            <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                <i data-acorn-icon="edit-square"></i>
+                <span>Alterar</span>
+            </button>
+        </form>
+    </div>
 </div>
 </div>
 </div>

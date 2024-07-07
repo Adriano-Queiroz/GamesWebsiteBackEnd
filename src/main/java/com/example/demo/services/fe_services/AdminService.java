@@ -22,6 +22,12 @@ public class AdminService {
         iGlobalRepository.save(globalModel);
     }
 
+    public void controlBonus(String name, Boolean status) {
+        GlobalModel globalModel = iGlobalRepository.findByName(name).get();
+        globalModel.setActive(status);
+        iGlobalRepository.save(globalModel);
+    }
+
 
 
 }

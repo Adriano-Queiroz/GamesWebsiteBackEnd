@@ -1,7 +1,9 @@
 package com.example.demo.controllers.fe_controllers;
 
+import com.example.demo.dtos.ajustes.ActivateBonusDTO;
 import com.example.demo.repositories.IDepositRepository;
 import com.example.demo.repositories.IWithdrawalRepository;
+import com.example.demo.services.fe_services.AdminService;
 import com.example.demo.services.fe_services.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,6 +18,10 @@ import java.time.format.DateTimeParseException;
 
 @Controller
 public class DashboardController {
+
+    @Autowired
+    private AdminService adminService;
+
     @Autowired
     private DashboardService dashboardService;
 
@@ -57,6 +63,10 @@ public class DashboardController {
         model.addAttribute("startDate", startDate != null ? startDate.toString() + " -" :"(Desde o Início)");
         model.addAttribute("endDate", endDate != null ? endDate.toString():"");
 
+        model.addAttribute("BonusBoasVindas", adminService.getGlobal("BonusBoasVindas"));
+        model.addAttribute("BonusRecargaDiaria", adminService.getGlobal("BonusRecargaDiaria"));
+        model.addAttribute("BonusPrimeiraRecarga", adminService.getGlobal("BonusPrimeiraRecarga"));
+
         return "dashboard";
     }
 
@@ -75,6 +85,11 @@ public class DashboardController {
 
         // Redirect to the GET /dashboard with parameters
         return "redirect:/dashboard";
+    }
+
+    @PostMapping("/changeBonusStatus")//chamada por script no html
+    public void changeBonusStatus(@RequestBody ActivateBonusDTO dto){
+        adminService.controlBonus(dto.bonusName(), dto.newStatus());
     }
 
 }
