@@ -97,12 +97,19 @@ public class UserModel {
     private double balance;
     @Getter
     @Setter
+    private double bonusBalance;
+    @Getter
+    @Setter
     LocalDate lastDepositDate;
     @Getter
     @Setter
     LocalDate lastWithdrawalDate;
+
     @Getter
     LocalDate joinDate;
+    @Getter
+    LocalDateTime joinDateTime;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
@@ -129,5 +136,6 @@ public class UserModel {
     @PrePersist
     protected void onCreate() {
         joinDate = LocalDate.now();
+        joinDateTime = LocalDateTime.now();
     }
 }

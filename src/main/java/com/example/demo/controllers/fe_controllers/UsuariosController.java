@@ -1,8 +1,8 @@
 package com.example.demo.controllers.fe_controllers;
 
+import com.example.demo.dtos.user.FeUserDTO;
 import com.example.demo.services.UsuariosService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 @Controller
 public class UsuariosController {
@@ -41,15 +42,30 @@ public class UsuariosController {
             int totalUsers = usuariosService.getTotalUsersBeforeEndDate(endDate);
             model.addAttribute("totalUsers", totalUsers);
 
-            int activeUsers = usuariosService.getActiveUsersBetweenDates(startDate, endDate);
+            int activeUsers = usuariosService.getCountActiveUsersBetweenDates(startDate, endDate);
             model.addAttribute("activeUsers", activeUsers);
 
-            int inactiveUsers = usuariosService.getInactiveUsersBetweenDates(startDate, endDate);
+            int inactiveUsers = usuariosService.getCountInactiveUsersBetweenDates(startDate, endDate);
             model.addAttribute("inactiveUsers", inactiveUsers);
+
+            List<FeUserDTO> allUsersList = usuariosService.getAllUsersBetweenDates(endDate);
+            model.addAttribute("allUsersList", allUsersList);
+
+            List<FeUserDTO> inactiveUsersList = usuariosService.getInactiveUsersBetweenDates(startDate,endDate);
+            model.addAttribute("inactiveUsersList", inactiveUsersList);
+
+            List<FeUserDTO> activeUsersList = usuariosService.getActiveUsersBetweenDates(startDate,endDate);
+            model.addAttribute("activeUsersList", activeUsersList);
+
+
         } else {
             model.addAttribute("totalUsers", usuariosService.getTotalUsers());
-            model.addAttribute("activeUsers", usuariosService.getActiveUsers());
-            model.addAttribute("inactiveUsers", usuariosService.getInactiveUsers());
+            model.addAttribute("activeUsers", usuariosService.getCountActiveUsers());
+            model.addAttribute("inactiveUsers", usuariosService.getCountInactiveUsers());
+            model.addAttribute("allUsersList", usuariosService.getAllUsers());
+            model.addAttribute("inactiveUsersList", usuariosService.getAllInactiveUsers());
+            model.addAttribute("activeUsersList", usuariosService.getAllActiveUsers());
+
         }
         model.addAttribute("startDate", startDate != null ? startDate.toString() + " -" : "(Desde o Início)");
         model.addAttribute("endDate", endDate != null ? endDate.toString() : "");
