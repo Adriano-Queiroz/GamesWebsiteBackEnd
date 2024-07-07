@@ -16,11 +16,7 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
-    @GetMapping("/usuarios")
-    public String getUsuarios(Model model){
 
-        return "usuarios";
-    }
     @GetMapping("/ajustes")
     public String getAjustes(Model model, HttpSession session){
         if(session.getAttribute("user") == null)

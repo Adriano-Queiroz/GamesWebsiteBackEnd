@@ -26,5 +26,6 @@ public class WithdrawalModel {
     @PrePersist
     protected void onCreate() {
         this.date = LocalDate.now();
+        user.setLastWithdrawalDate(LocalDate.now());
     }
 }

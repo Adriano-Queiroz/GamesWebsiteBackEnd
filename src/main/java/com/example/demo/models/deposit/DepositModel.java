@@ -27,5 +27,6 @@ public class DepositModel {
     @PrePersist
     protected void onCreate() {
         this.date = LocalDate.now();
+        user.setLastDepositDate(LocalDate.now());
     }
 }

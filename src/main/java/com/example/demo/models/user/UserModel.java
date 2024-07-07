@@ -1,7 +1,9 @@
 package com.example.demo.models.user;
 
+import com.example.demo.models.deposit.DepositModel;
 import com.example.demo.models.friendship.FriendshipModel;
 import com.example.demo.models.user.role.UserRoleModel;
+import com.example.demo.models.withdrawal.WithdrawalModel;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -93,6 +95,23 @@ public class UserModel {
     @Getter
     @Setter
     private double balance;
+    @Getter
+    @Setter
+    LocalDate lastDepositDate;
+    @Getter
+    @Setter
+    LocalDate lastWithdrawalDate;
+    @Getter
+    LocalDate joinDate;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
+    private List<DepositModel> deposits = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
+    private List<WithdrawalModel> withdrawals = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -107,5 +126,8 @@ public class UserModel {
         return Objects.hash(codUser);
     }
 
-
+    @PrePersist
+    protected void onCreate() {
+        joinDate = LocalDate.now();
+    }
 }

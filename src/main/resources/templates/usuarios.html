@@ -384,23 +384,24 @@
 </div>
 <!-- final Modal-->
 
-<form>
-<div class="text-alternate">Data Início</div>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="clock"></i>
-<input class="form-control" placeholder="08/05/2024">
-</div>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="clock"></i>
-<input class="form-control" placeholder="08/05/2024">
-</div>
-<a href="#" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-<i data-acorn-icon="search"></i>
-<span>Pesquisar</span>
-</a>
-</form>
+    <form th:action="@{/usuarios-date}" method="post">
+        <div class="text-alternate">Data Início</div>
+        <br>
+        <div class="mb-3 filled">
+            <i data-acorn-icon="clock"></i>
+            <input class="form-control" type="date" name="startDate" placeholder="08/05/2024">
+        </div>
+        <div class="text-alternate">Data Fim</div>
+        <br>
+        <div class="mb-3 filled">
+            <i data-acorn-icon="clock"></i>
+            <input class="form-control" type="date" name="endDate" placeholder="08/05/2024">
+        </div>
+        <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+            <i data-acorn-icon="search"></i>
+            <span>Pesquisar</span>
+        </button>
+    </form>
 </div>
 
 </div>
@@ -418,10 +419,10 @@
 </div>
 </div>
 <div class="col">
-<div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Usuários de Ativos</div>
+<div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Usuários Ativos</div>
 </div>
 <div class="col-auto ps-3">
-<div class="cta-2 text-primary">200</div>
+    <div class="cta-1 text-primary"><span th:text="${activeUsers}" ></span></div>
 </div>
 </div>
 
@@ -439,7 +440,7 @@
 <div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Usuários Inativos</div>
 </div>
 <div class="col-auto ps-3">
-<div class="cta-2 text-primary">32</div>
+    <div class="cta-1 text-primary"><span th:text="${inactiveUsers}" ></span></div>
 </div>
 </div>
 </div>
@@ -456,7 +457,7 @@
 <div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Total de Usuários</div>
 </div>
 <div class="col-auto ps-3">
-<div class="cta-2 text-primary">232</div>
+    <div class="cta-1 text-primary"><span th:text="${totalUsers}" ></span></div>
 </div>
 </div>
 
