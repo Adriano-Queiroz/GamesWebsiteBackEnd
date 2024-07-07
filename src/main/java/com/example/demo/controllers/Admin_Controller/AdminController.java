@@ -25,6 +25,7 @@ public class AdminController {
         model.addAttribute("BonusBoasVindas", adminService.getGlobal("BonusBoasVindas"));
         model.addAttribute("BonusRecargaDiaria", adminService.getGlobal("BonusRecargaDiaria"));
         model.addAttribute("BonusPrimeiraRecarga", adminService.getGlobal("BonusPrimeiraRecarga"));
+        model.addAttribute("ConfigLucro", adminService.getGlobal("ConfigLucro"));
 
         model.addAttribute("user", session.getAttribute("user"));
 
@@ -46,6 +47,12 @@ public class AdminController {
     @PostMapping("/changeBonusPrimeiraRecarga")
     public String changeBonusPrimeiraRecarga(@ModelAttribute ChangeGlobalSetting dto, Model model){
         adminService.changeGlobal("BonusPrimeiraRecarga",dto.value());
+        return "redirect:/ajustes";
+    }
+
+    @PostMapping("/changeConfigLucro")
+    public String changeConfigLucro(@ModelAttribute ChangeGlobalSetting dto, Model model){
+        adminService.changeGlobal("ConfigLucro",dto.value());
         return "redirect:/ajustes";
     }
 }
