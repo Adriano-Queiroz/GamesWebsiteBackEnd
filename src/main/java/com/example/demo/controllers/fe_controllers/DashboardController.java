@@ -1,6 +1,8 @@
 package com.example.demo.controllers.fe_controllers;
 
 import com.example.demo.dtos.ajustes.ActivateBonusDTO;
+import com.example.demo.dtos.deposits.DepositDTO;
+import com.example.demo.models.deposit.DepositStatus;
 import com.example.demo.repositories.IDepositRepository;
 import com.example.demo.repositories.IWithdrawalRepository;
 import com.example.demo.services.fe_services.AdminService;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 @Controller
 public class DashboardController {
@@ -54,10 +57,27 @@ public class DashboardController {
             double moneyGained = dashboardService.getTotalGainPerPercentageBetweenDates(startDate,endDate);
             model.addAttribute("moneyGained", moneyGained);
 
+            List<DepositDTO> depositsList = dashboardService.getAllDepositsBetweenDates(startDate,endDate);
+            model.addAttribute("depositsList", depositsList);
+
+            List<DepositDTO> aprovadoList =  dashboardService.getAllByStatusBetweenDates(DepositStatus.APROVADO,startDate,endDate);
+            model.addAttribute("aprovadoList",aprovadoList);
+
+            List<DepositDTO> abertoList =  dashboardService.getAllByStatusBetweenDates(DepositStatus.ABERTO,startDate,endDate);
+            model.addAttribute("abertoList",abertoList);
+
+            List<DepositDTO> fechadoList =  dashboardService.getAllByStatusBetweenDates(DepositStatus.FECHADO,startDate,endDate);
+            model.addAttribute("fechadoList",fechadoList);
+
         } else {
             model.addAttribute("totalDeposits", dashboardService.getTotalDeposits());
             model.addAttribute("totalWithdrawals", dashboardService.getTotalWithdrawals());
             model.addAttribute("moneyGained", dashboardService.getTotalGainPerPercentage());
+            model.addAttribute("depositsList", dashboardService.getAllDeposits());
+            model.addAttribute("aprovadoList",dashboardService.getAllByStatus(DepositStatus.APROVADO));
+            model.addAttribute("abertoList",dashboardService.getAllByStatus(DepositStatus.ABERTO));
+            model.addAttribute("fechadoList",dashboardService.getAllByStatus(DepositStatus.FECHADO));
+
         }
         model.addAttribute("totalBalance", dashboardService.getTotalBalance());
         model.addAttribute("startDate", startDate != null ? startDate.toString() + " -" :"(Desde o Início)");

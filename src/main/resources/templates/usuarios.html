@@ -337,52 +337,48 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="usuarioModalLabelDefault">Usuário: Tatiane da Silva</h5>
+                                                    <h5 class="modal-title" id="usuarioModalLabelDefault">Usuário: <span id="modalUsername"></span></h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <div class="card-body" style="margin-top: -10%;margin-bottom: -10%;">
+                                                    <div class="card-body">
                                                         <div class="border-bottom border-separator-light pb-2 mb-2">
                                                             <div class="row g-0 h-100 align-items-start align-content-start align-content-md-center align-items-md-center">
-
-                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0 order-1">
+                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0">
                                                                     <div>Nome:</div>
-                                                                    <div class="text-muted text-small">Estefania marchi</div>
+                                                                    <div class="text-muted text-small" id="modalRealName"></div>
                                                                 </div>
-                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0 order-1">
+                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0">
                                                                     <div>CPF:</div>
-                                                                    <div class="text-muted text-small">085.***.***-09</div>
+                                                                    <div class="text-muted text-small" id="modalCpf"></div>
                                                                 </div>
-                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0 order-1">
+                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0">
                                                                     <div>Telefone:</div>
-                                                                    <div class="text-muted text-small">(48) 933**-**75</div>
+                                                                    <div class="text-muted text-small" id="modalPhone"></div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="border-bottom border-separator-light pb-2 mb-2">
                                                             <div class="row g-0 h-100 align-items-start align-content-start align-content-md-center align-items-md-center">
-                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0 order-1">
+                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0">
                                                                     <div>Saldo Real:</div>
-                                                                    <div class="text-muted text-small">R$ 68,00</div>
+                                                                    <div class="text-muted text-small" id="modalBalance"></div>
                                                                 </div>
-                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0 order-1">
+                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0">
                                                                     <div>Saldo Bônus:</div>
-                                                                    <div class="text-muted text-small">R$ 20,00</div>
+                                                                    <div class="text-muted text-small" id="modalBonusBalance"></div>
                                                                 </div>
-                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0 order-1">
-                                                                    <div>Cadastro:</div>
-                                                                    <div class="text-muted text-small">26/04/2024 17:27</div>
+                                                                <div class="col-11 col-md-4 d-flex flex-column pe-2 mb-2 mb-md-0">
+                                                                    <div>Data de Cadastro:</div>
+                                                                    <div class="text-muted text-small" id="modalJoinDateTime"></div>
                                                                 </div>
-
                                                             </div>
                                                         </div>
-
-
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <a href="https://web.whatsapp.com/" target="_blank"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Enviar Mensagem Whatsapp</button></a>
-                                                    <a href="perfil-usuario"> <button type="button" class="btn btn-primary">Ver Perfil</button></a>
+                                                    <a href="https://web.whatsapp.com/" target="_blank"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Enviar Mensagem Whatsapp</button></a>
+                                                    <a href="perfil-usuario"><button type="button" class="btn btn-primary">Ver Perfil</button></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -534,26 +530,26 @@
                                         </div>
                                     </div>
                                     <div id="allUsersList" class ="list-container">
-                                    <ul class="list-unstyled">
-                                        <li th:each="item : ${allUsersList}" class="list-item">
-                                            <div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-                                                <div class="row g-0 h-100 align-content-center">
-                                                    <div class="col-12 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0">
-                                                        <div class="text-alternate" th:text="${item.username}"></div>
-                                                    </div>
-                                                    <div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0">
-                                                        <div class="text-alternate" th:text="${item.email}"></div>
-                                                    </div>
-                                                    <div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0">
-                                                        <div class="text-alternate" th:text="${item.phone}"></div>
-                                                    </div>
-                                                    <div class="col-6 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0">
-                                                        <div class="text-alternate" th:text="${item.cpf}"></div>
+                                        <ul class="list-unstyled">
+                                            <li th:each="item : ${allUsersList}" class="list-item" th:with="data=${item}" >
+                                                <div  class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
+                                                    <div class="row g-0 h-100 align-content-center">
+                                                        <div class="col-12 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                                                            <div class="text-alternate username-info" data-bs-toggle="modal" data-bs-target="#usuarioModal" style="cursor: pointer;" th:text="${item.username}"></div>
+                                                        </div>
+                                                        <div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                                                            <div class="text-alternate email-info" data-bs-toggle="modal" data-bs-target="#usuarioModal" style="cursor: pointer;" th:text="${item.email}"></div>
+                                                        </div>
+                                                        <div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                                                            <div class="text-alternate phone-info" data-bs-toggle="modal" data-bs-target="#usuarioModal" style="cursor: pointer;" th:text="${item.phone}"></div>
+                                                        </div>
+                                                        <div class="col-6 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0">
+                                                            <div class="text-alternate cpf-info" data-bs-toggle="modal" data-bs-target="#usuarioModal" style="cursor: pointer;" th:text="${item.cpf}"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                            </li>
+                                        </ul>
                                     </div>
                                     <div id="activeUsersList" class="list-container">
                                     <ul class="list-unstyled">
@@ -622,6 +618,29 @@
                     </div>
 
                     <script>
+                        console.log("hi");
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const modalUsername = document.getElementById('modalUsername');
+                            const modalRealName = document.getElementById('modalRealName');
+                            const modalCpf = document.getElementById('modalCpf');
+                            const modalPhone = document.getElementById('modalPhone');
+                            const modalBalance = document.getElementById('modalBalance');
+                            const modalBonusBalance = document.getElementById('modalBonusBalance');
+                            const modalJoinDateTime = document.getElementById('modalJoinDateTime');
+
+                            const listItems = document.querySelectorAll('.list-item');
+                            listItems.forEach(item => {
+                                item.addEventListener('click', function (mambo) {
+                                    modalUsername.textContent = item.getAttribute('data-username');
+                                    modalRealName.textContent = item.getAttribute('data-username'); // Adjust as needed for the real name data
+                                    modalCpf.textContent = item.getAttribute('data-cpf');
+                                    modalPhone.textContent = item.getAttribute('data-phone');
+                                    modalBalance.textContent = item.getAttribute('data-balance');
+                                    modalBonusBalance.textContent = item.getAttribute('data-bonus-balance');
+                                    modalJoinDateTime.textContent = item.getAttribute('data-join-datetime');
+                                });
+                            });
+                        });
                         function showList(listId) {
                             // Hide all lists
                             document.querySelectorAll('.list-container').forEach(function(list) {
