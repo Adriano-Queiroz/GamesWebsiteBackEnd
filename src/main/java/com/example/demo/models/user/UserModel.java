@@ -54,6 +54,7 @@ public class UserModel {
 
     @Getter
     @Setter
+    @Column(unique = true, nullable = false)
     private Long cpf;
 
     @Getter

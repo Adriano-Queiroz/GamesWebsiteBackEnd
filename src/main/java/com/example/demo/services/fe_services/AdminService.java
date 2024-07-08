@@ -1,8 +1,11 @@
 package com.example.demo.services.fe_services;
 
-import com.example.demo.dtos.ajustes.ChangeGlobalSetting;
 import com.example.demo.models.global.GlobalModel;
+import com.example.demo.models.global.SocialMediaModel;
+import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IGlobalRepository;
+import com.example.demo.repositories.ISocialMediaRepository;
+import com.example.demo.repositories.IUserModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +15,18 @@ public class AdminService {
     @Autowired
     private IGlobalRepository iGlobalRepository;
 
+    @Autowired
+    private ISocialMediaRepository iSocialMediaRepository;
+
+    @Autowired
+    private IUserModelRepository iUserModelRepository;
+
     public GlobalModel getGlobal(String name) {
         return iGlobalRepository.findByName(name).get();
+    }
+
+    public SocialMediaModel getSocialMedia(String name) {
+        return iSocialMediaRepository.findByName(name).get();
     }
 
     public void changeGlobal(String name, Double value) {
@@ -21,13 +34,29 @@ public class AdminService {
         globalModel.setValue(value);
         iGlobalRepository.save(globalModel);
     }
-
     public void controlBonus(String name, Boolean status) {
         GlobalModel globalModel = iGlobalRepository.findByName(name).get();
         globalModel.setActive(status);
         iGlobalRepository.save(globalModel);
     }
 
+    public void changeSocialMedia(String name, String value) {
+        SocialMediaModel socialMediaModel = iSocialMediaRepository.findByName(name).get();
+        socialMediaModel.setValue(value);
+        iSocialMediaRepository.save(socialMediaModel);
+    }
+
+    public void creditUserBalance(Long cpf, Double value) {
+        UserModel user = iUserModelRepository.findByCpf(cpf).get();
+        user.setBalance(user.getBalance() + value);
+        iUserModelRepository.save(user);
+    }
+
+    public void creditUserBonusBalance(Long cpf, Double value) {
+        UserModel user = iUserModelRepository.findByCpf(cpf).get();
+        user.setBonusBalance(user.getBonusBalance() + value);
+        iUserModelRepository.save(user);
+    }
 
 
 }

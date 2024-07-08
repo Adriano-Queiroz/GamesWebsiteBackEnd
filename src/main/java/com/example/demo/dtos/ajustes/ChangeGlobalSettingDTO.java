@@ -1,6 +1,6 @@
 package com.example.demo.dtos.ajustes;
 
-public record ChangeGlobalSetting(
+public record ChangeGlobalSettingDTO(
         Double value
 ) {
 }

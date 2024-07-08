@@ -1,6 +1,7 @@
 package com.example.demo.repositories;
 
 import com.example.demo.models.user.UserModel;
+import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public interface IUserModelRepository extends JpaRepository<UserModel, Long> {
     Optional<UserModel> findByUsername(String username);
     Optional<UserModel> findFirstByEmail(String email);
+    Optional<UserModel> findByCpf(Long cpf);
 
     @Transactional
     @Modifying

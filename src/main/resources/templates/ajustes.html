@@ -421,7 +421,8 @@
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
-                                                <img src="img/illustration/configuracao.png" class="theme-filter" alt="email icon">
+                                                <img src="img/illustration/preco-raspadinha.png" class="theme-filter"
+                                                     alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <a href="#" class="heading mb-2 d-inline-block">Configuração de Lucro (Sistema Completo)</a>
@@ -476,8 +477,7 @@
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
-                                                <img src="img/illustration/preco-raspadinha.png" class="theme-filter"
-                                                     alt="email icon">
+                                                <img src="img/illustration/configuracao.png" class="theme-filter" alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <a href="#" class="heading mb-2 d-inline-block">Preço da Raspadinha</a>
@@ -507,38 +507,38 @@
                             </div>
                             <div class="col">
                                 <div class="card">
-<span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
-<i data-acorn-icon="check" data-acorn-size="25"></i>
-</span>
+        <span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
+            <i data-acorn-icon="check" data-acorn-size="25"></i>
+        </span>
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
-                                                <img src="img/illustration/usuario.png" class="theme-filter"
-                                                     alt="email icon">
+                                                <img src="img/illustration/usuario.png" class="theme-filter" alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <a href="#" class="heading mb-2 d-inline-block">Creditar usuário</a>
-                                                <p>
-                                                    <span class="text-small text-muted">CPF USUÁRIO</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="user"></i>
-                                                    <input class="form-control" placeholder="000.000.000-00">
-                                                </div>
-                                                </p>
-                                                <p>
-                                                    <span class="text-small text-muted">VALOR PARA CREDITAR</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="money"></i>
-                                                    <input class="form-control" placeholder="80.00">
-                                                </div>
-                                                </p>
-                                                <a href="#"
-                                                   class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-                                                    <i data-acorn-icon="edit-square"></i>
-                                                    <span>Alterar</span>
-                                                </a>
+                                                <form action="/creditUserBonusBalance" method="POST">
+                                                    <p>
+                                                        <span class="text-small text-muted">CPF USUÁRIO</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="user"></i>
+                                                        <input class="form-control" th:name="cpf" placeholder="000.000.000-00">
+                                                    </div>
+                                                    </p>
+                                                    <p>
+                                                        <span class="text-small text-muted">VALOR PARA CREDITAR</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="money"></i>
+                                                        <input class="form-control" th:name="value" placeholder="80.00">
+                                                    </div>
+                                                    </p>
+                                                    <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>Alterar</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -546,38 +546,38 @@
                             </div>
                             <div class="col">
                                 <div class="card">
-<span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
-<i data-acorn-icon="check" data-acorn-size="25"></i>
-</span>
+        <span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
+            <i data-acorn-icon="check" data-acorn-size="25"></i>
+        </span>
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
-                                                <img src="img/illustration/premio.png" class="theme-filter"
-                                                     alt="email icon">
+                                                <img src="img/illustration/premio.png" class="theme-filter" alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <a href="#" class="heading mb-2 d-inline-block">Premiar Usuários</a>
-                                                <p>
-                                                    <span class="text-small text-muted">CPF USUÁRIO</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="user"></i>
-                                                    <input class="form-control" placeholder="000.000.000-00">
-                                                </div>
-                                                </p>
-                                                <p>
-                                                    <span class="text-small text-muted">VALOR PARA O PRÊMIO</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="money"></i>
-                                                    <input class="form-control" placeholder="80.00">
-                                                </div>
-                                                </p>
-                                                <a href="#"
-                                                   class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-                                                    <i data-acorn-icon="edit-square"></i>
-                                                    <span>Alterar</span>
-                                                </a>
+                                                <form action="/creditUserBalance" method="POST">
+                                                    <p>
+                                                        <span class="text-small text-muted">CPF USUÁRIO</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="user"></i>
+                                                        <input class="form-control" th:name="cpf" placeholder="000.000.000-00">
+                                                    </div>
+                                                    </p>
+                                                    <p>
+                                                        <span class="text-small text-muted">VALOR PARA O PRÊMIO</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="money"></i>
+                                                        <input class="form-control" th:name="value" placeholder="80.00">
+                                                    </div>
+                                                    </p>
+                                                    <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>Alterar</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -585,198 +585,172 @@
                             </div>
                             <div class="col">
                                 <div class="card">
-<span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
-<i data-acorn-icon="check" data-acorn-size="25"></i>
-</span>
+        <span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
+            <i data-acorn-icon="check" data-acorn-size="25"></i>
+        </span>
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
-                                                <img src="img/illustration/facebook.png" class="theme-filter"
-                                                     alt="email icon">
+                                                <img src="img/illustration/facebook.png" class="theme-filter" alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
-                                                <a href="#" class="heading mb-2 d-inline-block">Configuração
-                                                    Facebook</a>
-                                                <p>
-                                                    <span class="text-small text-muted">PIXEL FACEBOOK</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="clock"></i>
-                                                    <input class="form-control" placeholder="985552475745133">
-                                                </div>
-                                                </p>
-                                                <p>
-                                                    <span class="text-small text-muted">TOKEN FACEBOOK</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="money"></i>
-                                                    <input class="form-control"
-                                                           placeholder="EAAOClm7UI8sBO8hZBB0mk8Ri80w8QMqvPxqR5nfA0Q5L21O3HDyonZC7HuiVmSExfD3xHz6563j9Q3ZC6czrOvuZBAVTIb0vF2ru9zDUXtsgXZCeTK9XZBPNK0f8SiLe0pKi0r3NjZCBfvCZC1AGORoDlj9qA8m0VZC6YS5yRZB4OpGuwArUhkSBYzZC59OwKEcZAvUwcwZDZD">
-                                                </div>
-                                                </p>
-                                                <a href="#"
-                                                   class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-                                                    <i data-acorn-icon="edit-square"></i>
-                                                    <span>Alterar</span>
-                                                </a>
+                                                <a href="#" class="heading mb-2 d-inline-block">Configuração Facebook</a>
+                                                <form action="/changePixelFacebook" method="POST">
+                                                    <p>
+                                                        <span class="text-small text-muted">PIXEL FACEBOOK</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="clock"></i>
+                                                        <input th:name ="value" name="pixelFacebook" class="form-control" th:value="${PixelFacebook.value}">
+                                                    </div>
+                                                    </p>
+                                                    <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>Alterar</span>
+                                                    </button>
+                                                </form>
+                                                <form action="/changeTokenFacebook" method="POST">
+                                                    <p>
+                                                        <span class="text-small text-muted">TOKEN FACEBOOK</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="money"></i>
+                                                        <input th:name ="value" name="tokenFacebook" class="form-control" th:value="${TokenFacebook.value}">
+                                                    </div>
+                                                    </p>
+                                                    <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>Alterar</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col">
                                 <div class="card">
-<span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
-<i data-acorn-icon="check" data-acorn-size="25"></i>
-</span>
+        <span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
+            <i data-acorn-icon="check" data-acorn-size="25"></i>
+        </span>
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
-                                                <img src="img/illustration/mercadopago.png" class="theme-filter"
-                                                     alt="email icon">
+                                                <img src="img/illustration/mercadopago.png" class="theme-filter" alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
-                                                <a href="#" class="heading mb-2 d-inline-block">Configuração Mercado
-                                                    Pago</a>
-                                                <p>
-                                                    <span class="text-small text-muted">PIXEL MERCADOPAGO</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="clock"></i>
-                                                    <input class="form-control" placeholder="985552475745133">
-                                                </div>
-                                                </p>
-                                                <!--<p>
-                                                <span class="text-small text-muted">TOKEN MERCADOPAGO</span>
-                                                <br>
-                                                <div class="mb-3 filled">
-                                                <i data-acorn-icon="money"></i>
-                                                <input class="form-control" placeholder="EAAOClm7UI8sBO8hZBB0mk8Ri80w8QMqvPxqR5nfA0Q5L21O3HDyonZC7HuiVmSExfD3xHz6563j9Q3ZC6czrOvuZBAVTIb0vF2ru9zDUXtsgXZCeTK9XZBPNK0f8SiLe0pKi0r3NjZCBfvCZC1AGORoDlj9qA8m0VZC6YS5yRZB4OpGuwArUhkSBYzZC59OwKEcZAvUwcwZDZD">
-                                                </div>
-                                                </p>-->
-                                                <a href="#"
-                                                   class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-                                                    <i data-acorn-icon="edit-square"></i>
-                                                    <span>Alterar</span>
-                                                </a>
+                                                <a href="#" class="heading mb-2 d-inline-block">Configuração Mercado Pago</a>
+                                                <form action="/changePixelMercadoPago" method="POST">
+                                                    <p>
+                                                        <span class="text-small text-muted">PIXEL MERCADOPAGO</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="clock"></i>
+                                                        <input th:name ="value" name="pixelMercadoPago" class="form-control" th:value="${PixelMercadoPago.value}">
+                                                    </div>
+                                                    </p>
+                                                    <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>Alterar</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col">
                                 <div class="card">
-<span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
-<i data-acorn-icon="check" data-acorn-size="25"></i>
-</span>
+        <span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
+            <i data-acorn-icon="check" data-acorn-size="25"></i>
+        </span>
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
-                                                <img src="img/illustration/instagram.png" class="theme-filter"
-                                                     alt="email icon">
+                                                <img src="img/illustration/instagram.png" class="theme-filter" alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <a href="#" class="heading mb-2 d-inline-block">Link Instagram</a>
-                                                <p>
-                                                    <span class="text-small text-muted">Rede Social Instagram</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="clock"></i>
-                                                    <input class="form-control" placeholder="@raspeiganhei">
-                                                </div>
-                                                </p>
-                                                <!--<p>
-                                                <span class="text-small text-muted">TOKEN MERCADOPAGO</span>
-                                                <br>
-                                                <div class="mb-3 filled">
-                                                <i data-acorn-icon="money"></i>
-                                                <input class="form-control" placeholder="EAAOClm7UI8sBO8hZBB0mk8Ri80w8QMqvPxqR5nfA0Q5L21O3HDyonZC7HuiVmSExfD3xHz6563j9Q3ZC6czrOvuZBAVTIb0vF2ru9zDUXtsgXZCeTK9XZBPNK0f8SiLe0pKi0r3NjZCBfvCZC1AGORoDlj9qA8m0VZC6YS5yRZB4OpGuwArUhkSBYzZC59OwKEcZAvUwcwZDZD">
-                                                </div>
-                                                </p>-->
-                                                <a href="#"
-                                                   class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-                                                    <i data-acorn-icon="edit-square"></i>
-                                                    <span>Alterar</span>
-                                                </a>
+                                                <form action="/changeLinkInstagram" method="POST">
+                                                    <p>
+                                                        <span class="text-small text-muted">Rede Social Instagram</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="clock"></i>
+                                                        <input th:name ="value" name="linkInstagram" class="form-control" th:value="${LinkInstagram.value}">
+                                                    </div>
+                                                    </p>
+                                                    <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>Alterar</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col">
                                 <div class="card">
-<span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
-<i data-acorn-icon="check" data-acorn-size="25"></i>
-</span>
+        <span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
+            <i data-acorn-icon="check" data-acorn-size="25"></i>
+        </span>
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
-                                                <img src="img/illustration/whatsapp.png" class="theme-filter"
-                                                     alt="email icon">
+                                                <img src="img/illustration/whatsapp.png" class="theme-filter" alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <a href="#" class="heading mb-2 d-inline-block">Link Whatsapp</a>
-                                                <p>
-                                                    <span class="text-small text-muted">Link suporte Whatsapp</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="clock"></i>
-                                                    <input class="form-control"
-                                                           placeholder="https://chat.whatsapp.com/KWFniuwKLwP6O8mWyC0RO5">
-                                                </div>
-                                                </p>
-                                                <!--<p>
-                                                <span class="text-small text-muted">TOKEN MERCADOPAGO</span>
-                                                <br>
-                                                <div class="mb-3 filled">
-                                                <i data-acorn-icon="money"></i>
-                                                <input class="form-control" placeholder="EAAOClm7UI8sBO8hZBB0mk8Ri80w8QMqvPxqR5nfA0Q5L21O3HDyonZC7HuiVmSExfD3xHz6563j9Q3ZC6czrOvuZBAVTIb0vF2ru9zDUXtsgXZCeTK9XZBPNK0f8SiLe0pKi0r3NjZCBfvCZC1AGORoDlj9qA8m0VZC6YS5yRZB4OpGuwArUhkSBYzZC59OwKEcZAvUwcwZDZD">
-                                                </div>
-                                                </p>-->
-                                                <a href="#"
-                                                   class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-                                                    <i data-acorn-icon="edit-square"></i>
-                                                    <span>Alterar</span>
-                                                </a>
+                                                <form action="/changeLinkWhatsapp" method="POST">
+                                                    <p>
+                                                        <span class="text-small text-muted">Link suporte Whatsapp</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="clock"></i>
+                                                        <input th:name ="value" name="linkWhatsapp" class="form-control" th:value="${LinkWhatsapp.value}">
+                                                    </div>
+                                                    </p>
+                                                    <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>Alterar</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col">
                                 <div class="card">
-<span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
-<i data-acorn-icon="check" data-acorn-size="25"></i>
-</span>
+        <span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
+            <i data-acorn-icon="check" data-acorn-size="25"></i>
+        </span>
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
-                                                <img src="img/illustration/telegram.png" class="theme-filter"
-                                                     alt="email icon">
+                                                <img src="img/illustration/telegram.png" class="theme-filter" alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
                                                 <a href="#" class="heading mb-2 d-inline-block">Link Telegram</a>
-                                                <p>
-                                                    <span class="text-small text-muted">Suporte Telegram</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="clock"></i>
-                                                    <input class="form-control" placeholder="https://web.telegram.org/">
-                                                </div>
-                                                </p>
-                                                <!--<p>
-                                                <span class="text-small text-muted">TOKEN MERCADOPAGO</span>
-                                                <br>
-                                                <div class="mb-3 filled">
-                                                <i data-acorn-icon="money"></i>
-                                                <input class="form-control" placeholder="EAAOClm7UI8sBO8hZBB0mk8Ri80w8QMqvPxqR5nfA0Q5L21O3HDyonZC7HuiVmSExfD3xHz6563j9Q3ZC6czrOvuZBAVTIb0vF2ru9zDUXtsgXZCeTK9XZBPNK0f8SiLe0pKi0r3NjZCBfvCZC1AGORoDlj9qA8m0VZC6YS5yRZB4OpGuwArUhkSBYzZC59OwKEcZAvUwcwZDZD">
-                                                </div>
-                                                </p>-->
-                                                <a href="#"
-                                                   class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-                                                    <i data-acorn-icon="edit-square"></i>
-                                                    <span>Alterar</span>
-                                                </a>
+                                                <form action="/changeLinkTelegram" method="POST">
+                                                    <p>
+                                                        <span class="text-small text-muted">Suporte Telegram</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="clock"></i>
+                                                        <input th:name ="value" name="linkTelegram" class="form-control" th:value="${LinkTelegram.value}">
+                                                    </div>
+                                                    </p>
+                                                    <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>Alterar</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
