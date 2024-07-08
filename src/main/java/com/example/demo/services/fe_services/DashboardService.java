@@ -2,12 +2,12 @@ package com.example.demo.services.fe_services;
 
 import com.example.demo.dtos.deposits.DepositDTO;
 import com.example.demo.models.deposit.DepositStatus;
+import com.example.demo.models.withdrawal.WithdrawalStatus;
 import com.example.demo.repositories.IDepositRepository;
 import com.example.demo.repositories.IHistoryRepository;
 import com.example.demo.repositories.IUserModelRepository;
 import com.example.demo.repositories.IWithdrawalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,19 +24,19 @@ public class DashboardService {
     @Autowired
     private IHistoryRepository iHistoryRepository;
 
-    public double getTotalDeposits() {
-        return iDepositRepository.getTotalDeposits();
+    public double getTotalDeposits(DepositStatus status) {
+        return iDepositRepository.getTotalDeposits(status);
     }
 
-    public double getTotalWithdrawals() {
-        return iWithdrawalRepository.getTotalWithdrawals();
+    public double getTotalWithdrawals(WithdrawalStatus status) {
+        return iWithdrawalRepository.getTotalWithdrawals(status);
     }
 
-    public double getTotalDepositsBetweenDates(LocalDate startDate, LocalDate endDate) {
-        return iDepositRepository.getTotalDepositsBetweenDates(startDate, endDate);
+    public double getTotalDepositsBetweenDates(LocalDate startDate, LocalDate endDate, DepositStatus status) {
+        return iDepositRepository.getTotalDepositsBetweenDates(startDate, endDate, status);
     }
-    public double getTotalWithdrawalsBetweenDates(LocalDate startDate, LocalDate endDate) {
-        return iWithdrawalRepository.getTotalWithdrawalsBetweenDates(startDate, endDate);
+    public double getTotalWithdrawalsBetweenDates(LocalDate startDate, LocalDate endDate, WithdrawalStatus status) {
+        return iWithdrawalRepository.getTotalWithdrawalsBetweenDates(startDate, endDate, status);
     }
     public double getTotalBalance(){
         return iUserModelRepository.getTotalBalance();
@@ -63,7 +63,7 @@ public class DashboardService {
                 depositModel.getStatus().toString()
         )).toList();
     }
-    public List<DepositDTO> getAllByStatus(DepositStatus status){
+    public List<DepositDTO> getAllDepositsByStatus(DepositStatus status){
         return iDepositRepository.findAllByStatus(status).stream().map(depositModel -> new DepositDTO(
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
@@ -71,8 +71,40 @@ public class DashboardService {
                 depositModel.getStatus().toString()
         )).toList();
     }
-    public List<DepositDTO> getAllByStatusBetweenDates(DepositStatus status, LocalDate startDate, LocalDate endDate){
+    public List<DepositDTO> getAllDepositsByStatusBetweenDates(DepositStatus status, LocalDate startDate, LocalDate endDate){
         return iDepositRepository.findAllByStatusAndDateBetween(status,startDate,endDate).stream().map(depositModel -> new DepositDTO(
+                depositModel.getDate(),
+                depositModel.getUser().getUsername(),
+                depositModel.getAmount(),
+                depositModel.getStatus().toString()
+        )).toList();
+    }
+    public List<DepositDTO> getAllWithdrawals(){
+        return iWithdrawalRepository.findAllByOrderByDateDesc().stream().map(depositModel -> new DepositDTO(
+                depositModel.getDate(),
+                depositModel.getUser().getUsername(),
+                depositModel.getAmount(),
+                depositModel.getStatus().toString()
+        )).toList();
+    }
+    public List<DepositDTO> getAllWithdrawalsBetweenDates(LocalDate startDate, LocalDate endDate){
+        return iWithdrawalRepository.findAllByDateBetween(startDate,endDate).stream().map(depositModel -> new DepositDTO(
+                depositModel.getDate(),
+                depositModel.getUser().getUsername(),
+                depositModel.getAmount(),
+                depositModel.getStatus().toString()
+        )).toList();
+    }
+    public List<DepositDTO> getAllWithdrawalsByStatus(WithdrawalStatus status){
+        return iWithdrawalRepository.findAllByStatus(status).stream().map(depositModel -> new DepositDTO(
+                depositModel.getDate(),
+                depositModel.getUser().getUsername(),
+                depositModel.getAmount(),
+                depositModel.getStatus().toString()
+        )).toList();
+    }
+    public List<DepositDTO> getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus status, LocalDate startDate, LocalDate endDate){
+        return iWithdrawalRepository.findAllByStatusAndDateBetween(status,startDate,endDate).stream().map(depositModel -> new DepositDTO(
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),

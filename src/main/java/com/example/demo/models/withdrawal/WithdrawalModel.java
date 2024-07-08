@@ -23,6 +23,9 @@ public class WithdrawalModel {
 
     private LocalDate date;
 
+    @Enumerated(EnumType.STRING)
+    private WithdrawalStatus status;
+
     @PrePersist
     protected void onCreate() {
         this.date = LocalDate.now();

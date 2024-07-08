@@ -4,6 +4,7 @@ import com.example.demo.dtos.deposits.DepositDTO;
 import com.example.demo.models.deposit.DepositStatus;
 import com.example.demo.models.withdrawal.WithdrawalStatus;
 import com.example.demo.services.fe_services.DashboardService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,15 +19,21 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Controller
-public class DepositController {
+public class SaquesController {
+
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private DashboardService dashboardService;
 
-    @GetMapping("/depositos")
+    @GetMapping("/saques")
     public String getDashboard(@RequestParam(value = "startDate", required = false) String startDateStr,
                                @RequestParam(value = "endDate", required = false) String endDateStr,
-                               Model model) {
+                               Model model,
+                               HttpSession session) {
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
+
+        model.addAttribute("user", session.getAttribute("user"));
         LocalDate startDate = null;
         LocalDate endDate = null;
         try {
@@ -48,26 +55,25 @@ public class DepositController {
             model.addAttribute("totalWithdrawals", withdrawals);
 
 
-            List<DepositDTO> depositsList = dashboardService.getAllDepositsBetweenDates(startDate,endDate);
-            model.addAttribute("depositsList", depositsList);
+            List<DepositDTO> depositsList = dashboardService.getAllWithdrawalsBetweenDates(startDate,endDate);
+            model.addAttribute("withdrawalsList", depositsList);
 
-            List<DepositDTO> aprovadoList =  dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.APROVADO,startDate,endDate);
+            List<DepositDTO> aprovadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.APROVADO,startDate,endDate);
             model.addAttribute("aprovadoList",aprovadoList);
 
-            List<DepositDTO> abertoList =  dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.ABERTO,startDate,endDate);
-            model.addAttribute("abertoList",abertoList);
+            List<DepositDTO> solicitadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.SOLICITADO,startDate,endDate);
+            model.addAttribute("solicitadoList",solicitadoList);
 
-            List<DepositDTO> fechadoList =  dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.FECHADO,startDate,endDate);
-            model.addAttribute("fechadoList",fechadoList);
+            //List<DepositDTO> fechadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(Wit.FECHADO,startDate,endDate);
+            //model.addAttribute("fechadoList",fechadoList);
 
         } else {
             model.addAttribute("totalDeposits", dashboardService.getTotalDeposits(DepositStatus.APROVADO));
             model.addAttribute("totalWithdrawals", dashboardService.getTotalWithdrawals(WithdrawalStatus.APROVADO));
             model.addAttribute("moneyGained", dashboardService.getTotalGainPerPercentage());
-            model.addAttribute("depositsList", dashboardService.getAllDeposits());
-            model.addAttribute("aprovadoList",dashboardService.getAllDepositsByStatus(DepositStatus.APROVADO));
-            model.addAttribute("abertoList",dashboardService.getAllDepositsByStatus(DepositStatus.ABERTO));
-            model.addAttribute("fechadoList",dashboardService.getAllDepositsByStatus(DepositStatus.FECHADO));
+            model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawals());
+            model.addAttribute("aprovadoList",dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.APROVADO));
+            model.addAttribute("solicitadoList",dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.SOLICITADO));
 
         }
         model.addAttribute("totalBalance", dashboardService.getTotalBalance());
@@ -75,10 +81,10 @@ public class DepositController {
         model.addAttribute("endDate", endDate != null ? endDate.toString():"");
 
 
-        return "depositos";
+        return "saques";
     }
 
-    @PostMapping("/deposits-date")
+    @PostMapping("/saques-date")
     public String handleDateSubmission(@RequestParam("startDate") String startDateStr,
                                        @RequestParam("endDate") String endDateStr,
                                        RedirectAttributes redirectAttributes) {
@@ -92,6 +98,6 @@ public class DepositController {
         redirectAttributes.addAttribute("endDate", endDateStr);
 
         // Redirect to the GET /dashboard with parameters
-        return "redirect:/depositos";
+        return "redirect:/saques";
     }
 }

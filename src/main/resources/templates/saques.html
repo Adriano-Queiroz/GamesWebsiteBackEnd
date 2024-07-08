@@ -329,23 +329,24 @@
 <div class="col-auto">
 
 </div>
-<form>
-<div class="text-alternate">Data Início</div>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="clock"></i>
-<input class="form-control" placeholder="08/05/2024">
-</div>
-<br>
-<div class="mb-3 filled">
-<i data-acorn-icon="clock"></i>
-<input class="form-control" placeholder="08/05/2024">
-</div>
-<a href="#" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
-<i data-acorn-icon="search"></i>
-<span>Pesquisar</span>
-</a>
-</form>
+    <form th:action="@{/saques-date}" method="post">
+        <div class="text-alternate">Data Início</div>
+        <br>
+        <div class="mb-3 filled">
+            <i data-acorn-icon="clock"></i>
+            <input class="form-control" type="date" name="startDate" placeholder="08/05/2024">
+        </div>
+        <div class="text-alternate">Data Fim</div>
+        <br>
+        <div class="mb-3 filled">
+            <i data-acorn-icon="clock"></i>
+            <input class="form-control" type="date" name="endDate" placeholder="08/05/2024">
+        </div>
+        <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+            <i data-acorn-icon="search"></i>
+            <span>Pesquisar</span>
+        </button>
+    </form>
 </div>
 
 </div>
@@ -366,7 +367,7 @@
 <div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Total de depósitos</div>
 </div>
 <div class="col-auto ps-3">
-<div class="cta-2 text-primary">R$ 26.75</div>
+    <div class="cta-1 text-primary">R$ <span th:text="${totalDeposits}"> </span></div>
 </div>
 </div>
 
@@ -384,7 +385,7 @@
 <div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Total de saques</div>
 </div>
 <div class="col-auto ps-3">
-<div class="cta-2 text-primary">R$ 5.25</div>
+    <div class="cta-1 text-primary">R$ <span th:text="${totalWithdrawals}"> </span></div>
 </div>
 </div>
 </div>
@@ -398,10 +399,10 @@
 </div>
 </div>
 <div class="col">
-<div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Saldo Atual</div>
+    <div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Saldo Atual</div>
 </div>
 <div class="col-auto ps-3">
-<div class="cta-2 text-primary">R$ 26.75</div>
+    <div class="cta-1 text-primary">R$ <span th:text="${totalBalance}" ></span></div>
 </div>
 </div>
 
@@ -429,9 +430,9 @@
 <div class="d-inline-block">
 <div class="d-inline-block">
 
-<button class="btn btn-primary">Todos</button>&nbsp;&nbsp;
-<button class="btn btn-success" >Aprovados</button>&nbsp;&nbsp;
-<button class="btn btn-warning">Solicitados</button>&nbsp;&nbsp;
+    <button onclick="showList('withdrawalsList')" class="btn btn-primary">Todos</button>&nbsp;&nbsp;
+    <button onclick="showList('aprovadoList')" class="btn btn-success" >Aprovados</button>&nbsp;&nbsp;
+    <button onclick="showList('solicitadoList')" class="btn btn-warning">Solicitados</button>&nbsp;&nbsp;
 <button class="btn p-0" data-bs-toggle="dropdown" type="button" data-bs-offset="0,3">
 <span class="btn btn-icon btn-icon-only btn-foreground-alternate shadow dropdown" data-bs-delay="0" data-bs-placement="top" data-bs-toggle="tooltip" title="Baixar">
 <i data-acorn-icon="download"></i>
@@ -472,186 +473,105 @@
 <div class="col-6 col-md-2 d-flex align-items-center text-alternate text-medium justify-content-end text-muted text-small">STATUS</div>
 </div>
 </div>
-<div class="mb-5 border-last-none">
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<span class="badge rounded-pill bg-outline-success">APROVADO</span>
+    <div id="withdrawalsList" class="list-container">
+        <ul class="list-unstyled">
+            <li th:each="item : ${withdrawalsList}" class="list-item">
+                <div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
+                    <div class="row g-0 h-100 align-content-center">
+                        <div class="col-12 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                            <div class="text-alternate" th:text="${item.date}"></div>
+                        </div>
+                        <div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                            <div class="text-alternate" th:text="${item.username}"></div>
+                        </div>
+                        <div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                            <div class="text-alternate" th:text="${item.value}"></div>
+                        </div>
+                        <div class="col-6 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0">
+                            <div class="text-alternate" ></div>
+                            <span th:switch="${item.status}">
+                            <span th:case="'FECHADO'" class="badge rounded-pill bg-outline-danger" th:text="${item.status}"></span>
+                            <span th:case="'APROVADO'" class="badge rounded-pill bg-outline-success" th:text="${item.status}"></span>
+                            <span th:case="'SOLICITADO'" class="badge rounded-pill bg-outline-warning" th:text="${item.status}"></span>
+                            <span th:case="*/*" class="badge rounded-pill bg-outline-secondary" th:text="${item.status}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="aprovadoList" class="list-container">
+        <ul class="list-unstyled">
+            <li th:each="item : ${aprovadoList}" class="list-item">
+                <div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
+                    <div class="row g-0 h-100 align-content-center">
+                        <div class="col-12 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                            <div class="text-alternate" th:text="${item.date}"></div>
+                        </div>
+                        <div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                            <div class="text-alternate" th:text="${item.username}"></div>
+                        </div>
+                        <div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                            <div class="text-alternate" th:text="${item.value}"></div>
+                        </div>
+                        <div class="col-6 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0">
+                            <div class="text-alternate" ></div>
+                            <span th:switch="${item.status}">
+                            <span th:case="'FECHADO'" class="badge rounded-pill bg-outline-danger" th:text="${item.status}"></span>
+                            <span th:case="'APROVADO'" class="badge rounded-pill bg-outline-success" th:text="${item.status}"></span>
+                            <span th:case="'ABERTO'" class="badge rounded-pill bg-outline-warning" th:text="${item.status}"></span>
+                            <span th:case="*/*" class="badge rounded-pill bg-outline-secondary" th:text="${item.status}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="solicitadoList" class="list-container">
+        <ul class="list-unstyled">
+            <li th:each="item : ${solicitadoList}" class="list-item">
+                <div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
+                    <div class="row g-0 h-100 align-content-center">
+                        <div class="col-12 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                            <div class="text-alternate" th:text="${item.date}"></div>
+                        </div>
+                        <div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                            <div class="text-alternate" th:text="${item.username}"></div>
+                        </div>
+                        <div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0">
+                            <div class="text-alternate" th:text="${item.value}"></div>
+                        </div>
+                        <div class="col-6 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0">
+                            <div class="text-alternate" ></div>
+                            <span th:switch="${item.status}">
+                            <span th:case="'FECHADO'" class="badge rounded-pill bg-outline-danger" th:text="${item.status}"></span>
+                            <span th:case="'APROVADO'" class="badge rounded-pill bg-outline-success" th:text="${item.status}"></span>
+                            <span th:case="'SOLICITADO'" class="badge rounded-pill bg-outline-warning" th:text="${item.status}"></span>
+                            <span th:case="*/*" class="badge rounded-pill bg-outline-secondary" th:text="${item.status}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
 
-</div>
-</div>
-</div>
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<span class="badge rounded-pill bg-outline-success">APROVADO</span>
+    <script>
+        function showList(listId) {
+            // Hide all lists
+            document.querySelectorAll('.list-container').forEach(function(list) {
+                list.style.display = 'none';
+            });
 
-</div>
-</div>
-</div>
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<div class="text-alternate">
-<span class="badge rounded-pill bg-outline-success">APROVADO</span>
-</div>
-</div>
-</div>
-</div>
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<div class="text-alternate">
-<span class="badge rounded-pill bg-outline-success">APROVADO</span>
-</div>
-</div>
-</div>
-</div>
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<div class="text-alternate">
-<span class="badge rounded-pill bg-outline-success">APROVADO</span>
-</div>
-</div>
-</div>
-</div>
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<div class="text-alternate">
-<span class="badge rounded-pill bg-outline-success">APROVADO</span>
-</div>
-</div>
-</div>
-</div>
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<div class="text-alternate">
-<span class="badge rounded-pill bg-outline-warning">ABERTO</span>
-</div>
-</div>
-</div>
-</div>
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<div class="text-alternate">
-<span class="badge rounded-pill bg-outline-danger">FECHADO</span>
-</div>
-</div>
-</div>
-</div>
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<div class="text-alternate">
-<span class="badge rounded-pill bg-outline-danger">FECHADO</span>
-</div>
-</div>
-</div>
-</div>
-<div class="h-100 sh-md-4 border-bottom border-separator-light pb-3 mb-3">
-<div class="row g-0 h-100 align-content-center">
-<div class="col-10 col-md-5 d-flex flex-column justify-content-center mb-1 mb-md-0 order-0">
-<div class="text-alternate">19/05/2024 14:37</div>
-</div>
-<div class="col-6 col-md-3 d-flex flex-column justify-content-center mb-1 mb-md-0 order-2">
-<div class="text-alternate">Simone de Oliveira Silva</div>
-</div>
-<div class="col-6 col-md-2 d-flex flex-column justify-content-center mb-1 mb-md-0 order-3">
-<div class="text-alternate">R$ 8,00</div>
-</div>
-<div class="col-2 col-md-2 d-flex flex-column justify-content-center align-items-md-end mb-1 mb-md-0 order-1 order-md-4">
-<div class="text-alternate">
-<span class="badge rounded-pill bg-outline-danger">FECHADO</span>
-</div>
-</div>
-</div>
-</div>
-</div>
+            // Show the selected list
+            document.getElementById(listId).style.display = 'block';
+        }
+
+        // Optionally, show the first list by default
+        showList("withdrawalsList");
+    </script>
 <nav>
 <ul class="pagination justify-content-center mb-0 semibordered">
 <li class="page-item">

@@ -14,9 +14,14 @@ public interface IDepositRepository extends JpaRepository<DepositModel,Long> {
     Double getTotalDeposits();
     @Query("SELECT COALESCE(SUM(d.amount), 0) FROM DepositModel d WHERE d.date BETWEEN :startDate AND :endDate")
     Double getTotalDepositsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    @Query("SELECT COALESCE(SUM(d.amount), 0) FROM DepositModel d where d.status = :status")
+    Double getTotalDeposits(DepositStatus status);
+    @Query("SELECT COALESCE(SUM(d.amount), 0) FROM DepositModel d WHERE d.date BETWEEN :startDate AND :endDate and d.status = :status")
+    Double getTotalDepositsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,DepositStatus status);
 
     List<DepositModel> findAllByStatusAndDateBetween(DepositStatus status, LocalDate date, LocalDate date2);
     List<DepositModel> findAllByStatus(DepositStatus status);
     List<DepositModel> findAllByOrderByDateDesc();
     List<DepositModel> findAllByDateBetween(LocalDate date, LocalDate date2);
+
 }

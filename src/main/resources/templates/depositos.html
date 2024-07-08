@@ -365,7 +365,7 @@
 <div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Total de depósitos</div>
 </div>
 <div class="col-auto ps-3">
-<div class="cta-2 text-primary">R$ 26.75</div>
+    <div class="cta-1 text-primary">R$ <span th:text="${totalDeposits}"> </span></div>
 </div>
 </div>
 
@@ -383,7 +383,7 @@
 <div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Total de saques</div>
 </div>
 <div class="col-auto ps-3">
-<div class="cta-2 text-primary">R$ 5.25</div>
+    <div class="cta-1 text-primary">R$ <span th:text="${totalWithdrawals}"> </span></div>
 </div>
 </div>
 </div>
@@ -400,7 +400,7 @@
 <div class="sh-5 d-flex align-items-center lh-1-25 ps-3">Saldo Atual</div>
 </div>
 <div class="col-auto ps-3">
-<div class="cta-2 text-primary">R$ 26.75</div>
+    <div class="cta-1 text-primary">R$ <span th:text="${totalBalance}" ></span></div>
 </div>
 </div>
 
