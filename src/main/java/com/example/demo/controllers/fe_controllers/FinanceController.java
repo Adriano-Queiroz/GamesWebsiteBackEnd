@@ -53,7 +53,6 @@ public class FinanceController {
         this.iRoomRepository = iRoomRepository;
         this.iGameRepository = iGameRepository;
     }
-
     @GetMapping("/saques")
     public String saques(Model model, HttpSession session){
         if(session.getAttribute("user") == null)
@@ -62,12 +61,15 @@ public class FinanceController {
         model.addAttribute("user", session.getAttribute("user"));
         return "saques";
     }
+    /*
     @GetMapping("/depositos")
     public String depositos(Model model, HttpSession session){
         if(session.getAttribute("user") == null)
             return "redirect:/login";
         return "depositos";
     }
+*/
+
 
 
 
