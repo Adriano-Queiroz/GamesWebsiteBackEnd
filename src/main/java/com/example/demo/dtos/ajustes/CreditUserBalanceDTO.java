@@ -1,7 +1,7 @@
 package com.example.demo.dtos.ajustes;
 
 public record CreditUserBalanceDTO(
-        Long cpf,
-        Double value
+        long cpf,
+        double value
 ) {
 }

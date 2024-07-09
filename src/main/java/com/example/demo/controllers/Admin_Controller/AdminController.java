@@ -29,6 +29,8 @@ public class AdminController {
         model.addAttribute("BonusPrimeiraRecarga", adminService.getGlobal("BonusPrimeiraRecarga"));
         model.addAttribute("ConfigLucro", adminService.getGlobal("ConfigLucro"));
 
+        model.addAttribute("Salas", adminService.getRooms());
+
         model.addAttribute("PixelFacebook", adminService.getSocialMedia("PixelFacebook"));
         model.addAttribute("TokenFacebook", adminService.getSocialMedia("TokenFacebook"));
         model.addAttribute("PixelMercadoPago", adminService.getSocialMedia("PixelMercadoPago"));
@@ -112,6 +114,18 @@ public class AdminController {
     @PostMapping("/creditUserBonusBalance")
     public String creditUserBonusBalance(@ModelAttribute CreditUserBalanceDTO dto, Model model){
         adminService.creditUserBonusBalance(dto.cpf(),dto.value());
+        return "redirect:/ajustes";
+    }
+
+    @PostMapping("/AddRoom")
+    public String addRoom(@RequestParam String name, @RequestParam double bet , Model model){
+        adminService.addRoom(name, bet);
+        return "redirect:/ajustes";
+    }
+
+    @PostMapping("/removeRoom")
+    public String removeRoom(@RequestParam Long salaId, Model model){
+        adminService.removeRoom(salaId);
         return "redirect:/ajustes";
     }
 
