@@ -2,6 +2,7 @@ package com.example.demo.services.fe_services;
 
 import com.example.demo.dtos.deposits.DepositDTO;
 import com.example.demo.models.deposit.DepositStatus;
+import com.example.demo.models.deposit.ExtratoType;
 import com.example.demo.repositories.IDepositRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,9 @@ public class DepositService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.DEPÓSITO.toString()
+
         )).toList();
     }
     public List<DepositDTO> getAllDepositsBetweenDates(LocalDate startDate, LocalDate endDate){
@@ -33,7 +36,9 @@ public class DepositService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.DEPÓSITO.toString()
+
         )).toList();
     }
     public List<DepositDTO> getAllByStatus(DepositStatus status){
@@ -41,7 +46,9 @@ public class DepositService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.DEPÓSITO.toString()
+
         )).toList();
     }
     public List<DepositDTO> getAllByStatusBetweenDates(DepositStatus status, LocalDate startDate, LocalDate endDate){
@@ -49,7 +56,9 @@ public class DepositService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.DEPÓSITO.toString()
+
         )).toList();
     }
 }

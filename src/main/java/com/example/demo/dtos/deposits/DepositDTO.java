@@ -6,6 +6,7 @@ public record DepositDTO(
         LocalDate date,
         String username,
         double value,
-        String status
+        String status,
+        String type
 ) {
 }

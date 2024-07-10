@@ -2,6 +2,7 @@ package com.example.demo.services.fe_services;
 
 import com.example.demo.dtos.deposits.DepositDTO;
 import com.example.demo.models.deposit.DepositStatus;
+import com.example.demo.models.deposit.ExtratoType;
 import com.example.demo.models.withdrawal.WithdrawalStatus;
 import com.example.demo.repositories.IDepositRepository;
 import com.example.demo.repositories.IHistoryRepository;
@@ -52,7 +53,8 @@ public class DashboardService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.DEPÓSITO.toString()
         )).toList();
     }
     public List<DepositDTO> getAllDepositsBetweenDates(LocalDate startDate, LocalDate endDate){
@@ -60,7 +62,8 @@ public class DashboardService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.DEPÓSITO.toString()
         )).toList();
     }
     public List<DepositDTO> getAllDepositsByStatus(DepositStatus status){
@@ -68,7 +71,9 @@ public class DashboardService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.DEPÓSITO.toString()
+
         )).toList();
     }
     public List<DepositDTO> getAllDepositsByStatusBetweenDates(DepositStatus status, LocalDate startDate, LocalDate endDate){
@@ -76,7 +81,9 @@ public class DashboardService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.DEPÓSITO.toString()
+
         )).toList();
     }
     public List<DepositDTO> getAllWithdrawals(){
@@ -84,7 +91,9 @@ public class DashboardService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.SAQUE.toString()
+
         )).toList();
     }
     public List<DepositDTO> getAllWithdrawalsBetweenDates(LocalDate startDate, LocalDate endDate){
@@ -92,7 +101,9 @@ public class DashboardService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.SAQUE.toString()
+
         )).toList();
     }
     public List<DepositDTO> getAllWithdrawalsByStatus(WithdrawalStatus status){
@@ -100,7 +111,9 @@ public class DashboardService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.SAQUE.toString()
+
         )).toList();
     }
     public List<DepositDTO> getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus status, LocalDate startDate, LocalDate endDate){
@@ -108,7 +121,9 @@ public class DashboardService {
                 depositModel.getDate(),
                 depositModel.getUser().getUsername(),
                 depositModel.getAmount(),
-                depositModel.getStatus().toString()
+                depositModel.getStatus().toString(),
+                ExtratoType.SAQUE.toString()
+
         )).toList();
     }
 }
