@@ -6,22 +6,24 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
-@Table(name = "room")
-@Getter
-@Setter
-public class RoomModel {
+    @Entity
+    @Table(name = "room")
+    @Getter
+    @Setter
+    public class RoomModel {
 
-    @Id
-    @GeneratedValue
-    private Long codRoom;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "cod_room")
+        private Long codRoom;
 
-    private double bet;
-    @ManyToOne
-    @JoinColumn(name = "cod_game")
-    private GameModel game;
+        private double bet;
 
-    public RoomDTO roomToDTO(){
-        return new RoomDTO(codRoom,bet);
+        @ManyToOne
+        @JoinColumn(name = "cod_game")
+        private GameModel game;
+
+        public RoomDTO roomToDTO(){
+            return new RoomDTO(codRoom,bet);
+        }
     }
-}

@@ -471,36 +471,63 @@
                             </script>
                             <div class="col">
                                 <div class="card">
-<span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
-<i data-acorn-icon="check" data-acorn-size="25"></i>
-</span>
+        <span class="badge rounded-pill bg-outline-primary me-1 position-absolute s-3 t-3 z-index-1">
+            <i data-acorn-icon="check" data-acorn-size="25"></i>
+        </span>
                                     <div class="card-body">
                                         <div class="row g-0">
                                             <div class="col-12 col-sm-auto pe-4 d-flex justify-content-center">
                                                 <img src="img/illustration/configuracao.png" class="theme-filter" alt="email icon">
                                             </div>
                                             <div class="col-12 col-sm">
-                                                <a href="#" class="heading mb-2 d-inline-block">Preço da Raspadinha</a>
-                                                <p>
-                                                    <span class="text-small text-muted">VALOR DA RASPADINHA (R$)</span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <i data-acorn-icon="money"></i>
-                                                    <input class="form-control" placeholder="1.00">
-                                                </div>
-                                                </p>
-                                                <p>
-                                                    <span class="text-small text-muted"></span>
-                                                    <br>
-                                                <div class="mb-3 filled">
-                                                    <br><br></div>
-                                                </p>
-                                                <a href="#"
-                                                   class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                <a href="#" class="heading mb-2 d-inline-block">Preço das Salas</a>
+                                                <form action="/removeRoom" method="POST">
+                                                    <p>
+                                                        <span class="text-small text-muted">SELECIONAR SALA</span>
+                                                        <br>
+                                                    <div class="mb-3 filled">
+                                                        <i data-acorn-icon="money"></i>
+                                                        <select class="form-control" th:name="salaId">
+                                                            <option th:each="sala : ${Salas}" th:value="${sala.getCodRoomConfig()}" th:text="${sala.getName()}"></option>
+                                                        </select>
+                                                    </div>
+                                                    </p>
+                                                    <button type="submit" class="btn btn-icon btn-icon-start btn-outline-primary mt-1">
+                                                        <i data-acorn-icon="edit-square"></i>
+                                                        <span>Remover Sala</span>
+                                                    </button>
+                                                </form>
+                                                <!-- Botão para abrir o modal -->
+                                                <button type="button" class="btn btn-icon btn-icon-start btn-outline-primary mt-1" data-bs-toggle="modal" data-bs-target="#addRoomModal">
                                                     <i data-acorn-icon="edit-square"></i>
-                                                    <span>Alterar</span>
-                                                </a>
+                                                    <span>Adicionar Sala</span>
+                                                </button>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addRoomModalLabel">Adicionar Sala</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/AddRoom" method="POST">
+                                                <div class="mb-3">
+                                                    <label for="roomName" class="form-label">Nome da Sala</label>
+                                                    <input type="text" class="form-control" id="roomName" th:name="name" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="roomBet" class="form-label">Valor da Aposta</label>
+                                                    <input type="number" class="form-control" id="roomBet" min="0" th:name="bet" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Adicionar</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
