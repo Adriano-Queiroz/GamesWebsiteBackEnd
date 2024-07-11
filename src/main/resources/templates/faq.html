@@ -286,98 +286,30 @@
 </ul>
 </div>
 <div class="col">
-
-<section class="mb-5 scroll-section" id="are-the-contents-of-the-niches-interchangeable">
-<h2 class="small-title"><a href="#are-the-contents-of-the-niches-interchangeable">1</a></h2>
-<div class="card">
-<div class="card-body">
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="QUAIS SÃO OS PRINCIPAIS PRÊMIOS QUE POSSO GANHAR NA RASPADINHA">
-</div>
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="Você irá ganhar prèmios em dinheiro que vai de R 1,00 até R$ 10.000,00 além de prêmios como JBL, Iphone, Motos e muito mais">
-</div>
-</div>
-</div>
-</section>
-
-<section class="mb-5 scroll-section" id="are-the-contents-of-the-niches-interchangeable">
-<h2 class="small-title"><a href="#are-the-contents-of-the-niches-interchangeable">2</a></h2>
-<div class="card">
-<div class="card-body">
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="POSSO GANHAR MAIS DE UMA VEZ COM UMA RASPADINHA?">
-</div>
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="Sim. se você achar 3 números repetidos mais de uma vez, sim você receberá o prêmio dos números repetidos.">
-</div>
-</div>
-</div>
-</section>
-
-<section class="mb-5 scroll-section" id="are-the-contents-of-the-niches-interchangeable">
-<h2 class="small-title"><a href="#are-the-contents-of-the-niches-interchangeable">3</a></h2>
-<div class="card">
-<div class="card-body">
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="QUANDO POSSO RESGATAR MINHA RASPADINHA VENCEDORA?">
-</div>
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="Você pode resgatar o valor ganho a qualquer momento. Precisará apenas solicitar o saque em sua conta e em até 2 horas você receberá o seu valor via PIX.">
-</div>
-</div>
-</div>
-</section>
-
-<section class="mb-5 scroll-section" id="are-the-contents-of-the-niches-interchangeable">
-<h2 class="small-title"><a href="#are-the-contents-of-the-niches-interchangeable">4</a></h2>
-<div class="card">
-<div class="card-body">
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="COMO POSSO RESGATAR MEUS GANHOS?">
-</div>
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="A qualquer hora do dia na sua área administrativa.">
-</div>
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="serão pagos em até">
-</div>
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="2 horas">
-</div>
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="a partir da sua solicitação.">
-</div>
-</div>
-</div>
-</section>
-
-<section class="mb-5 scroll-section" id="are-the-contents-of-the-niches-interchangeable">
-<h2 class="small-title"><a href="#are-the-contents-of-the-niches-interchangeable">5</a></h2>
-<div class="card">
-<div class="card-body">
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="SE EU TIVER ALGUMA DÚVIDA DE COMO RESGATAR MEUS PRÊMIOS?">
-</div>
-<div class="mb-3 filled w-100 d-flex flex-column">
-<i data-acorn-icon="text"></i>
-<input class="form-control" placeholder="Name" value="Basta apenas chamar nosso suporte via Whatsapp que iremos lhe ajudar em minutos.">
-</div>
-</div>
-</div>
-</section>
+    <div th:each="faq, iterStat : ${faqList}">
+        <section class="mb-5 scroll-section" th:id="'faq-' + ${faq.id}">
+            <h2 class="small-title"><a th:href="'#faq-' + ${faq.id}" th:text="${iterStat.index + 1}"></a></h2>
+            <div class="card">
+                <div class="card-body">
+                    <form th:action="@{/faqsubmit}" method="post">
+                        <input type="hidden" name="id" th:value="${faq.id}"/>
+                        <input type="hidden" name="group" th:value="${faq.questionGroup}"/>
+                        <div class="mb-3 filled w-100 d-flex flex-column">
+                            <i data-acorn-icon="text"></i>
+                            <input class="form-control" name="question" placeholder="Name" th:value="${faq.question}">
+                        </div>
+                        <div class="mb-3 filled w-100 d-flex flex-column">
+                            <i data-acorn-icon="text"></i>
+                            <input class="form-control" name="answer" placeholder="Name" th:value="${faq.answer}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+        </section>
+    </div>
 
 
 </div>
