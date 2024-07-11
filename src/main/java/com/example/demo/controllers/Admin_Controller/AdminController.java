@@ -104,6 +104,24 @@ public class AdminController {
         adminService.changeSocialMedia("LinkTelegram",dto.value());
         return "redirect:/ajustes";
     }
+    @PostMapping("/changeLinkInstagramSuporte")
+    public String changeLinkInstagramSuporte(@ModelAttribute ChangeSocialMediaDTO dto, Model model){
+        adminService.changeSocialMedia("LinkInstagram",dto.value());
+        return "redirect:/ajustes-suporte";
+    }
+
+    @PostMapping("/changeLinkWhatsappSuporte")
+    public String changeLinkWhatsappSuporte(@ModelAttribute ChangeSocialMediaDTO dto, Model model){
+        adminService.changeSocialMedia("LinkWhatsapp",dto.value());
+        return "redirect:/ajustes-suporte";
+    }
+
+    @PostMapping("/changeLinkTelegramSuporte")
+    public String changeLinkTelegramSuporte(@ModelAttribute ChangeSocialMediaDTO dto, Model model){
+        adminService.changeSocialMedia("LinkTelegram",dto.value());
+        return "redirect:/ajustes-suporte";
+    }
+
 
     @PostMapping("/creditUserBalance")
     public String creditUserBalance(@ModelAttribute CreditUserBalanceDTO dto, Model model){

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class ProfileController {
+public class PerfilController {
     @Autowired
     private IUserModelRepository iuserRepository;
-    @GetMapping("/admin-profile")
+    @GetMapping("/perfil")
     public String profile(HttpSession session, Model model){
         if(session.getAttribute("user") == null)
             return "redirect:/login";
