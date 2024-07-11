@@ -110,6 +110,9 @@ public class UserModel {
     LocalDate joinDate;
     @Getter
     LocalDateTime joinDateTime;
+    @Getter
+    @Setter
+    private String city;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
@@ -120,6 +123,16 @@ public class UserModel {
     @Getter
     @Setter
     private List<WithdrawalModel> withdrawals = new ArrayList<>();
+
+    @Getter
+    @Setter
+    private boolean whatsappNotifications;
+    @Getter
+    @Setter
+    private boolean generalNotifications;
+    @Getter
+    @Setter
+    private boolean weeklyNewsletter;
 
     @Override
     public boolean equals(Object o) {
