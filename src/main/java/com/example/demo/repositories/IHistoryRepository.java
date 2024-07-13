@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface IHistoryRepository extends JpaRepository<HistoryModel,Long> {
@@ -16,6 +17,9 @@ public interface IHistoryRepository extends JpaRepository<HistoryModel,Long> {
      Optional<HistoryModel> findLatestHistoryByUser(@Param("user") UserModel user);
      @Query("SELECT COALESCE(SUM(d.moneyGained), 0) FROM HistoryModel d WHERE d.createdAt BETWEEN :startDate AND :endDate")
      Double getTotalMoneyGainedBetweenDates(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+     List<HistoryModel> findAllByPlayer1OrPlayer2OrderByCreatedAt(UserModel player1, UserModel player2);
+
 
      @Query("SELECT COALESCE(SUM(moneyGained), 0) FROM HistoryModel ")
      Double getTotalMoneyGained();

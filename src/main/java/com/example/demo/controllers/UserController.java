@@ -89,4 +89,11 @@ public class UserController {
     public ResponseEntity<BattleDTO> getBattleContext(@PathVariable long codUser) throws NotFoundException {
         return userService.getBattleContext(codUser);
     }
+
+    @GetMapping("/user/{id}/balances")
+    public ResponseEntity<UserBalancesOutputDTO> getUserBalances(@PathVariable long id) throws NotFoundException {
+        UserModel user = userService.getUserById(id);
+        UserBalancesOutputDTO userBalancesOutputDTO = new UserBalancesOutputDTO(user.getBalance(), user.getBonusBalance());
+        return ResponseEntity.ok(userBalancesOutputDTO);
+    }
 }
