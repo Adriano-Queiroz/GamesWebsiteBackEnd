@@ -289,11 +289,12 @@
                             </svg>
                         </div>
                     </div>
-                    <script>
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
                         async function refreshBalance() {
                             const icon = document.getElementById('refresh-icon');
                             icon.classList.add('animate-spin');
-                            const userId = [[${user.getCodUser}]]; // Ensure this retrieves the correct user ID
+                            const userId = /*[[${user.getCodUser}]]*/ 'default'; // Ensure this retrieves the correct user ID
 
                             try {
                                 const response = await fetch(`user/${userId}/balances`);
@@ -302,9 +303,9 @@
                                 console.log('Fetched data:', data); // Log fetched data
 
                                 if (data.balance !== undefined && data.bonusBalance !== undefined) {
-                                    document.getElementById('real-balance').innerText = data.balance.toFixed(2);
-                                    document.getElementById('bonus-balance').innerText = data.bonusBalance.toFixed(2);
-                                    setTimeout(updateDisplayedBalance, 200); // Delay to ensure DOM update
+                                    localStorage.setItem('realBalance', data.balance.toFixed(2));
+                                    localStorage.setItem('bonusBalance', data.bonusBalance.toFixed(2));
+                                    updateBalancesFromLocalStorage();
                                 } else {
                                     throw new Error('Invalid data structure');
                                 }
@@ -317,18 +318,39 @@
                             }
                         }
 
+                        function updateBalancesFromLocalStorage() {
+                            const realBalance = localStorage.getItem('realBalance');
+                            const bonusBalance = localStorage.getItem('bonusBalance');
+
+                            if (realBalance !== null && bonusBalance !== null) {
+                                document.getElementById('real-balance').innerText = realBalance;
+                                document.getElementById('bonus-balance').innerText = bonusBalance;
+                                updateDisplayedBalance();
+                            }
+                        }
+
                         function updateDisplayedBalance() {
                             const balanceType = document.querySelector('input[name="balanceType"]:checked').value;
                             const balanceValue = balanceType === 'balance' ?
-                                document.getElementById('real-balance').innerText :
-                                document.getElementById('bonus-balance').innerText;
+                                localStorage.getItem('realBalance') :
+                                localStorage.getItem('bonusBalance');
 
+                            console.log('Updating displayed balance:', balanceValue); // Log balance value
                             document.getElementById('current-balance').innerText = balanceValue;
+                            localStorage.setItem('selectedBalanceType', balanceType); // Store selected balance type
                         }
 
-                        document.addEventListener('DOMContentLoaded', () => {
-                            refreshBalance();
+                        function restoreSelectedBalanceType() {
+                            const selectedBalanceType = localStorage.getItem('selectedBalanceType') || 'balance';
+                            document.querySelector(`input[name="balanceType"][value="${selectedBalanceType}"]`).checked = true;
+                        }
+
+                        document.addEventListener('DOMContentLoaded', async () => {
+                            restoreSelectedBalanceType(); // Restore selected balance type on page load
+                            updateBalancesFromLocalStorage(); // Update balances from localStorage on page load
+                            await refreshBalance();
                         });
+                        /*]]>*/
                     </script>
                     <div class="dropdown-end dropdown ml-1">
                         <div class="form-control">

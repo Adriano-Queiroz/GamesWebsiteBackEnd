@@ -300,11 +300,12 @@
                             </svg>
                         </div>
                     </div>
-                    <script>
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
                         async function refreshBalance() {
                             const icon = document.getElementById('refresh-icon');
                             icon.classList.add('animate-spin');
-                            const userId = [[${user.getCodUser}]]; // Ensure this retrieves the correct user ID
+                            const userId = /*[[${user.getCodUser}]]*/ 'default'; // Ensure this retrieves the correct user ID
 
                             try {
                                 const response = await fetch(`user/${userId}/balances`);
@@ -313,9 +314,9 @@
                                 console.log('Fetched data:', data); // Log fetched data
 
                                 if (data.balance !== undefined && data.bonusBalance !== undefined) {
-                                    document.getElementById('real-balance').innerText = data.balance.toFixed(2);
-                                    document.getElementById('bonus-balance').innerText = data.bonusBalance.toFixed(2);
-                                    setTimeout(updateDisplayedBalance, 200); // Delay to ensure DOM update
+                                    localStorage.setItem('realBalance', data.balance.toFixed(2));
+                                    localStorage.setItem('bonusBalance', data.bonusBalance.toFixed(2));
+                                    updateBalancesFromLocalStorage();
                                 } else {
                                     throw new Error('Invalid data structure');
                                 }
@@ -328,18 +329,39 @@
                             }
                         }
 
+                        function updateBalancesFromLocalStorage() {
+                            const realBalance = localStorage.getItem('realBalance');
+                            const bonusBalance = localStorage.getItem('bonusBalance');
+
+                            if (realBalance !== null && bonusBalance !== null) {
+                                document.getElementById('real-balance').innerText = realBalance;
+                                document.getElementById('bonus-balance').innerText = bonusBalance;
+                                updateDisplayedBalance();
+                            }
+                        }
+
                         function updateDisplayedBalance() {
                             const balanceType = document.querySelector('input[name="balanceType"]:checked').value;
                             const balanceValue = balanceType === 'balance' ?
-                                document.getElementById('real-balance').innerText :
-                                document.getElementById('bonus-balance').innerText;
+                                localStorage.getItem('realBalance') :
+                                localStorage.getItem('bonusBalance');
 
+                            console.log('Updating displayed balance:', balanceValue); // Log balance value
                             document.getElementById('current-balance').innerText = balanceValue;
+                            localStorage.setItem('selectedBalanceType', balanceType); // Store selected balance type
                         }
 
-                        document.addEventListener('DOMContentLoaded', () => {
-                            refreshBalance();
+                        function restoreSelectedBalanceType() {
+                            const selectedBalanceType = localStorage.getItem('selectedBalanceType') || 'balance';
+                            document.querySelector(`input[name="balanceType"][value="${selectedBalanceType}"]`).checked = true;
+                        }
+
+                        document.addEventListener('DOMContentLoaded', async () => {
+                            restoreSelectedBalanceType(); // Restore selected balance type on page load
+                            updateBalancesFromLocalStorage(); // Update balances from localStorage on page load
+                            await refreshBalance();
                         });
+                        /*]]>*/
                     </script>
                     <div class="dropdown-end dropdown ml-1">
                         <div class="form-control">
@@ -1004,7 +1026,7 @@ CPF
 <script th:inline="javascript">
     /*<![CDATA[*/
     document.addEventListener('DOMContentLoaded', () => {
-        const loggedInUser = /*[[${user.getUsername()}]]*/ `default`; // Substitua pelo método correto para obter o nome de usuário
+        const loggedInUser = /*[[${user.getUsername()}]]*/ `default`;
         console.log('Usuário logado:', loggedInUser);
         document.querySelectorAll('.money-gained').forEach(element => {
             const status = element.getAttribute('data-status');
@@ -1013,29 +1035,22 @@ CPF
 
             let moneyGained = parseFloat(element.innerText.replace('R$ ', ''));
             let moneyElement = element;
+            let statusTextElement = element.nextElementSibling;
 
-            if ((status === 'P1_WON' && loggedInUser === player1) ||( status === 'P2_WON' && loggedInUser === player2)) {
+            if ((status === 'P1_WON' && loggedInUser === player1) || (status === 'P2_WON' && loggedInUser === player2)) {
                 moneyElement.classList.add('text-green-400');
                 moneyElement.previousElementSibling.querySelector('svg').classList.add('text-green-400');
                 moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2);
-            } else if ((status === 'P1_WON' && loggedInUser === player2) ||( status === 'P2_WON' && loggedInUser === player1)) {
+                statusTextElement.innerText = 'VENCEU';
+            } else if ((status === 'P1_WON' && loggedInUser === player2) || (status === 'P2_WON' && loggedInUser === player1)) {
                 moneyElement.classList.add('text-red-400');
                 moneyElement.previousElementSibling.querySelector('svg').classList.add('text-red-400');
                 moneyElement.innerText = 'R$ ' + (moneyGained / 2).toFixed(2);
+                statusTextElement.innerText = 'PERDEU';
             } else if (status === 'DRAW') {
                 moneyElement.classList.add('text-yellow-400');
                 moneyElement.previousElementSibling.querySelector('svg').classList.add('text-yellow-400');
                 moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2);
-            }
-
-            // Ajusta o texto de status com base no status do jogo e usuário
-            const statusTextElement = element.nextElementSibling;
-            console.log('Status:', statusTextElement.innerText);
-            if (status === 'P1_WON') {
-                statusTextElement.innerText = loggedInUser === player1 ? 'VENCEU' : 'PERDEU';
-            } else if (status === 'P2_WON') {
-                statusTextElement.innerText = loggedInUser === player2 ? 'VENCEU' : 'PERDEU';
-            } else if (status === 'DRAW') {
                 statusTextElement.innerText = 'EMPATOU';
             }
         });
