@@ -430,9 +430,21 @@
 <div class="d-inline-block">
 <div class="d-inline-block">
 
-    <button onclick="showList('withdrawalsList')" class="btn btn-primary">Todos</button>&nbsp;&nbsp;
+    <!--<button onclick="showList('withdrawalsList')" class="btn btn-primary">Todos</button>&nbsp;&nbsp;
     <button onclick="showList('aprovadoList')" class="btn btn-success" >Aprovados</button>&nbsp;&nbsp;
-    <button onclick="showList('solicitadoList')" class="btn btn-warning">Solicitados</button>&nbsp;&nbsp;
+    <button onclick="showList('solicitadoList')" class="btn btn-warning">Solicitados</button>&nbsp;&nbsp;-->
+    <form th:action="@{/saques}" method="get" class="d-inline">
+        <input type="hidden" name="list" value="withdrawalsList" />
+        <button type="submit" class="btn btn-primary">Todos</button>&nbsp;&nbsp;
+    </form>
+    <form th:action="@{/saques}" method="get" class="d-inline">
+        <input type="hidden" name="list" value="aprovadoList" />
+        <button type="submit" class="btn btn-success">Aprovados</button>&nbsp;&nbsp;
+    </form>
+    <form th:action="@{/saques}" method="get" class="d-inline">
+        <input type="hidden" name="list" value="solicitadoList" />
+        <button type="submit" class="btn btn-warning">Solicitados</button>&nbsp;&nbsp;
+    </form>
 <button class="btn p-0" data-bs-toggle="dropdown" type="button" data-bs-offset="0,3">
 <span class="btn btn-icon btn-icon-only btn-foreground-alternate shadow dropdown" data-bs-delay="0" data-bs-placement="top" data-bs-toggle="tooltip" title="Baixar">
 <i data-acorn-icon="download"></i>
@@ -572,23 +584,23 @@
         // Optionally, show the first list by default
         showList("withdrawalsList");
     </script>
-<nav>
-<ul class="pagination justify-content-center mb-0 semibordered">
-<li class="page-item">
-<a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-<i data-acorn-icon="chevron-left"></i>
-</a>
-</li>
-<li class="page-item active"><a class="page-link" href="#">1</a></li>
-<li class="page-item"><a class="page-link" href="#">2</a></li>
-<li class="page-item"><a class="page-link" href="#">3</a></li>
-<li class="page-item">
-<a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-<i data-acorn-icon="chevron-right"></i>
-</a>
-</li>
-</ul>
-</nav>
+    <nav>
+        <ul class="pagination justify-content-center mb-0 semibordered">
+            <li class="page-item" th:classappend="${withdrawalsList.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/saques(page=${withdrawalsList.number}, list=${param.list})}" tabindex="-1" aria-disabled="true">
+                    <i data-acorn-icon="chevron-left"></i>
+                </a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, withdrawalsList.totalPages)}" th:classappend="${i == withdrawalsList.number + 1} ? 'active'">
+                <a class="page-link" th:href="@{/saques(page=${i}, list=${param.list})}" th:text="${i}"></a>
+            </li>
+            <li class="page-item" th:classappend="${withdrawalsList.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/saques(page=${withdrawalsList.number + 1}, list=${param.list})}" tabindex="-1" aria-disabled="true">
+                    <i data-acorn-icon="chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </div>
 </div>

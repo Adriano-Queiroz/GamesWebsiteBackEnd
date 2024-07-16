@@ -12,6 +12,7 @@ public class FinanceService {
     private IDepositRepository iDepositRepository;
     @Autowired
     private IWithdrawalRepository iWithdrawalRepository;
+    /*
 
     public double getTotalDeposits(){
         return iDepositRepository.getTotalDeposits();
@@ -19,4 +20,6 @@ public class FinanceService {
     public double getTotalWithdrawals(){
         return iWithdrawalRepository.getTotalWithdrawals();
     }
+
+     */
 }

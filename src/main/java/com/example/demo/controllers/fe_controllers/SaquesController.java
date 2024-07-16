@@ -6,6 +6,9 @@ import com.example.demo.models.withdrawal.WithdrawalStatus;
 import com.example.demo.services.fe_services.DashboardService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +31,12 @@ public class SaquesController {
     @GetMapping("/saques")
     public String getDashboard(@RequestParam(value = "startDate", required = false) String startDateStr,
                                @RequestParam(value = "endDate", required = false) String endDateStr,
+                               @RequestParam(value = "page", defaultValue = "1") int page,
+                               @RequestParam(value = "size", defaultValue = "10") int size,
+                               @RequestParam(value = "list", defaultValue = "withdrawalsList") String list,
                                Model model,
                                HttpSession session) {
+
         if(session.getAttribute("user") == null)
             return "redirect:/login";
 
@@ -46,6 +53,7 @@ public class SaquesController {
         } catch (DateTimeParseException e) {
             // Handle the exception, e.g., set default dates or show an error message
         }
+        Pageable pageable = PageRequest.of(page - 1, size);
 
         if (startDate != null && endDate != null) {
             double deposits = dashboardService.getTotalDepositsBetweenDates(startDate, endDate,DepositStatus.APROVADO);
@@ -55,15 +63,23 @@ public class SaquesController {
             model.addAttribute("totalWithdrawals", withdrawals);
 
 
-            List<DepositDTO> depositsList = dashboardService.getAllWithdrawalsBetweenDates(startDate,endDate);
+            Page<DepositDTO> depositsList = dashboardService.getAllWithdrawalsBetweenDates(startDate,endDate, pageable);
             model.addAttribute("withdrawalsList", depositsList);
 
-            List<DepositDTO> aprovadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.APROVADO,startDate,endDate);
+            Page<DepositDTO> aprovadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.APROVADO,startDate,endDate, pageable);
             model.addAttribute("aprovadoList",aprovadoList);
 
-            List<DepositDTO> solicitadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.SOLICITADO,startDate,endDate);
+            Page<DepositDTO> solicitadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.SOLICITADO,startDate,endDate, pageable);
             model.addAttribute("solicitadoList",solicitadoList);
 
+            switch (list) {
+                case "withdrawalsList" ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsBetweenDates(startDate, endDate, pageable));
+                case "aprovadoList" ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.APROVADO, startDate, endDate, pageable));
+                default ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.SOLICITADO, startDate, endDate, pageable));
+            }
             //List<DepositDTO> fechadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(Wit.FECHADO,startDate,endDate);
             //model.addAttribute("fechadoList",fechadoList);
 
@@ -71,17 +87,24 @@ public class SaquesController {
             model.addAttribute("totalDeposits", dashboardService.getTotalDeposits(DepositStatus.APROVADO));
             model.addAttribute("totalWithdrawals", dashboardService.getTotalWithdrawals(WithdrawalStatus.APROVADO));
             model.addAttribute("moneyGained", dashboardService.getTotalGainPerPercentage());
-            model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawals());
-            model.addAttribute("aprovadoList",dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.APROVADO));
-            model.addAttribute("solicitadoList",dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.SOLICITADO));
+            model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawals(pageable));
+            model.addAttribute("aprovadoList",dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.APROVADO, pageable));
+            model.addAttribute("solicitadoList",dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.SOLICITADO, pageable));
+            switch (list) {
+                case "withdrawalsList" ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawals(pageable));
+                case "aprovadoList" ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.APROVADO, pageable));
+                default ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.SOLICITADO, pageable));
+            }
 
         }
         model.addAttribute("totalBalance", dashboardService.getTotalBalance());
         model.addAttribute("startDate", startDate != null ? startDate.toString() + " -" :"(Desde o Início)");
         model.addAttribute("endDate", endDate != null ? endDate.toString():"");
-
-
         return "saques";
+
     }
 
     @PostMapping("/saques-date")

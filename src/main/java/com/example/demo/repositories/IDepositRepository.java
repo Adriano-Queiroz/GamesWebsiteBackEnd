@@ -2,6 +2,8 @@ package com.example.demo.repositories;
 
 import com.example.demo.models.deposit.DepositModel;
 import com.example.demo.models.deposit.DepositStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +26,9 @@ public interface IDepositRepository extends JpaRepository<DepositModel,Long> {
     List<DepositModel> findAllByOrderByDateDesc();
     List<DepositModel> findAllByDateBetween(LocalDate date, LocalDate date2);
 
+
+    Page<DepositModel> findAllByStatusAndDateBetween(DepositStatus status, LocalDate date, LocalDate date2, Pageable pageable);
+    Page<DepositModel> findAllByStatus(DepositStatus status, Pageable pageable);
+    Page<DepositModel> findAllByOrderByDateDesc(Pageable pageable);
+    Page<DepositModel> findAllByDateBetween(LocalDate date, LocalDate date2, Pageable pageable);
 }

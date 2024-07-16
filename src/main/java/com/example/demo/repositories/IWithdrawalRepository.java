@@ -4,6 +4,8 @@ import com.example.demo.models.deposit.DepositModel;
 import com.example.demo.models.deposit.DepositStatus;
 import com.example.demo.models.withdrawal.WithdrawalModel;
 import com.example.demo.models.withdrawal.WithdrawalStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +27,12 @@ public interface IWithdrawalRepository extends JpaRepository<WithdrawalModel, Lo
     List<WithdrawalModel> findAllByStatusAndDateBetween(WithdrawalStatus status, LocalDate date, LocalDate date2);
     List<WithdrawalModel> findAllByStatus(WithdrawalStatus status);
     List<WithdrawalModel> findAllByOrderByDateDesc();
-    List<WithdrawalModel> findAllByDateBetween(LocalDate date, LocalDate date2);}
+    List<WithdrawalModel> findAllByDateBetween(LocalDate date, LocalDate date2);
+
+
+    Page<WithdrawalModel> findAllByStatusAndDateBetween(WithdrawalStatus status, LocalDate date, LocalDate date2, Pageable pageable);
+    Page<WithdrawalModel> findAllByStatus(WithdrawalStatus status, Pageable pageable);
+    Page<WithdrawalModel> findAllByOrderByDateDesc(Pageable pageable);
+    Page<WithdrawalModel> findAllByDateBetween(LocalDate date, LocalDate date2, Pageable pageable);
+}
+
