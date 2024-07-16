@@ -3,30 +3,31 @@ package com.example.demo.services;
 
 import com.example.demo.Auth_Pipeline.UsersDomain;
 import com.example.demo.boards.TicTacToeBoard;
+import com.example.demo.dtos.Deposit_WithdrawalDTO;
 import com.example.demo.dtos.battle.BattleDTO;
 import com.example.demo.mappers.BoardMapper;
 import com.example.demo.models.battle.BattleModel;
+import com.example.demo.models.deposit.DepositModel;
 import com.example.demo.models.game.GameType;
+import com.example.demo.models.history.HistoryModel;
 import com.example.demo.models.token.TokenModel;
 import com.example.demo.models.user.AuthenticatedUser;
 import com.example.demo.models.user.PasswordValidationInfo;
 import com.example.demo.models.user.TokenValidationInfo;
 import com.example.demo.models.user.UserModel;
-import com.example.demo.repositories.IBattleRepository;
-import com.example.demo.repositories.ITokenRepository;
-import com.example.demo.repositories.IUserModelRepository;
-import com.example.demo.repositories.IUserRoleModelRepository;
+import com.example.demo.models.withdrawal.WithdrawalModel;
+import com.example.demo.repositories.*;
 import com.example.demo.services.exceptions.*;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Component
 public class UserService {
@@ -39,6 +40,9 @@ public class UserService {
     private GamesService gamesService;
     private IUserRoleModelRepository iUserRoleModelRepository;
     private EmailService emailService;
+    private IWithdrawalRepository iWithdrawalRepository;
+    private IDepositRepository iDepositRepository;
+    private IHistoryRepository iHistoryRepository;
 
     public UserService(IUserModelRepository userRepository,
                        ITokenRepository tokenRepository,
@@ -47,7 +51,10 @@ public class UserService {
                        IBattleRepository iBattleRepository,
                        GamesService gamesService,
                        IUserRoleModelRepository iUserRoleModelRepository,
-                       EmailService emailService) {
+                       EmailService emailService,
+                       IWithdrawalRepository iWithdrawalRepository,
+                       IDepositRepository iDepositRepository,
+                       IHistoryRepository iHistoryRepository) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.usersDomain = usersDomain;
@@ -56,6 +63,9 @@ public class UserService {
         this.gamesService = gamesService;
         this.iUserRoleModelRepository = iUserRoleModelRepository;
         this.emailService = emailService;
+        this.iWithdrawalRepository = iWithdrawalRepository;
+        this.iDepositRepository = iDepositRepository;
+        this.iHistoryRepository = iHistoryRepository;
     }
 
     public UserModel getUserById(long id) throws NotFoundException {
@@ -236,6 +246,63 @@ public class UserService {
         user.setPasswordValidationInfo(passwordValidationInfo.validationInfo());
         userRepository.save(user);
     }
+
+    public List<Deposit_WithdrawalDTO> getTransactions(
+            Long externalReferenceId,
+            Long accountUserSelected,
+            String type,
+            String status,
+            LocalDateTime createdAtFrom,
+            LocalDateTime createdAtTo,
+            LocalDate fromDate,
+            LocalDate toDate) {
+
+        List<Deposit_WithdrawalDTO> transactions = new ArrayList<>();
+
+        boolean hasFilters = externalReferenceId != null || type != null || status != null || createdAtFrom != null || createdAtTo != null;
+
+        if (!hasFilters) {
+            // No filters applied, fetch all transactions
+            transactions.addAll(Deposit_WithdrawalDTO.fromDepositModel(
+                    iDepositRepository.findAllByUserCodUserOrderByDateDesc(accountUserSelected)));
+            transactions.addAll(Deposit_WithdrawalDTO.fromWithdrawalModel(
+                    iWithdrawalRepository.findAllByUserCodUserOrderByDateDesc(accountUserSelected)));
+        } else {
+            // Apply filters based on type and other parameters
+            if (type == null || "deposit".equalsIgnoreCase(type)) {
+                List<DepositModel> deposits = iDepositRepository.findDeposits(
+                        externalReferenceId, accountUserSelected, status, createdAtFrom, createdAtTo);
+                transactions.addAll(Deposit_WithdrawalDTO.fromDepositModel(deposits));
+            }
+
+            if (type == null || "withdrawal".equalsIgnoreCase(type)) {
+                List<WithdrawalModel> withdrawals = iWithdrawalRepository.findWithdrawals(
+                        externalReferenceId, accountUserSelected, status, fromDate, toDate);
+                transactions.addAll(Deposit_WithdrawalDTO.fromWithdrawalModel(withdrawals));
+            }
+        }
+
+        // Sort transactions by date/time
+        transactions.sort((t1, t2) -> {
+            if (t1.dateTime() != null && t2.dateTime() != null) {
+                return t2.dateTime().compareTo(t1.dateTime());
+            } else if (t1.date() != null && t2.date() != null) {
+                return t2.date().compareTo(t1.date());
+            } else if (t1.dateTime() != null) {
+                return 1; // t2.date() is null
+            } else {
+                return -1; // t1.dateTime() is null
+            }
+        });
+
+        return transactions;
+    }
+
+    public List<HistoryModel> getHistory(UserModel codUser){
+        return iHistoryRepository.findAllByPlayer1OrPlayer2OrderByCreatedAt(codUser,codUser);
+    }
+
+
 }
 
 

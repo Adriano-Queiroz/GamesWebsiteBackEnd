@@ -24,6 +24,22 @@ public interface IWithdrawalRepository extends JpaRepository<WithdrawalModel, Lo
     @Query("SELECT COALESCE(SUM(d.amount), 0) FROM WithdrawalModel d WHERE d.date BETWEEN :startDate AND :endDate and d.status = :status")
     Double getTotalWithdrawalsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, WithdrawalStatus status);
 
+    @Query("SELECT w FROM WithdrawalModel w WHERE w.user.codUser = :codUser ORDER BY w.date DESC")
+    List<WithdrawalModel> findAllByUserCodUserOrderByDateDesc(@Param("codUser") Long codUser);
+
+    @Query("SELECT w FROM WithdrawalModel w WHERE " +
+            "(:externalReferenceId IS NULL OR w.codWithdrawal = :externalReferenceId) AND " +
+            "(:codUser IS NULL OR w.user.codUser = :codUser) AND " +
+            "(:status IS NULL OR w.status = :status) AND " +
+            "(:fromDate IS NULL OR w.date >= :fromDate) AND " +
+            "(:toDate IS NULL OR w.date <= :toDate) " +
+            "ORDER BY w.date DESC")
+    List<WithdrawalModel> findWithdrawals(@Param("externalReferenceId") Long externalReferenceId,
+                                          @Param("codUser") Long codUser,
+                                          @Param("status") String status,
+                                          @Param("fromDate") LocalDate fromDate,
+                                          @Param("toDate") LocalDate toDate);
+
     List<WithdrawalModel> findAllByStatusAndDateBetween(WithdrawalStatus status, LocalDate date, LocalDate date2);
     List<WithdrawalModel> findAllByStatus(WithdrawalStatus status);
     List<WithdrawalModel> findAllByOrderByDateDesc();
