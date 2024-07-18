@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Games List</title>
+</head>
+<body>
+<h1>Games List</h1>
+<ul>
+    <li th:each="game : ${gamesList}">
+        <form th:action="@{/jogoClick}" method="post">
+            <input type="hidden" name="codGame" th:value="${game.codGame}" />
+            <button type="submit" th:text="${game.gameType}"></button>
+        </form>    </li>
+</ul>
+</body>
+</html>

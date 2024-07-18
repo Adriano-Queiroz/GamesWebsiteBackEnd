@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<!-- Mirrored from x1jogos.com/register by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 26 Jun 2024 01:30:13 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="csrf-token" content="vCGWSZlVROqU3ueFfWjwuK5sbXLMMkzFng4Ritru">
+<title>X1 Jogos</title>
+<style>
+            [x-cloak] {
+                display: none !important;
+            }
+        </style>
+<style>[wire\:loading][wire\:loading], [wire\:loading\.delay][wire\:loading\.delay], [wire\:loading\.inline-block][wire\:loading\.inline-block], [wire\:loading\.inline][wire\:loading\.inline], [wire\:loading\.block][wire\:loading\.block], [wire\:loading\.flex][wire\:loading\.flex], [wire\:loading\.table][wire\:loading\.table], [wire\:loading\.grid][wire\:loading\.grid], [wire\:loading\.inline-flex][wire\:loading\.inline-flex] {display: none;}[wire\:loading\.delay\.none][wire\:loading\.delay\.none], [wire\:loading\.delay\.shortest][wire\:loading\.delay\.shortest], [wire\:loading\.delay\.shorter][wire\:loading\.delay\.shorter], [wire\:loading\.delay\.short][wire\:loading\.delay\.short], [wire\:loading\.delay\.default][wire\:loading\.delay\.default], [wire\:loading\.delay\.long][wire\:loading\.delay\.long], [wire\:loading\.delay\.longer][wire\:loading\.delay\.longer], [wire\:loading\.delay\.longest][wire\:loading\.delay\.longest] {display: none;}[wire\:offline][wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}:root {--livewire-progress-bar-color: #2299dd;}[x-cloak] {display: none !important;}</style>
+<link rel="preload" as="style" href="user/assets/app-52332527.css" /><link rel="stylesheet" href="user/assets/app-52332527.css" data-navigate-track="reload" /> <link rel="icon" type="image/x-icon" href="assets/images/branding/favicon.png">
+<link rel="apple-touch-icon" href="assets/images/branding/favicon.png">
+<meta name="facebook-domain-verification" content="tiz5tjez0qnn6pe9yxphgqoq8xkzah" />
+<meta property="og:title" content="X1 Jogos" />
+<meta property="og:description" content="Os jogos mais divertidos da internet estão aqui!" />
+
+<link href="https://fonts.cdnfonts.com/css/gotham-ultra" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/gotham-book" rel="stylesheet">
+
+<noscript><iframe src="https://www.googletagmanager.com/ns?id=GTM-THS8683X"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        '../www.googletagmanager.com/gtm5445?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-THS8683X');</script>
+
+<meta name="facebook-domain-verification" content="5rdpdzhi7ajzkb66t2a1apcp1zvni8" />
+</head>
+<style>
+        body {
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('assets/images/backgrounds/WP1.png') center/cover no-repeat;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+            backdrop-filter: blur(5px);
+        }
+    </style>
+<body class="min-h-screen h-full flex justify-center items-center">
+<div class="font-sans text-base-300 antialiased flex flex-col justify-center items-center">
+<div class="w-full flex flex-col items-center sm:pt-0 px-4">
+<div class="shadow-md bg-white p-5 py-10 sm:p-12 rounded-md md:rounded-2xl">
+<div class="flex justify-center pb-6 relative">
+<a href="javascript:history.back()">
+<svg class="absolute left-0" width="24px" height="24px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M19 9H3.661l5.997-5.246a1 1 0 00-1.316-1.506l-8 7c-.008.007-.011.018-.019.025a.975.975 0 00-.177.24c-.018.03-.045.054-.059.087a.975.975 0 000 .802c.014.033.041.057.059.088.05.087.104.17.177.239.008.007.011.018.019.025l8 7a.996.996 0 001.411-.095 1 1 0 00-.095-1.411L3.661 11H19a1 1 0 000-2z" fill="#000000"></path></g></svg>
+</a>
+<a href="index">
+<img class src="assets/images/branding/logo.png">
+</a>
+</div>
+    <!-- Each room's button is inside its own form -->
+    <p class="font-bold text-3xl mb-2 text-base-700" style="text-align-last: center;font-size: revert;">Escolher a sala</p>
+
+    <div th:each="room : ${roomsList}" class="flex flex-wrap md:flex-nowrap gap-2" style="align-self: center;">
+        <div class="w-full md:w-1/2 form-control">
+            <form method="POST" th:action="@{/entrar-sala}" class="flex flex-col gap-2">
+                <input type="hidden" name="_token" value="vCGWSZlVROqU3ueFfWjwuK5sbXLMMkzFng4Ritru" autocomplete="off">
+                <!-- Hidden input for the room code -->
+                <input type="hidden" name="codRoom" th:value="${room.codRoom}">
+                <button
+                        type="submit"
+                        class="tablinks text-x1blue bg-gray-100 hover:bg-x1blue hover:text-white focus:outline-none focus:ring-4 border-2 border-x1blue focus:ring-blue-300 font-medium rounded-lg h-[4rem] w-72 text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:hover:bg-blue-700 dark:focus:ring-blue-800 active">
+                    <span th:text="'Jogo de R$ ' + ${room.bet}"></span>
+                    <div class="rounded-full bg-green-500 text-white flex justify-center items-center px-4 py-1 space-x-2" style="max-width: max-content;margin-inline: auto;">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-300"></span>
+                    </span>
+                        <p>21 Online</p>
+                    </div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Single submit button not inside a form -->
+    <!-- It's not necessary since each button already submits its own form -->
+    <!--
+    <button style="text-transform: capitalize !important; padding: 16px; font-size: 16px; font-weight: 600;" type="submit" class="inline-flex items-center justify-center px-4 py-2 bg-x1blue border border-transparent rounded font-semibold text-sm text-white w-full hover:bg-x1blue/80 mt-4 mb-8">
+        Jogar
+    </button>
+    -->
+
+<script>
+    function setRoomCode(codRoom) {
+        document.getElementById('selectedRoom').value = codRoom;
+    }
+            const togglePasswordInputType = () => {
+                const passwordInput = document.getElementById('password');
+                const revealIcon = document.getElementById('revealIcon');
+                const concealIcon = document.getElementById('concealIcon');
+                passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+                revealIcon.classList.toggle('hidden');
+                concealIcon.classList.toggle('hidden');
+            };
+            const telMask = (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '')
+                    .replace(/^(\d)/, '($1')
+                    .replace(/^(\(\d{2})(\d)/, '$1) $2')
+                    .replace(/(\d{4})(\d{1,4})/, '$1-$2')
+                    .replace(/(\d)(\d{3})-(\d)(\d{4})/, '$1 $2$3-$4')
+                    .replace(/(-\d{4})\d+?$/, '$1')
+            };
+            const numericMask = (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            };
+        </script>
+</div>
+</div>
+</div>
+<script src="livewire/livewire.mind524.js?id=07f22875" data-csrf="vCGWSZlVROqU3ueFfWjwuK5sbXLMMkzFng4Ritru" data-update-uri="/livewire/update" data-navigate-once="true"></script>
+<link rel="modulepreload" href="user/assets/app-ddee773b.js" /><script type="module" src="user/assets/app-ddee773b.js" data-navigate-track="reload"></script> </body>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-11190888849"></script>
+<script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'AW-11190888849');
+        </script>
+
+<script>
+          gtag('event', 'conversion', {'send_to': 'AW-11190888849/CBduCMPCpaMYEJHTndgp'});
+        </script>
+
+
+
+<script>
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                '../connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '1450530865858659');
+                fbq('track', 'PageView');
+                </script>
+<noscript><img height="1" width="1" style="display:none"
+                src="https://www.facebook.com/tr?id=1450530865858659&amp;ev=PageView&amp;noscript=1"
+                /></noscript>
+
+
+<script>
+                (function(h,o,t,j,a,r){
+                    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                    h._hjSettings={hjid:3506637,hjsv:6};
+                    a=o.getElementsByTagName('head')[0];
+                    r=o.createElement('script');r.async=1;
+                    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                    a.appendChild(r);
+                })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+            </script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2XTE6MZ3D9"></script>
+<script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-2XTE6MZ3D9');
+        </script>
+
+<!-- Mirrored from x1jogos.com/register by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 26 Jun 2024 01:30:14 GMT -->
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React with SockJS and Stomp</title>
+    <!-- Include Babel for JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Include React and ReactDOM from CDN -->
+    <script src="https://unpkg.com/react/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js" crossorigin></script>
+    <!-- Include SockJS and Stomp from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <!-- Include TailSpin for loading spinner -->
+    <script src="https://cdn.jsdelivr.net/npm/react-loader-spinner@4.3.3/dist/umd/react-loader-spinner.min.js"></script>
+
+    <!-- Thymeleaf script injection for roomsData -->
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        const roomsData = /*[[${rooms}]]*/ '[[${rooms}]]';
+        /*]]>*/
+        /*<![CDATA[*/
+        const codUser = /*[[${codUser}]]*/ [[${codUser}]];
+        /*]]>*/
+        /*<![CDATA[*/
+        const isFriendsRooms = /*[[${isFriendsRooms}]]*/ [[${isFriendsRooms}]];
+        /*]]>*/
+        /*<![CDATA[*/
+        const codAutoRoom = /*[[${codAutoRoom}]]*/ [[${codAutoRoom}]];
+        /*]]>*/
+    </script>
+</head>
+<body>
+<!-- Root element for React -->
+<div id="root"></div>
+
+<!-- React code -->
+<script type="text/babel">
+    const { useEffect, useState } = React;
+
+    function App({ rooms }) {
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+
+        useEffect(() => {
+            setLoading(false); // Simulating fetched rooms from Thymeleaf data
+        }, []);
+
+        const getFriendsLobby = async (codRoom,codUser) => {
+
+            try {
+                const response = await fetch(`/friendship/newInvite`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        codRoom: codRoom,
+                        codUser: codUser,
+                        friendUsername: "",
+                        codLobby:-1
+                    })
+                });
+                if (!response.ok)
+                    throw new Error("Error fetching lobby");
+
+                const result = await response.json();
+                const codBattle = result.codBattle;
+                console.log("is Second Player: " + result.isSecondPlayer);
+                if (!result.isSecondPlayer) {
+                    // WebSocket communication
+                    const socket = new SockJS(`http://localhost:9000/ws`);
+                    const stompClient = Stomp.over(socket);
+                    let messageReceived = false;
+
+                    stompClient.connect({}, function (frame) {
+                        console.log('Connected: ' + frame);
+
+                        stompClient.subscribe(`/topic/lobby/` + result.codLobby, function (message) {
+                            messageReceived = true;
+                            const result = JSON.parse(message.body);
+                            console.log('Received message:', message.body);
+                            stompClient.disconnect();
+                            const number = 1;
+                            //clearTimeout(timeout); // Clear the timeout if we received a message
+                            //navigate('/lobby', {state: { result, codBattle }});
+                            window.location.href = '/lobby?codBattle=' + result.codBattle
+
+                        });
+
+                        // Set a timeout to finalize if no message is received within 5 seconds
+                        /*
+                        const timeout = setTimeout(() => {
+                            if (!messageReceived) {
+                                console.log('No message received within 5 seconds, finalizing and sending request to delete lobby.');
+                                fetch(`api/lobby/delete`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        codUser: user.id // Replace with a valid user ID if necessary
+                                    })
+                                });
+                                stompClient.disconnect();
+                            }
+                       }, 15000);
+
+                         */
+                    }, function (error) {
+                        console.error('Error:', error);
+                    });
+                }else{
+                    console.log("MAMBO");
+                    //navigate('/lobby', {state: { result }});
+                    window.location.href = '/lobby?codBattle=' + result.codBattle
+
+                    //navigate('/rooms');
+                }
+            } catch (error) {
+                alert(error);
+            }
+        }
+
+
+        const getLobby = async (codRoom,codUser) => {
+            try {
+                const response = await fetch('/lobby', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        codRoom: codRoom,
+                        codUser: codUser
+                    })
+                });
+                if (!response.ok) {
+                    const responseJson = await response.json();
+                    throw new Error(responseJson.error);
+                }
+
+                const result = await response.json();
+                const codBattle = result.codBattle;
+
+                if (!result.isSecondPlayer) {
+                    // WebSocket communication
+                    const socket = new SockJS('http://localhost:9000/ws');
+                    const stompClient = Stomp.over(socket);
+                    let messageReceived = false;
+
+                    stompClient.connect({}, function (frame) {
+                        console.log('Connected: ' + frame);
+
+                        stompClient.subscribe(`/topic/lobby/${result.codLobby}`, function (message) {
+                            messageReceived = true;
+                            const result = JSON.parse(message.body);
+                            console.log('Received message:', result);
+                            stompClient.disconnect();
+                            window.location.href = '/lobby?codBattle=' + result.codBattle
+                        });
+
+                        const timeout = setTimeout(() => {
+                            if (!messageReceived) {
+                                console.log('No message received within 5 seconds, finalizing and sending request to delete lobby.');
+                                fetch(`/rest_battle/createBattle`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        codUser: codUser,
+                                        isPlayer1 : result.isPlayer1,
+                                        codLobby : result.codLobby
+                                    })
+                                })
+                                    .then(r => {
+                                        console.log("Response:");
+                                        console.log(r);
+                                        return r.json();  // Return the promise from r.json()
+                                    })
+                                    .then(data => {
+                                        console.log(data);  // This is the JSON data
+                                        stompClient.disconnect();
+                                        window.location.href = '/lobby?codBattle=' + data.codBattle
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                                //navigate("/battle", {state : {result }})
+
+                            }
+                        }, 5000);
+                    }, function (error) {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    console.log("Already second player, navigating to lobby");
+                    window.location.href = '/lobby?codBattle=' + result.codBattle
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        if (loading) {
+            return (
+                <div className="loader">
+                    <h1>loading</h1>
+                </div>
+            );
+        }
+
+        if (error) {
+            return <div>Error: {error.message}</div>;
+        }
+
+        const handleRoomButtonClick = (codRoom) => {
+            // Example function to handle room button click
+            console.log("codRoom:" + codRoom);
+            console.log(codRoom);
+            alert(isFriendsRooms);
+            if(isFriendsRooms)
+                getFriendsLobby(codRoom,codUser)
+            else
+                getLobby(codRoom,codUser);
+        };
+
+        handleRoomButtonClick(codAutoRoom);
+        /*
+        return (
+            <div className="room-buttons">
+                {rooms.map((room) => (
+                    <button
+                        key={room.codRoom}
+                        className="room-button"
+                        onClick={handleRoomButtonClick.bind(this, room.codRoom)}
+                    >
+                        {room.bet}
+                    </button>
+                ))}
+            </div>
+        );
+
+         */
+        return (
+            <h1>
+                Esperando Alguém entrar
+            </h1>
+        )
+
+    }
+
+    // Render the React component
+    ReactDOM.render(<App rooms={roomsData} codUser={codUser} codAutoRoom={codAutoRoom} isFriendsRooms={isFriendsRooms}/>, document.getElementById('root'));
+</script>
+</body>
+</html>
