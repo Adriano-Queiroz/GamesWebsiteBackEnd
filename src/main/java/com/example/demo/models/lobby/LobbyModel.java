@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -44,4 +46,9 @@ public class LobbyModel {
     @OneToMany(mappedBy = "lobby", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<InviteModel> invites;
 
+    private LocalDateTime creationDate;
+    @PrePersist
+    protected void onCreate() {
+        creationDate = LocalDateTime.now();
+    }
 }

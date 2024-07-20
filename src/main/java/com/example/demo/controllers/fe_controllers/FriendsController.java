@@ -87,6 +87,9 @@ public class FriendsController {
         if(optionalLobby.isEmpty())
             throw new NotFoundException("Convite expirado ou não existe");
         LobbyModel lobby = optionalLobby.get();
+        if (lobby.getCreationDate().plusMinutes(5).isBefore(LocalDateTime.now())) {
+            throw new NotFoundException("Convite expirado ou não existe");
+        }
         LobbyResponseDTO lobbyResponseDTO = lobbyService.newCreateBattle(lobby,
                 (UserModel) session.getAttribute("user"),
                 lobby.getRoom());
