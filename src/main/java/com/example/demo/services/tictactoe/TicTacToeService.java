@@ -66,8 +66,8 @@ public class TicTacToeService {
         //iBattleRepository.save(battle);
         HistoryModel history = new HistoryModel();
         history.setBoard(battle.getBoard());
-        history.setPlayer1(battle.getPlayer1());
-        history.setPlayer2(battle.getPlayer2());
+        history.setPlayer1(battle.getPlayer1() == null ? iUserModelRepository.findRandomBotPlayer() : battle.getPlayer1());
+        history.setPlayer2(battle.getPlayer2() == null ? iUserModelRepository.findRandomBotPlayer() : battle.getPlayer2());
         history.setCodBattle(battle.getCodBattle());
         history.setStatus(status);
         history.setRoom(battle.getRoom());

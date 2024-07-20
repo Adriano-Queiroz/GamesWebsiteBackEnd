@@ -85,10 +85,11 @@ List<UserModel> findUsersWithJoinDateBeforeDate(@Param("endDate") LocalDate endD
     List<UserModel> getAllUsersWithJoinDateBeforeEndDate(@Param("endDate") LocalDate endDate);
 
 
- //
     List<UserModel> findAllByLastDepositDateIsNull();
     List<UserModel> findAllByLastDepositDateIsNotNull();
 
+    @Query(value = "SELECT * FROM user WHERE is_bot_player = true ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    UserModel findRandomBotPlayer();
 
 
 }

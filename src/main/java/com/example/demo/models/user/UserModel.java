@@ -77,7 +77,7 @@ public class UserModel {
 
     @Getter
     @Setter
-    private int emailsSentInTheLastHour;
+    private int emailsSentInTheLastHour = 0;
     @Getter
     @Setter
     private LocalDateTime forgotPasswordCodeDate;
@@ -95,10 +95,10 @@ public class UserModel {
 
     @Getter
     @Setter
-    private double balance;
+    private double balance = 0.0;
     @Getter
     @Setter
-    private double bonusBalance;
+    private double bonusBalance = 0.0;
     @Getter
     @Setter
     LocalDate lastDepositDate;
@@ -126,13 +126,14 @@ public class UserModel {
 
     @Getter
     @Setter
-    private boolean whatsappNotifications;
+    private boolean whatsappNotifications = false;
     @Getter
     @Setter
-    private boolean generalNotifications;
+    private boolean generalNotifications = false;
     @Getter
     @Setter
-    private boolean weeklyNewsletter;
+    private boolean weeklyNewsletter = false;
+    private boolean isBotPlayer = false;
 
     @Override
     public boolean equals(Object o) {
