@@ -35,19 +35,31 @@ public class JogoController {
     @PostMapping("/jogoClick")
     public String jogoClick(@RequestParam("codGame") long codGame, HttpSession session, Model model, RedirectAttributes redirectAttributes){
         redirectAttributes.addAttribute("codGame", codGame);
-        return "redirect:/salas";
+        model.addAttribute("codGame",codGame);
+        //return "redirect:/salas";
+        return "redirect:/entrar-no-jogo";
     }
 
 
     @GetMapping("/salas")
     public String salas(@RequestParam("codGame") long codGame,HttpSession session, Model model){
+    //  public String salas(HttpSession session, Model model){
+        //long codGame = (Long) model.getAttribute("codGame");
         List<RoomModel> roomsList = iRoomRepository.findAllByGame(gameRepository.findById(codGame).get());
         model.addAttribute("roomsList",roomsList);
         return "salas";
     }
+    @GetMapping("/salas-friends")
+    public String salasFriends(@RequestParam("codGame") long codGame,HttpSession session, Model model){
+        //  public String salas(HttpSession session, Model model){
+        //long codGame = (Long) model.getAttribute("codGame");
+        List<RoomModel> roomsList = iRoomRepository.findAllByGame(gameRepository.findById(codGame).get());
+        model.addAttribute("roomsList",roomsList);
+        return "salas-friends";
+    }
     @GetMapping("/entrar-no-jogo")
-    public String entrarNoJogo(HttpSession session ,Model model){
-
+    public String entrarNoJogo(@RequestParam("codGame") long codGame, HttpSession session ,Model model){
+        model.addAttribute("codGame",codGame);
         return "entrar-no-jogo";
     }
     @PostMapping("/entrar-sala")
@@ -56,11 +68,24 @@ public class JogoController {
         long codUser = user.getCodUser();
         Object roomsData = null;
         long codAutoRoom = codRoom;
-        boolean isFriendsRoom = false;
+        boolean isFriendsRooms = false;
         model.addAttribute("roomsData",roomsData);
         model.addAttribute("codUser", codUser);
         model.addAttribute("codAutoRoom", codAutoRoom);
-        model.addAttribute("isFriendsRoom", isFriendsRoom);
+        model.addAttribute("isFriendsRooms", isFriendsRooms);
+        return "auto-room";
+    }
+    @PostMapping("entrar-sala-friends")
+    public String entrarSalaFriends(@RequestParam("codRoom") Long codRoom,HttpSession session, Model model, RedirectAttributes redirectAttributes){
+        UserModel user = (UserModel) session.getAttribute("user");
+        long codUser = user.getCodUser();
+        Object roomsData = null;
+        long codAutoRoom = codRoom;
+        boolean isFriendsRooms = true;
+        model.addAttribute("roomsData",roomsData);
+        model.addAttribute("codUser", codUser);
+        model.addAttribute("codAutoRoom", codAutoRoom);
+        model.addAttribute("isFriendsRooms", isFriendsRooms);
         return "auto-room";
     }
     @GetMapping("/auto-room")

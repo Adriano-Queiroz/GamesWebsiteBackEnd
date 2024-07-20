@@ -77,31 +77,39 @@
 <img class src="assets/images/branding/logo.png">
 </a>
 </div>
-<form method="POST" class="flex flex-col gap-2" action="https://x1jogos.com/register">
-<input type="hidden" name="_token" value="vCGWSZlVROqU3ueFfWjwuK5sbXLMMkzFng4Ritru" autocomplete="off"> <p class="font-bold text-3xl mb-2 text-base-700" style="text-align-last: center;font-size: revert;
-">Escolher a sala</p>
+
+    <a th:href="@{/salas-friends(codGame=${codGame})}" style="text-transform: capitalize !important; padding: 16px; font-size: 16px; font-weight: 600;" class="inline-flex items-center justify-center px-4 py-2 bg-x1blue border border-transparent rounded font-semibold text-sm text-white w-full hover:bg-x1blue/80 mt-4 mb-8">
+        Convidar Amigo
+    </a>
+    <form method="POST" class="flex flex-col gap-2" action="/friends/acceptInvite">
+        <input type="hidden" name="_token" value="vCGWSZlVROqU3ueFfWjwuK5sbXLMMkzFng4Ritru" autocomplete="off">
+
+        <p class="font-bold text-3xl mb-2 text-base-700" style="text-align-last: center; font-size: revert;">
+            Entrar em Sala
+        </p>
+
+        <!-- Text box input -->
+        <div class="flex flex-wrap md:flex-nowrap gap-2" style="align-self: center;">
+            <div class="w-full md:w-1/2 form-control">
+                <input type="text" name="inviteCode" placeholder="Link do convite" class="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-x1blue focus:border-x1blue" style=" padding: 16px; color: black;">
+            </div>
+        </div>
+
+        <!-- Submit button -->
+        <button style="text-transform: capitalize !important; padding: 16px; font-size: 16px; font-weight: 600;" type="submit" class="inline-flex items-center justify-center px-4 py-2 bg-x1blue border border-transparent rounded font-semibold text-sm text-white w-full hover:bg-x1blue/80 mt-4 mb-8">
+            Entrar em Sala
+        </button>
+    </form>
+
+
+    </form>
+    <a th:href="@{/salas(codGame=${codGame})}" style="text-transform: capitalize !important; padding: 16px; font-size: 16px; font-weight: 600;" class="inline-flex items-center justify-center px-4 py-2 bg-x1blue border border-transparent rounded font-semibold text-sm text-white w-full hover:bg-x1blue/80 mt-4 mb-8">
+        Jogar Online
+    </a>
 
 
 
-
-<div class="flex flex-wrap md:flex-nowrap gap-2" style="align-self: center;">
-<div class="w-full md:w-1/2 form-control" >
-<button type="button" class="tablinks text-x1blue bg-gray-100 hover:bg-x1blue hover:text-white focus:outline-none focus:ring-4 border-2 border-x1blue    focus:ring-blue-300 font-medium rounded-lg h-[4rem] w-72 text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:hover:bg-blue-700 dark:focus:ring-blue-800 active" onclick="openCity(event, 'btn1')" >Temos nesse momento
-<div class="rounded-full bg-green-500 text-white flex justify-center items-center px-4 py-1 space-x-2" style="max-width: max-content;margin-inline: auto;">
-<span class="relative flex h-3 w-3">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75"></span>
-<span class="relative inline-flex rounded-full h-3 w-3 bg-green-300"></span>
-</span>
-<p>333 Online</p>
-</div></button>
-</div>
-</div>
-<button style="text-transform: capitalize !important; padding: 16px; font-size: 16px; font-weight: 600;" type="submit" class="inline-flex items-center justify-center px-4 py-2 bg-x1blue border border-transparent rounded font-semibold text-sm text-white w-full  hover:bg-x1blue/80 mt-4 mb-8">
-Jogar
-</button>
-
-</form>
-<script>
+    <script>
             const togglePasswordInputType = () => {
                 const passwordInput = document.getElementById('password');
                 const revealIcon = document.getElementById('revealIcon');

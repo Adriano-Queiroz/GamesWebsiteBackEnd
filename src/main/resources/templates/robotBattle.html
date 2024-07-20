@@ -369,6 +369,8 @@
         const handleClick = async (rowIndex, colIndex, resetTimer) => {
             if (!isTurn)
                 return;
+            if (board[rowIndex][colIndex] === "X" || board[rowIndex][colIndex] === "O") return;
+
             setWaitTime(getRandomNumber() * 1000);
             const newBoard = board.map((row, rIdx) =>
                 row.map((col, cIdx) => {

@@ -68,20 +68,20 @@ public class FriendsController {
         this.lobbyService = lobbyService;
     }
     @GetMapping("/rooms")
-    public String rooms(HttpSession session, Model model) throws NotFoundException {
+    public String rooms(@RequestParam("codGame") long codGame, HttpSession session, Model model) throws NotFoundException {
         if (session.getAttribute("user") == null)
             return "redirect:/login";
         long codUser = ((UserModel) session.getAttribute("user")).getCodUser();
         IsInBattleDTO isInBattleDTO = battleService.isInBattle(codUser);
         if (isInBattleDTO.isInBattle())
             return getLobby(isInBattleDTO.result().codBattle(), session, model);
-        List<RoomModel> roomList = iRoomRepository.findAllByGame(iGameRepository.findById(1L).get()); //todo trocar para ser o game que carreguei
+        List<RoomModel> roomList = iRoomRepository.findAllByGame(iGameRepository.findById(codGame).get()); //todo trocar para ser o game que carreguei
         model.addAttribute("rooms", roomList);
         model.addAttribute("codUser", codUser);
         model.addAttribute("isFriendsRooms", true);
         return "rooms";
     }
-    @GetMapping("/acceptInvite")
+    @PostMapping("/acceptInvite")
     public String acceptInvite(HttpSession session, @RequestParam String inviteCode, Model model) throws NotFoundException {
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByInviteCode(inviteCode);
         if(optionalLobby.isEmpty())

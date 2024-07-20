@@ -69,7 +69,22 @@ public class BattleRestController {
             throw new NotFoundException("Partida não encontrada");
         BattleModel battle = optionalBattle.get();
         String board = makeMoveRequestDTO.board();
-        String[][] boardArray = ((TicTacToeBoard)
+        Tuple hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
+                getBoard(GameType.TICTACTOE, board))
+                .getBoard());
+
+        if (hasFinishedTuple.hasFinished()) {
+            Status status = ticTacToeService.RestTreatFinishedGame(hasFinishedTuple, makeMoveRequestDTO.codBattle());
+            battleService.shutdown(makeMoveRequestDTO.codBattle());
+            return ResponseEntity.ok(new MakeMoveResponseDTO(
+                    makeMoveRequestDTO.board(),
+                    "",
+                    makeMoveRequestDTO.codBattle(),
+                    status.toString()
+            ));
+        }
+
+                String[][] boardArray = ((TicTacToeBoard)
                 BoardMapper.getBoard(GameType.TICTACTOE, board))
                 .getBoard();
         Gson gson = new Gson();
@@ -83,7 +98,7 @@ public class BattleRestController {
                 makeMoveRequestDTO.codUser(),
                 makeMoveRequestDTO.waitTime());
         MakeMoveResponseDTO responseDTO =  ticTacToeLogicService.makeMove(makeMoveRequestDTO);
-        Tuple hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
+        hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
                 getBoard(GameType.TICTACTOE, responseDTO.board()))
                 .getBoard());
         if(hasFinishedTuple.hasFinished()){
