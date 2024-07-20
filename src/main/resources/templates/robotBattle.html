@@ -207,7 +207,7 @@
         );
     }
 
-    function BoardComponent({ isConnected, isTurn, isPlayer1, board, handleClick, handleGiveup, isFinished, textToShowIfFinished, playAgain, resetTimer }) {
+    function BoardComponent({ isConnected, isTurn, isPlayer1, board, handleClick, handleGiveup, isFinished, textToShowIfFinished, playAgain, homePage, resetTimer }) {
         function squareColor(square) {
             return square === 'X' ? 'text-pink-500' : square === 'O' ? 'text-blue-400' : ''
         }
@@ -235,12 +235,20 @@
                             </div>
                         </div>
                         {isFinished ? (
-                            <button
-                                className="px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300"
-                                onClick={playAgain}
-                            >
-                                Jogar Novamente
-                            </button>
+                            <div>
+                                <button
+                                    className="px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300"
+                                    onClick={playAgain}
+                                >
+                                    Jogar Novamente
+                                </button>
+                                <button
+                                    className="px-4 py-2 bg-gray-500 rounded uppercase font-bold hover:bg-pink-600 duration-300"
+                                    onClick={homePage}
+                                >
+                                    Página Principal
+                                </button>
+                            </div>
                         ) : (
                             <button
                                 className="px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300"
@@ -344,7 +352,6 @@
                 setIsConnected(true);
                 stompClientRef.current.subscribe(`/topic/battle/${result.codBattle}/${opponent}`, function (message) {
                     const response = JSON.parse(message.body);
-                    alert("inside subscribe");
                     if (response.hasTimedOut) {
                         treatFinishedGame(response.status);
                         return;
@@ -411,6 +418,9 @@
         const playAgain = async () => {
             await getLobby(codRoom, codUser);
         };
+        const homePage = () => {
+            window.location.href = '/';
+        }
 
         return (
             <BoardComponent
@@ -423,6 +433,7 @@
                 handleGiveup={handleGiveup}
                 handleClick={handleClick}
                 playAgain={playAgain}
+                homePage={homePage}
                 resetTimer={resetTimerRef}
             />
         );
