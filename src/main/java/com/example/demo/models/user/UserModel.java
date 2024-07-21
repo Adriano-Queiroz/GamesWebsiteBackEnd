@@ -77,7 +77,9 @@ public class UserModel {
 
     @Getter
     @Setter
-    private int emailsSentInTheLastHour = 0;
+    @Column(columnDefinition = "int default 0")
+    private int emailsSentInTheLastHour;
+    
     @Getter
     @Setter
     private LocalDateTime forgotPasswordCodeDate;
@@ -95,10 +97,12 @@ public class UserModel {
 
     @Getter
     @Setter
-    private double balance = 0.0;
+    @Column(columnDefinition = "double default 0.0")
+    private double balance;
     @Getter
     @Setter
-    private double bonusBalance = 0.0;
+    @Column(columnDefinition = "double default 0.0")
+    private double bonusBalance;
     @Getter
     @Setter
     LocalDate lastDepositDate;
@@ -136,7 +140,11 @@ public class UserModel {
     @Setter
     @Column(columnDefinition = "boolean default false")
     private boolean weeklyNewsletter;
-    private boolean isBotPlayer = false;
+
+    @Getter
+    @Setter
+    @Column(columnDefinition = "boolean default false")
+    private boolean isBotPlayer ;
 
 
     @Override
