@@ -189,6 +189,8 @@ public class LobbyService {
                 battle.getCodBattle());
     }
     public LobbyModel createLobby(UserModel user, RoomModel room,UserModel friend){
+            if(iLobbyRepository.findFirstByUserOrderByCodLobbyDesc(user).isPresent())
+                iLobbyRepository.delete(iLobbyRepository.findFirstByUserOrderByCodLobbyDesc(user).get());
         LobbyModel lobby = new LobbyModel();
         lobby.setGame(room.getGame());
         lobby.setUser(user);

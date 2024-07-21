@@ -131,15 +131,15 @@ public class UserModel {
     @Getter
     @Setter
     @Column(columnDefinition = "boolean default false")
-    private boolean whatsappNotifications;
+    private boolean whatsappNotifications = false;
     @Getter
     @Setter
     @Column(columnDefinition = "boolean default false")
-    private boolean generalNotifications;
+    private boolean generalNotifications = false;
     @Getter
     @Setter
     @Column(columnDefinition = "boolean default false")
-    private boolean weeklyNewsletter;
+    private boolean weeklyNewsletter = false;
 
     @Getter
     @Setter
