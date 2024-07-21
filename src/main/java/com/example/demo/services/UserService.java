@@ -80,6 +80,9 @@ public class UserService {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new AlreadyExistsException("Username Já existe");
         }
+        if (userRepository.findFirstByEmail(email).isPresent()) {
+            throw new AlreadyExistsException("Email Já existe");
+        }
         if (!usersDomain.isSafePassword(password)) {
             throw new IllegalArgumentException("Password não é segura o suficiente");
         }
@@ -91,7 +94,7 @@ public class UserService {
         user.setPhoneNumber(phoneNumber);
         user.setPasswordValidationInfo(passwordValidationInfo.validationInfo());
         user.setBalance(0.0);
-        user.setUserRole(iUserRoleModelRepository.findById(1L).get());
+        user.setUserRole(iUserRoleModelRepository.findById(0L).get());
         return userRepository.save(user);
 
     }

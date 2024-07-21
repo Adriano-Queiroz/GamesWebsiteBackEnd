@@ -43,7 +43,7 @@ public class SaquesController {
             return "redirect:/login";
 
         UserModel user = (UserModel) session.getAttribute("user");
-        if(!user.getUserRole().equals( UserRoles.ADMIN))
+        if(!user.getUserRole().getUserRole().equals(UserRoles.ADMIN))
             return "redirect:/login";
 
         model.addAttribute("user", user);

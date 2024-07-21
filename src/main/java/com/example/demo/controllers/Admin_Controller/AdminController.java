@@ -4,6 +4,8 @@ package com.example.demo.controllers.Admin_Controller;
 import com.example.demo.dtos.ajustes.ChangeGlobalSettingDTO;
 import com.example.demo.dtos.ajustes.ChangeSocialMediaDTO;
 import com.example.demo.dtos.ajustes.CreditUserBalanceDTO;
+import com.example.demo.models.user.UserModel;
+import com.example.demo.models.user.role.UserRoles;
 import com.example.demo.services.fe_services.AdminService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class AdminController {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
 
+        UserModel user = (UserModel) session.getAttribute("user");
+        if(!user.getUserRole().getUserRole().equals(UserRoles.ADMIN))
+            return "redirect:/login";
         model.addAttribute("BonusBoasVindas", adminService.getGlobal("BonusBoasVindas"));
         model.addAttribute("BonusRecargaDiaria", adminService.getGlobal("BonusRecargaDiaria"));
         model.addAttribute("BonusPrimeiraRecarga", adminService.getGlobal("BonusPrimeiraRecarga"));
