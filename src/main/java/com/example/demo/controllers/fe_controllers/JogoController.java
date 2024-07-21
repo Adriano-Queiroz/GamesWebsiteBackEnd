@@ -6,6 +6,8 @@ import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IGameRepository;
 import com.example.demo.repositories.IRoomRepository;
+import com.example.demo.services.CommomMethods.CommonMethods;
+import com.example.demo.services.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -25,44 +27,67 @@ public class JogoController {
     private IGameRepository gameRepository;
     @Autowired
     private IRoomRepository iRoomRepository;
+    @Autowired
+    private CommonMethods commonMethods;
     @GetMapping("jogosList")
-    public String jogosList(HttpSession session, Model model){
+    public String jogosList(HttpSession session, Model model) throws NotFoundException {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
+
+        UserModel user = (UserModel) session.getAttribute("user");
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
         List<GameModel> gamesList = gameRepository.findAll();
         model.addAttribute("gamesList", gamesList);
 
         return "jogos-list";
     }
     @PostMapping("/jogoClick")
-    public String jogoClick(@RequestParam("codGame") long codGame, HttpSession session, Model model, RedirectAttributes redirectAttributes){
+    public String jogoClick(@RequestParam("codGame") long codGame, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws NotFoundException {
         redirectAttributes.addAttribute("codGame", codGame);
         model.addAttribute("codGame",codGame);
-        //return "redirect:/salas";
+
+        UserModel user = (UserModel) session.getAttribute("user");
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
         return "redirect:/entrar-no-jogo";
     }
 
 
     @GetMapping("/salas")
-    public String salas(@RequestParam("codGame") long codGame,HttpSession session, Model model){
+    public String salas(@RequestParam("codGame") long codGame,HttpSession session, Model model) throws NotFoundException {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
+        UserModel user = (UserModel) session.getAttribute("user");
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
         List<RoomModel> roomsList = iRoomRepository.findAllByGame(gameRepository.findById(codGame).get());
         model.addAttribute("roomsList",roomsList);
         return "salas";
     }
     @GetMapping("/salas-friends")
-    public String salasFriends(@RequestParam("codGame") long codGame,HttpSession session, Model model){
+    public String salasFriends(@RequestParam("codGame") long codGame,HttpSession session, Model model) throws NotFoundException {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
+        UserModel user = (UserModel) session.getAttribute("user");
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
         List<RoomModel> roomsList = iRoomRepository.findAllByGame(gameRepository.findById(codGame).get());
         model.addAttribute("roomsList",roomsList);
         return "salas-friends";
     }
     @GetMapping("/entrar-no-jogo")
-    public String entrarNoJogo(@RequestParam("codGame") long codGame, HttpSession session ,Model model){
+    public String entrarNoJogo(@RequestParam("codGame") long codGame, HttpSession session ,Model model) throws NotFoundException {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
+        UserModel user = (UserModel) session.getAttribute("user");
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
         model.addAttribute("codGame",codGame);
         return "entrar-no-jogo";
     }
@@ -93,9 +118,13 @@ public class JogoController {
         return "auto-room";
     }
     @GetMapping("/auto-room")
-    public String autoRoom(HttpSession session, Model model){
+    public String autoRoom(HttpSession session, Model model) throws NotFoundException {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
+        UserModel user = (UserModel) session.getAttribute("user");
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
         return "auto-room";
     }
 }

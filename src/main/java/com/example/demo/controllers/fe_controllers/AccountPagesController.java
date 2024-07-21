@@ -7,7 +7,9 @@ import com.example.demo.models.user.UserModel;
 import com.example.demo.models.user.role.UserRoleModel;
 import com.example.demo.models.user.role.UserRoles;
 import com.example.demo.repositories.IUserModelRepository;
+import com.example.demo.services.CommomMethods.CommonMethods;
 import com.example.demo.services.UserService;
+import com.example.demo.services.exceptions.NotFoundException;
 import com.example.demo.services.fe_services.AdminService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,29 +32,34 @@ public class AccountPagesController {
     private AdminService adminService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CommonMethods commonMethods;
 
     @GetMapping("/profile")
-    public String profile(Model model, HttpSession session){
+    public String profile(Model model, HttpSession session) throws NotFoundException {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
         UserModel user = (UserModel) session.getAttribute("user");
-
-
         model.addAttribute("user", user);
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
 
         return "profile";
     }
 
     @GetMapping("/transactions")
-    public String transactions(Model model, HttpSession session){
+    public String transactions(Model model, HttpSession session) throws NotFoundException {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
         UserModel user = (UserModel) session.getAttribute("user");
+        model.addAttribute("user",user);
 
-
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
         model.addAttribute("transactions",userService.getTransactions(null,user.getCodUser(),null,null,null,null,null,null));
 
-        model.addAttribute("user",user);
 
         return "transactions";
     }
@@ -105,17 +112,22 @@ public class AccountPagesController {
     }
 
     @GetMapping("/bets")
-    public String bets(Model model,HttpSession session){
+    public String bets(Model model,HttpSession session) throws NotFoundException {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
 
         UserModel user = (UserModel) session.getAttribute("user");
 
+        model.addAttribute("user",session.getAttribute("user"));
+
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
+
         List<HistoryInfoDTO> historyInfo = userService.getHistory(user);
 
         model.addAttribute("histories", historyInfo);
 
-        model.addAttribute("user",session.getAttribute("user"));
 
         return "bets";
     }
