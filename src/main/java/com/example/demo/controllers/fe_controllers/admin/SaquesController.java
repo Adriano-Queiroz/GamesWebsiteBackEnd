@@ -1,4 +1,4 @@
-package com.example.demo.controllers.fe_controllers;
+package com.example.demo.controllers.fe_controllers.admin;
 
 import com.example.demo.dtos.deposits.DepositDTO;
 import com.example.demo.models.deposit.DepositStatus;
@@ -24,19 +24,21 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Controller
-public class DepositController {
+public class SaquesController {
+
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private DashboardService dashboardService;
 
-    @GetMapping("/depositos")
+    @GetMapping("/saques")
     public String getDashboard(@RequestParam(value = "startDate", required = false) String startDateStr,
                                @RequestParam(value = "endDate", required = false) String endDateStr,
                                @RequestParam(value = "page", defaultValue = "1") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
-                               @RequestParam(value = "list", defaultValue = "depositsList") String list,
-                               HttpSession session,
-                               Model model) {
+                               @RequestParam(value = "list", defaultValue = "withdrawalsList") String list,
+                               Model model,
+                               HttpSession session) {
+
         if(session.getAttribute("user") == null)
             return "redirect:/login";
 
@@ -44,6 +46,7 @@ public class DepositController {
         if(!user.getUserRole().equals( UserRoles.ADMIN))
             return "redirect:/login";
 
+        model.addAttribute("user", user);
         LocalDate startDate = null;
         LocalDate endDate = null;
         try {
@@ -66,58 +69,51 @@ public class DepositController {
             model.addAttribute("totalWithdrawals", withdrawals);
 
 
-            Page<DepositDTO> depositsList = dashboardService.getAllDepositsBetweenDates(startDate,endDate,pageable);
-            model.addAttribute("depositsList", depositsList);
-            switch (list) {
-                case "depositsList" ->
-                        model.addAttribute("depositsList", dashboardService.getAllDepositsBetweenDates(startDate, endDate, pageable));
-                case "aprovadoList" ->
-                        model.addAttribute("depositsList", dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.APROVADO, startDate, endDate, pageable));
-                case "abertoList" ->
-                        model.addAttribute("depositsList", dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.ABERTO, startDate, endDate, pageable));
-                default ->
-                        model.addAttribute("depositsList", dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.FECHADO, startDate, endDate, pageable));
-            }
-            Page<DepositDTO> aprovadoList =  dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.APROVADO,startDate,endDate,pageable);
+            Page<DepositDTO> depositsList = dashboardService.getAllWithdrawalsBetweenDates(startDate,endDate, pageable);
+            model.addAttribute("withdrawalsList", depositsList);
+
+            Page<DepositDTO> aprovadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.APROVADO,startDate,endDate, pageable);
             model.addAttribute("aprovadoList",aprovadoList);
 
-            Page<DepositDTO> abertoList =  dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.ABERTO,startDate,endDate,pageable);
-            model.addAttribute("abertoList",abertoList);
+            Page<DepositDTO> solicitadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.SOLICITADO,startDate,endDate, pageable);
+            model.addAttribute("solicitadoList",solicitadoList);
 
-            Page<DepositDTO> fechadoList =  dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.FECHADO,startDate,endDate,pageable);
-            model.addAttribute("fechadoList",fechadoList);
+            switch (list) {
+                case "withdrawalsList" ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsBetweenDates(startDate, endDate, pageable));
+                case "aprovadoList" ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.APROVADO, startDate, endDate, pageable));
+                default ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsByStatusBetweenDates(WithdrawalStatus.SOLICITADO, startDate, endDate, pageable));
+            }
+            //List<DepositDTO> fechadoList =  dashboardService.getAllWithdrawalsByStatusBetweenDates(Wit.FECHADO,startDate,endDate);
+            //model.addAttribute("fechadoList",fechadoList);
 
         } else {
             model.addAttribute("totalDeposits", dashboardService.getTotalDeposits(DepositStatus.APROVADO));
             model.addAttribute("totalWithdrawals", dashboardService.getTotalWithdrawals(WithdrawalStatus.APROVADO));
             model.addAttribute("moneyGained", dashboardService.getTotalGainPerPercentage());
-            model.addAttribute("depositsList", dashboardService.getAllDeposits(pageable));
+            model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawals(pageable));
+            model.addAttribute("aprovadoList",dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.APROVADO, pageable));
+            model.addAttribute("solicitadoList",dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.SOLICITADO, pageable));
             switch (list) {
-                case "depositsList" ->
-                        model.addAttribute("depositsList", dashboardService.getAllDeposits(pageable));
+                case "withdrawalsList" ->
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawals(pageable));
                 case "aprovadoList" ->
-                        model.addAttribute("depositsList", dashboardService.getAllDepositsByStatus(DepositStatus.APROVADO, pageable));
-                case "abertoList" ->
-                        model.addAttribute("depositsList", dashboardService.getAllDepositsByStatus(DepositStatus.ABERTO, pageable));
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.APROVADO, pageable));
                 default ->
-                        model.addAttribute("depositsList", dashboardService.getAllDepositsByStatus(DepositStatus.FECHADO, pageable));
+                        model.addAttribute("withdrawalsList", dashboardService.getAllWithdrawalsByStatus(WithdrawalStatus.SOLICITADO, pageable));
             }
-            model.addAttribute("aprovadoList",dashboardService.getAllDepositsByStatus(DepositStatus.APROVADO,pageable));
-            model.addAttribute("abertoList",dashboardService.getAllDepositsByStatus(DepositStatus.ABERTO,pageable));
-            model.addAttribute("fechadoList",dashboardService.getAllDepositsByStatus(DepositStatus.FECHADO,pageable));
 
         }
         model.addAttribute("totalBalance", dashboardService.getTotalBalance());
         model.addAttribute("startDate", startDate != null ? startDate.toString() + " -" :"(Desde o Início)");
         model.addAttribute("endDate", endDate != null ? endDate.toString():"");
+        return "saques";
 
-
-
-
-        return "depositos";
     }
 
-    @PostMapping("/deposits-date")
+    @PostMapping("/saques-date")
     public String handleDateSubmission(@RequestParam("startDate") String startDateStr,
                                        @RequestParam("endDate") String endDateStr,
                                        RedirectAttributes redirectAttributes) {
@@ -131,6 +127,6 @@ public class DepositController {
         redirectAttributes.addAttribute("endDate", endDateStr);
 
         // Redirect to the GET /dashboard with parameters
-        return "redirect:/depositos";
+        return "redirect:/saques";
     }
 }

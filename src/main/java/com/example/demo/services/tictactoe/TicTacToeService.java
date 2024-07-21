@@ -10,9 +10,12 @@ import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IBattleRepository;
 import com.example.demo.repositories.IHistoryRepository;
 import com.example.demo.repositories.IUserModelRepository;
+import com.example.demo.services.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class TicTacToeService {
@@ -26,12 +29,16 @@ public class TicTacToeService {
         this.iHistoryRepository = iHistoryRepository;
     }
 
-    public void treatFinishedGame(Tuple hasFinishedTuple, SimpMessagingTemplate messagingTemplate, long codBattle){
+    public void treatFinishedGame(Tuple hasFinishedTuple, SimpMessagingTemplate messagingTemplate, long codBattle) throws NotFoundException {
         Status status = (hasFinishedTuple.winner().equals("X") ? Status.P1_WON :
                 hasFinishedTuple.winner().equals("O") ? Status.P2_WON : Status.DRAW);
 
         
-        BattleModel battle = iBattleRepository.findById(codBattle).get();
+        Optional<BattleModel> optionalBattle = iBattleRepository.findById(codBattle);
+
+        if(optionalBattle.isEmpty())
+            throw new NotFoundException("Partida não encontrada");
+        BattleModel battle = optionalBattle.get();
         UserModel user1 = battle.getPlayer1();
         UserModel user2 = battle.getPlayer2();
         double moneyGained = treatBets(status,user1,user2,battle);

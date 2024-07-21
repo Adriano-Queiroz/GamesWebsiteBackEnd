@@ -56,7 +56,7 @@ public class GameController {
         long codUser = ((UserModel) session.getAttribute("user")).getCodUser();
         IsInBattleDTO isInBattleDTO = battleService.isInBattle(codUser);
         if (isInBattleDTO.isInBattle())
-            return getLobby(isInBattleDTO.result().codBattle(), session, model);
+            return getLobby(isInBattleDTO.result().codBattle(),true, session, model);
         model.addAttribute("user", session.getAttribute("user"));
         return "home";
     }
@@ -64,6 +64,7 @@ public class GameController {
     @GetMapping("/lobby")
     public String getLobby(
             @RequestParam long codBattle,
+            boolean hasReturned,
             HttpSession session,
             Model model) {
         if (session.getAttribute("user") == null)
@@ -80,7 +81,7 @@ public class GameController {
         model.addAttribute("isPlayer1", isPlayer1);
         model.addAttribute("status", battle.getStatus());
         model.addAttribute("codBattle", codBattle);
-        model.addAttribute("hasReturned", false);
+        model.addAttribute("hasReturned", hasReturned);
         model.addAttribute("possibleMoves",
                 gamesService.getPossibleMoves(boardArray, battle.getRoom().getGame().getGameType()));
         model.addAttribute("codUser", codUser);
@@ -108,7 +109,7 @@ public class GameController {
         model.addAttribute("board", board);
         return "robotBattle";
     }
-
+/*
     @GetMapping("/rooms")
     public String rooms(HttpSession session, Model model) throws NotFoundException {
         if (session.getAttribute("user") == null)
@@ -124,4 +125,6 @@ public class GameController {
 
         return "rooms";
     }
+    */
+
 }

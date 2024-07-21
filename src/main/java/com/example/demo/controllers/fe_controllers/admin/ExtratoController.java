@@ -1,4 +1,4 @@
-package com.example.demo.controllers.fe_controllers;
+package com.example.demo.controllers.fe_controllers.admin;
 
 import com.example.demo.dtos.deposits.DepositDTO;
 import com.example.demo.models.deposit.DepositStatus;

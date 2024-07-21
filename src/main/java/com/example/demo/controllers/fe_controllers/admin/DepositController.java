@@ -1,20 +1,21 @@
-package com.example.demo.controllers.fe_controllers;
+package com.example.demo.controllers.fe_controllers.admin;
 
-import com.example.demo.dtos.ajustes.ActivateBonusDTO;
 import com.example.demo.dtos.deposits.DepositDTO;
 import com.example.demo.models.deposit.DepositStatus;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.models.user.role.UserRoles;
 import com.example.demo.models.withdrawal.WithdrawalStatus;
-import com.example.demo.services.fe_services.AdminService;
 import com.example.demo.services.fe_services.DashboardService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -22,33 +23,27 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
 @Controller
-public class DashboardController {
-
-    @Autowired
-    private AdminService adminService;
-
+public class DepositController {
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private DashboardService dashboardService;
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    @GetMapping("/dashboard")
+    @GetMapping("/depositos")
     public String getDashboard(@RequestParam(value = "startDate", required = false) String startDateStr,
                                @RequestParam(value = "endDate", required = false) String endDateStr,
                                @RequestParam(value = "page", defaultValue = "1") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
                                @RequestParam(value = "list", defaultValue = "depositsList") String list,
-                               Model model,
-                               HttpSession session) {
+                               HttpSession session,
+                               Model model) {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
 
         UserModel user = (UserModel) session.getAttribute("user");
         if(!user.getUserRole().equals( UserRoles.ADMIN))
             return "redirect:/login";
+
         LocalDate startDate = null;
         LocalDate endDate = null;
         try {
@@ -61,13 +56,18 @@ public class DashboardController {
         } catch (DateTimeParseException e) {
             // Handle the exception, e.g., set default dates or show an error message
         }
-
         Pageable pageable = PageRequest.of(page - 1, size);
 
         if (startDate != null && endDate != null) {
-            model.addAttribute("totalDeposits", dashboardService.getTotalDepositsBetweenDates(startDate, endDate, DepositStatus.APROVADO));
-            model.addAttribute("totalWithdrawals", dashboardService.getTotalWithdrawalsBetweenDates(startDate, endDate, WithdrawalStatus.APROVADO));
-            model.addAttribute("moneyGained", dashboardService.getTotalGainPerPercentageBetweenDates(startDate, endDate));
+            double deposits = dashboardService.getTotalDepositsBetweenDates(startDate, endDate,DepositStatus.APROVADO);
+            model.addAttribute("totalDeposits", deposits);
+
+            double withdrawals = dashboardService.getTotalWithdrawalsBetweenDates(startDate,endDate, WithdrawalStatus.APROVADO);
+            model.addAttribute("totalWithdrawals", withdrawals);
+
+
+            Page<DepositDTO> depositsList = dashboardService.getAllDepositsBetweenDates(startDate,endDate,pageable);
+            model.addAttribute("depositsList", depositsList);
             switch (list) {
                 case "depositsList" ->
                         model.addAttribute("depositsList", dashboardService.getAllDepositsBetweenDates(startDate, endDate, pageable));
@@ -78,15 +78,20 @@ public class DashboardController {
                 default ->
                         model.addAttribute("depositsList", dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.FECHADO, startDate, endDate, pageable));
             }
+            Page<DepositDTO> aprovadoList =  dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.APROVADO,startDate,endDate,pageable);
+            model.addAttribute("aprovadoList",aprovadoList);
 
-            model.addAttribute("aprovadoList", dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.APROVADO, startDate, endDate, pageable));
-            model.addAttribute("abertoList", dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.ABERTO, startDate, endDate, pageable));
-            model.addAttribute("fechadoList", dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.FECHADO, startDate, endDate, pageable));
+            Page<DepositDTO> abertoList =  dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.ABERTO,startDate,endDate,pageable);
+            model.addAttribute("abertoList",abertoList);
+
+            Page<DepositDTO> fechadoList =  dashboardService.getAllDepositsByStatusBetweenDates(DepositStatus.FECHADO,startDate,endDate,pageable);
+            model.addAttribute("fechadoList",fechadoList);
+
         } else {
             model.addAttribute("totalDeposits", dashboardService.getTotalDeposits(DepositStatus.APROVADO));
             model.addAttribute("totalWithdrawals", dashboardService.getTotalWithdrawals(WithdrawalStatus.APROVADO));
             model.addAttribute("moneyGained", dashboardService.getTotalGainPerPercentage());
-
+            model.addAttribute("depositsList", dashboardService.getAllDeposits(pageable));
             switch (list) {
                 case "depositsList" ->
                         model.addAttribute("depositsList", dashboardService.getAllDeposits(pageable));
@@ -97,23 +102,22 @@ public class DashboardController {
                 default ->
                         model.addAttribute("depositsList", dashboardService.getAllDepositsByStatus(DepositStatus.FECHADO, pageable));
             }
-            model.addAttribute("aprovadoList", dashboardService.getAllDepositsByStatus(DepositStatus.APROVADO, pageable));
-            model.addAttribute("abertoList", dashboardService.getAllDepositsByStatus(DepositStatus.ABERTO, pageable));
-            model.addAttribute("fechadoList", dashboardService.getAllDepositsByStatus(DepositStatus.FECHADO, pageable));
+            model.addAttribute("aprovadoList",dashboardService.getAllDepositsByStatus(DepositStatus.APROVADO,pageable));
+            model.addAttribute("abertoList",dashboardService.getAllDepositsByStatus(DepositStatus.ABERTO,pageable));
+            model.addAttribute("fechadoList",dashboardService.getAllDepositsByStatus(DepositStatus.FECHADO,pageable));
+
         }
-
         model.addAttribute("totalBalance", dashboardService.getTotalBalance());
-        model.addAttribute("startDate", startDate != null ? startDate.toString() + " -" : "(Desde o Início)");
-        model.addAttribute("endDate", endDate != null ? endDate.toString() : "");
+        model.addAttribute("startDate", startDate != null ? startDate.toString() + " -" :"(Desde o Início)");
+        model.addAttribute("endDate", endDate != null ? endDate.toString():"");
 
-        model.addAttribute("BonusBoasVindas", adminService.getGlobal("BonusBoasVindas"));
-        model.addAttribute("BonusRecargaDiaria", adminService.getGlobal("BonusRecargaDiaria"));
-        model.addAttribute("BonusPrimeiraRecarga", adminService.getGlobal("BonusPrimeiraRecarga"));
 
-        return "dashboard";
+
+
+        return "depositos";
     }
 
-    @PostMapping("/dashboard-date")
+    @PostMapping("/deposits-date")
     public String handleDateSubmission(@RequestParam("startDate") String startDateStr,
                                        @RequestParam("endDate") String endDateStr,
                                        RedirectAttributes redirectAttributes) {
@@ -127,11 +131,6 @@ public class DashboardController {
         redirectAttributes.addAttribute("endDate", endDateStr);
 
         // Redirect to the GET /dashboard with parameters
-        return "redirect:/dashboard";
-    }
-
-    @PostMapping("/changeBonusStatus")//chamada por script no html
-    public void changeBonusStatus(@RequestBody ActivateBonusDTO dto){
-        adminService.controlBonus(dto.bonusName(), dto.newStatus());
+        return "redirect:/depositos";
     }
 }

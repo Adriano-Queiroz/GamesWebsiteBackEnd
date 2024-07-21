@@ -327,7 +327,10 @@
                     console.log("result board:");
                     console.log(result);
                     setBoard(JSON.parse(result.firstMoveBoard));
-                    setIsTurn(!isPlayer1);
+                    if(!result.hasReturned)
+                        setIsTurn(!isPlayer1);
+                    else
+                        setIsTurn(true);
                     result.isFirstMove = false;
                 }, waitTime);
                 resetTimerRef.current();
@@ -430,6 +433,10 @@
         const homePage = () => {
             window.location.href = '/';
         }
+        useEffect(() => {
+            if(result.hasReturned)
+                setIsTurn(true);
+        }, []);
 
         return (
             <BoardComponent

@@ -56,14 +56,15 @@ public class BattleService {
         String[][] boardArray = ((TicTacToeBoard)
                 BoardMapper.getBoard(GameType.TICTACTOE, board))
                 .getBoard();
-
+        //todo - Se um user for null, o turn tem que ser do user e a board mais recente ser enviada
             return new IsInBattleDTO(true
                     ,new BattleDTO(
                     board,
                     gamesService.getPossibleMoves(boardArray,battle.getRoom().getGame().getGameType()),
                     battle.getCodBattle(),
-                    battle.getStatus().toString(),
-                    battle.getPlayer1().getCodUser() == codUser,
+                    //battle.getStatus().toString(),
+                    battle.getPlayer1() != null ? Status.P1_TURN.toString() : Status.P2_TURN.toString(),
+                    battle.getPlayer1()!=null && battle.getPlayer1().getCodUser() == codUser,
                     true),
                     -1
                     //,Duration.between(battle.getLastMoveDateTime(),LocalDateTime.now()).getSeconds()
@@ -115,7 +116,11 @@ public class BattleService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                executeAction(battle);
+                try {
+                    executeAction(battle);
+                } catch (NotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }, 16000 + timeAdded);
 
@@ -133,7 +138,11 @@ public class BattleService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                executeAction(battle);
+                try {
+                    executeAction(battle);
+                } catch (NotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }, 16000);
 
@@ -152,7 +161,12 @@ public class BattleService {
         resetTimer(battle);
     }
 
-    private void executeAction(BattleModel battle) {
+    private void executeAction(BattleModel battle) throws NotFoundException {
+        if(battle.getPlayer2()==null)
+            battle.setStatus(Status.P1_TURN);
+        else if(battle.getPlayer1()==null)
+            battle.setStatus(Status.P2_TURN);
+            iBattleRepository.save(battle);
         if(battle.getStatus() == Status.P2_TURN){
             ticTacToeService.treatFinishedGame(new Tuple(true,"X"),messagingTemplate,battle.getCodBattle());
         }else if(battle.getStatus () == Status.P1_TURN){

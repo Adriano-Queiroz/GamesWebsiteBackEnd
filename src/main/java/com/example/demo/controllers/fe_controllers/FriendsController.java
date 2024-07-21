@@ -67,20 +67,7 @@ public class FriendsController {
         this.iInviteRepository = iInviteRepository;
         this.lobbyService = lobbyService;
     }
-    @GetMapping("/rooms")
-    public String rooms(@RequestParam("codGame") long codGame, HttpSession session, Model model) throws NotFoundException {
-        if (session.getAttribute("user") == null)
-            return "redirect:/login";
-        long codUser = ((UserModel) session.getAttribute("user")).getCodUser();
-        IsInBattleDTO isInBattleDTO = battleService.isInBattle(codUser);
-        if (isInBattleDTO.isInBattle())
-            return getLobby(isInBattleDTO.result().codBattle(), session, model);
-        List<RoomModel> roomList = iRoomRepository.findAllByGame(iGameRepository.findById(codGame).get()); //todo trocar para ser o game que carreguei
-        model.addAttribute("rooms", roomList);
-        model.addAttribute("codUser", codUser);
-        model.addAttribute("isFriendsRooms", true);
-        return "rooms";
-    }
+
     @PostMapping("/acceptInvite")
     public String acceptInvite(HttpSession session, @RequestParam String inviteCode, Model model) throws NotFoundException {
         Optional<LobbyModel> optionalLobby = iLobbyRepository.findFirstByInviteCode(inviteCode);
@@ -142,5 +129,23 @@ public class FriendsController {
         model.addAttribute("board", board);
         return "robotBattle";
     }
+
+        /*
+    @GetMapping("/rooms")
+    public String rooms(@RequestParam("codGame") long codGame, HttpSession session, Model model) throws NotFoundException {
+        if (session.getAttribute("user") == null)
+            return "redirect:/login";
+        long codUser = ((UserModel) session.getAttribute("user")).getCodUser();
+        IsInBattleDTO isInBattleDTO = battleService.isInBattle(codUser);
+        if (isInBattleDTO.isInBattle())
+            return getLobby(isInBattleDTO.result().codBattle(), session, model);
+        List<RoomModel> roomList = iRoomRepository.findAllByGame(iGameRepository.findById(codGame).get()); //todo trocar para ser o game que carreguei
+        model.addAttribute("rooms", roomList);
+        model.addAttribute("codUser", codUser);
+        model.addAttribute("isFriendsRooms", true);
+        return "rooms";
+    }
+
+     */
 
 }

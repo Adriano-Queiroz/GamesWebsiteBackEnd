@@ -1,4 +1,4 @@
-package com.example.demo.controllers.fe_controllers;
+package com.example.demo.controllers.fe_controllers.admin;
 
 import com.example.demo.boards.TicTacToeBoard;
 import com.example.demo.dtos.FE.Battle.BattleRequestDTO;

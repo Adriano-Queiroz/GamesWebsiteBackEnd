@@ -1,4 +1,4 @@
-package com.example.demo.controllers.fe_controllers;
+package com.example.demo.controllers.fe_controllers.admin;
 
 import com.example.demo.dtos.user.FeUserDTO;
 import com.example.demo.models.user.UserModel;
