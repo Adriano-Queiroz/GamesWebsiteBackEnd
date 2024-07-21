@@ -3,9 +3,12 @@ package com.example.demo.controllers.fe_controllers;
 import com.example.demo.dtos.ajustes.ActivateBonusDTO;
 import com.example.demo.dtos.deposits.DepositDTO;
 import com.example.demo.models.deposit.DepositStatus;
+import com.example.demo.models.user.UserModel;
+import com.example.demo.models.user.role.UserRoles;
 import com.example.demo.models.withdrawal.WithdrawalStatus;
 import com.example.demo.services.fe_services.AdminService;
 import com.example.demo.services.fe_services.DashboardService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +41,14 @@ public class DashboardController {
                                @RequestParam(value = "page", defaultValue = "1") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
                                @RequestParam(value = "list", defaultValue = "depositsList") String list,
-                               Model model) {
+                               Model model,
+                               HttpSession session) {
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
+
+        UserModel user = (UserModel) session.getAttribute("user");
+        if(!user.getUserRole().equals( UserRoles.ADMIN))
+            return "redirect:/login";
         LocalDate startDate = null;
         LocalDate endDate = null;
         try {

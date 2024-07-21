@@ -2,6 +2,8 @@ package com.example.demo.controllers.fe_controllers;
 
 import com.example.demo.dtos.deposits.DepositDTO;
 import com.example.demo.models.deposit.DepositStatus;
+import com.example.demo.models.user.UserModel;
+import com.example.demo.models.user.role.UserRoles;
 import com.example.demo.models.withdrawal.WithdrawalStatus;
 import com.example.demo.services.fe_services.DashboardService;
 import jakarta.servlet.http.HttpServlet;
@@ -41,11 +43,14 @@ public class ExtratoController {
                                @RequestParam(value = "size", defaultValue = "10") int size,
                                @RequestParam(value = "list", defaultValue = "depositsAndWithdrawalsList") String list,
                                HttpSession session) {
-
         if(session.getAttribute("user") == null)
             return "redirect:/login";
 
-        model.addAttribute("user", session.getAttribute("user"));
+        UserModel user = (UserModel) session.getAttribute("user");
+        if(!user.getUserRole().equals( UserRoles.ADMIN))
+            return "redirect:/login";
+
+        model.addAttribute("user", user);
 
         LocalDate startDate = null;
         LocalDate endDate = null;

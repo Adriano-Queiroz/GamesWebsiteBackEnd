@@ -53,7 +53,9 @@ public class AuthenticationController {
         userService.forgotPassword(forgotPasswordRequestDTO.email());
     }
     @GetMapping("/forgot-password")
-    public String forgotPassword(Model model){
+    public String forgotPassword(HttpSession session, Model model){
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
         return "forgot-password";
     }
     @PostMapping("/reset-password")

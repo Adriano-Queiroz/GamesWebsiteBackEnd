@@ -1,7 +1,10 @@
 package com.example.demo.controllers.fe_controllers;
 
 import com.example.demo.dtos.user.FeUserDTO;
+import com.example.demo.models.user.UserModel;
+import com.example.demo.models.user.role.UserRoles;
 import com.example.demo.services.UsuariosService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +27,15 @@ public class UsuariosController {
     @GetMapping("/usuarios")
     public String getUsuarios(@RequestParam(value = "startDate", required = false) String startDateStr,
                               @RequestParam(value = "endDate", required = false) String endDateStr,
+                              HttpSession session,
                               Model model) {
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
+
+        UserModel user = (UserModel) session.getAttribute("user");
+        if(!user.getUserRole().equals( UserRoles.ADMIN))
+            return "redirect:/login";
+
         LocalDate startDate = null;
         LocalDate endDate = null;
         try {

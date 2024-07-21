@@ -4,6 +4,8 @@ import com.example.demo.dtos.Deposit_WithdrawalDTO;
 import com.example.demo.dtos.history.HistoryInfoDTO;
 import com.example.demo.models.history.HistoryModel;
 import com.example.demo.models.user.UserModel;
+import com.example.demo.models.user.role.UserRoleModel;
+import com.example.demo.models.user.role.UserRoles;
 import com.example.demo.repositories.IUserModelRepository;
 import com.example.demo.services.UserService;
 import com.example.demo.services.fe_services.AdminService;
@@ -33,8 +35,10 @@ public class AccountPagesController {
     public String profile(Model model, HttpSession session){
         if(session.getAttribute("user") == null)
             return "redirect:/login";
+        UserModel user = (UserModel) session.getAttribute("user");
 
-        model.addAttribute("user",session.getAttribute("user"));
+
+        model.addAttribute("user", user);
 
         return "profile";
     }
@@ -43,8 +47,8 @@ public class AccountPagesController {
     public String transactions(Model model, HttpSession session){
         if(session.getAttribute("user") == null)
             return "redirect:/login";
-
         UserModel user = (UserModel) session.getAttribute("user");
+
 
         model.addAttribute("transactions",userService.getTransactions(null,user.getCodUser(),null,null,null,null,null,null));
 

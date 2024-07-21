@@ -1,7 +1,10 @@
 package com.example.demo.controllers.fe_controllers;
 
 import com.example.demo.models.faq.FaqModel;
+import com.example.demo.models.user.UserModel;
+import com.example.demo.models.user.role.UserRoles;
 import com.example.demo.repositories.IFaqRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +19,14 @@ public class FaqController {
     @Autowired
     private IFaqRepository iFaqRepository;
     @GetMapping("/faq")
-    public String faq(Model model){
+    public String faq(HttpSession session, Model model){
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
+
+        UserModel user = (UserModel) session.getAttribute("user");
+        if(!user.getUserRole().equals( UserRoles.ADMIN))
+            return "redirect:/login";
+
         List<FaqModel> faqList = iFaqRepository.findAll();
         model.addAttribute("faqList", faqList);
         return "faq";

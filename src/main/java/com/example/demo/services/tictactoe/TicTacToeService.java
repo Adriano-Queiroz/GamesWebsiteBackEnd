@@ -37,8 +37,8 @@ public class TicTacToeService {
         double moneyGained = treatBets(status,user1,user2,battle);
         HistoryModel history = new HistoryModel();
 
-        history.setPlayer1(user1);
-        history.setPlayer2(user2);
+        history.setPlayer1(battle.getPlayer1() == null ? iUserModelRepository.findRandomBotPlayer() : battle.getPlayer1());
+        history.setPlayer2(battle.getPlayer2() == null ? iUserModelRepository.findRandomBotPlayer() : battle.getPlayer2());
         history.setCodBattle(battle.getCodBattle());
         history.setRoom(battle.getRoom());
         history.setStatus(status);

@@ -26,7 +26,9 @@ public class JogoController {
     @Autowired
     private IRoomRepository iRoomRepository;
     @GetMapping("jogosList")
-    public String jogosList(Model model){
+    public String jogosList(HttpSession session, Model model){
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
         List<GameModel> gamesList = gameRepository.findAll();
         model.addAttribute("gamesList", gamesList);
 
@@ -43,22 +45,24 @@ public class JogoController {
 
     @GetMapping("/salas")
     public String salas(@RequestParam("codGame") long codGame,HttpSession session, Model model){
-    //  public String salas(HttpSession session, Model model){
-        //long codGame = (Long) model.getAttribute("codGame");
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
         List<RoomModel> roomsList = iRoomRepository.findAllByGame(gameRepository.findById(codGame).get());
         model.addAttribute("roomsList",roomsList);
         return "salas";
     }
     @GetMapping("/salas-friends")
     public String salasFriends(@RequestParam("codGame") long codGame,HttpSession session, Model model){
-        //  public String salas(HttpSession session, Model model){
-        //long codGame = (Long) model.getAttribute("codGame");
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
         List<RoomModel> roomsList = iRoomRepository.findAllByGame(gameRepository.findById(codGame).get());
         model.addAttribute("roomsList",roomsList);
         return "salas-friends";
     }
     @GetMapping("/entrar-no-jogo")
     public String entrarNoJogo(@RequestParam("codGame") long codGame, HttpSession session ,Model model){
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
         model.addAttribute("codGame",codGame);
         return "entrar-no-jogo";
     }
@@ -90,7 +94,8 @@ public class JogoController {
     }
     @GetMapping("/auto-room")
     public String autoRoom(HttpSession session, Model model){
-
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
         return "auto-room";
     }
 }

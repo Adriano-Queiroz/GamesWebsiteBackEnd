@@ -1,6 +1,7 @@
 package com.example.demo.controllers.fe_controllers;
 
 import com.example.demo.models.user.UserModel;
+import com.example.demo.models.user.role.UserRoles;
 import com.example.demo.repositories.IUserModelRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,11 @@ public class PerfilController {
     public String profile(HttpSession session, Model model){
         if(session.getAttribute("user") == null)
             return "redirect:/login";
-        model.addAttribute("user", session.getAttribute("user"));
+
+        UserModel user = (UserModel) session.getAttribute("user");
+        if(!user.getUserRole().equals( UserRoles.ADMIN))
+            return "redirect:/login";
+        model.addAttribute("user", user);
 
         return "perfil";
     }
