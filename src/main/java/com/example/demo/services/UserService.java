@@ -5,6 +5,7 @@ import com.example.demo.Auth_Pipeline.UsersDomain;
 import com.example.demo.boards.TicTacToeBoard;
 import com.example.demo.dtos.Deposit_WithdrawalDTO;
 import com.example.demo.dtos.battle.BattleDTO;
+import com.example.demo.dtos.history.HistoryInfoDTO;
 import com.example.demo.mappers.BoardMapper;
 import com.example.demo.models.battle.BattleModel;
 import com.example.demo.models.deposit.DepositModel;
@@ -20,6 +21,8 @@ import com.example.demo.repositories.*;
 import com.example.demo.services.exceptions.*;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +31,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class UserService {
@@ -298,10 +302,20 @@ public class UserService {
         return transactions;
     }
 
-    public List<HistoryModel> getHistory(UserModel codUser){
-        return iHistoryRepository.findAllByPlayer1OrPlayer2OrderByCreatedAt(codUser,codUser);
+    public List<HistoryInfoDTO> getHistory(UserModel codUser) {
+        List<HistoryModel> histories = iHistoryRepository.findTop20ByPlayer1OrPlayer2OrderByCreatedAtDesc(codUser, codUser);
+        return histories.stream()
+                .map(history -> new HistoryInfoDTO(
+                        history.getStatus().toString(),
+                        history.getCodBattle(),
+                        history.getRoom().getGame().getGameType().toString(),
+                        history.getPlayer1().getUsername(),
+                        history.getPlayer2().getUsername(),
+                        history.getRoom().getBet(),
+                        history.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
     }
-
 
 }
 

@@ -2,6 +2,8 @@ package com.example.demo.repositories;
 
 import com.example.demo.models.history.HistoryModel;
 import com.example.demo.models.user.UserModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,8 +20,7 @@ public interface IHistoryRepository extends JpaRepository<HistoryModel,Long> {
      @Query("SELECT COALESCE(SUM(d.moneyGained), 0) FROM HistoryModel d WHERE d.createdAt BETWEEN :startDate AND :endDate")
      Double getTotalMoneyGainedBetweenDates(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-     List<HistoryModel> findAllByPlayer1OrPlayer2OrderByCreatedAt(UserModel player1, UserModel player2);
-
+     List<HistoryModel> findTop20ByPlayer1OrPlayer2OrderByCreatedAtDesc(UserModel player1, UserModel player2);
 
      @Query("SELECT COALESCE(SUM(moneyGained), 0) FROM HistoryModel ")
      Double getTotalMoneyGained();

@@ -962,60 +962,58 @@ CPF
                             <div class="max-w-7xl mx-auto mt-12 m:px-6 lg:px-8 relative" style="z-index: 1;">
                                 <div class="overflow-hidden bg-white shadow sm:rounded-md">
                                     <ul role="list" id="history-list">
-                                        <div class="w-full" id="loading-indicator" style="display:none;">
-                                            <div class="loading ml-auto mr-auto mb-4 mt-12"></div>
-                                        </div>
-                                        <li th:each="history : ${histories}" style="border-bottom: 1px solid #ffffff08;" th:title="${history.getStatus()}">
-                                            <div class="block bg-white">
-                                                <div class="flex items-center px-4 py-4 sm:px-6">
-                                                    <div class="flex min-w-0 flex-1 items-center">
-                                                        <div class="flex-shrink-0">
-                                                            <div class="mr-1.5 h-5 w-5 flex-shrink-0">
-                                                                <svg class="status-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"></path>
-                                                                </svg>
+                                        <th:block th:if="${#lists.isEmpty(histories)}">
+                                            <div class="text-center">
+                                                <img src="https://x1jogos.com/assets/images/misc/withoutRegisters.gif" style="filter: contrast(1.6) brightness(0.9); filter: hue-rotate(230deg) !important;" class="w-32 mx-auto mt-xl">
+                                                <h1 class="text-xl font-bold pt-2">Você não possui nenhum histórico de jogo nesta conta</h1>
+                                                <p class="opacity-60 pt-6 text-sm max-w-md mx-auto">Parece que até o momento você ainda não participou de nenhum jogo <span class="font-bold">:(</span> Todos os jogos estarão disponíveis aqui</p>
+                                                <a class="active:bg-transparent deposit-btn">
+                                                    <div class="form-control">
+                                                        <label for="depo-modal" class="deposit-btn text-white bg-x1blue hover:bg-x1blue/80 border-none w-fit mx-auto mt-12">
+                                                            Clique e faça um depósito!
+                                                        </label>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                        <th:block th:if="${!#lists.isEmpty(histories)}" th:each="history : ${histories}">
+                                            <li th:attr="style=${'border-bottom: 1px solid #ffffff08;'}" th:title="${history.status}">
+                                                <div class="block bg-white">
+                                                    <div class="flex items-center px-4 py-4 sm:px-6">
+                                                        <div class="flex min-w-0 flex-1 items-center">
+                                                            <div class="flex-shrink-0">
+                                                                <div class="mr-1.5 h-5 w-5 flex-shrink-0">
+                                                                    <svg class="status-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"></path>
+                                                                    </svg>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                                                            <div>
-                                                                <p class="truncate text-sm font-bold text-base-700" th:text="'Game Type: ' + ${history.getRoom().getGame().getGameType()}"></p>
-                                                                <p class="mt-2 flex items-center text-sm text-gray-500" th:text="'Battle Code: ' + ${history.getCodBattle()}"></p>
-                                                                <p class="mt-2 flex items-center text-sm text-gray-500" th:text="'Player 1: ' + ${history.getPlayer1().getUsername()}"></p>
-                                                                <p class="mt-2 flex items-center text-sm text-gray-500" th:text="'Player 2: ' + ${history.getPlayer2().getUsername()}"></p>
-                                                                <p class="mt-2 flex items-center text-lg font-bold money-gained"
-                                                                   th:data-status="${history.getStatus()}"
-                                                                   th:data-player1="${history.getPlayer1().getUsername()}"
-                                                                   th:data-player2="${history.getPlayer2().getUsername()}"
-                                                                   th:text="'R$ ' + ${history.getMoneyGained()}"></p>
-                                                                <p class="mt-2 text-sm font-bold status-text"
-                                                                   th:text="${history.getStatus() == 'P1_WON' ? 'VENCEU' : (history.getStatus() == 'P2_WON' ? 'PERDEU' : 'EMPATOU')}"></p>
-                                                            </div>
-                                                            <div class="hidden md:block">
+                                                            <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                                                                 <div>
-                                                                    <p class="text-sm text-gray-400" th:text="${history.getCreatedAt()}"></p>
+                                                                    <p class="truncate text-sm font-bold text-base-700">Game Type: <span th:text="${history.gameType}"></span></p>
+                                                                    <p class="mt-2 flex items-center text-sm text-gray-500">Battle Code: <span th:text="${history.codBattle}"></span></p>
+                                                                    <p class="mt-2 flex items-center text-sm text-gray-500">Player 1: <span th:text="${history.player1Username}"></span></p>
+                                                                    <p class="mt-2 flex items-center text-sm text-gray-500">Player 2: <span th:text="${history.player2Username}"></span></p>
+                                                                    <p class="mt-2 flex items-center text-lg font-bold money-gained"
+                                                                       th:data-status="${history.status}"
+                                                                       th:data-player1="${history.player1Username}"
+                                                                       th:data-player2="${history.player2Username}">R$ <span th:text="${history.betAmount}"></span></p>
+                                                                    <p class="mt-2 text-sm font-bold status-text">${history.status}</p>
+                                                                </div>
+                                                                <div class="hidden md:block">
+                                                                    <div>
+                                                                        <p class="text-sm text-gray-400" th:text="${history.createdAt}"></p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                        <div th:if="${#lists.isEmpty(histories)}" class="text-center">
-                                            <img src="https://x1jogos.com/assets/images/misc/withoutRegisters.gif" style="filter: contrast(1.6) brightness(0.9); filter: hue-rotate(230deg) !important;" class="w-32 mx-auto mt-xl">
-                                            <h1 class="text-xl font-bold pt-2">Você não possui nenhum histórico de jogo nesta conta</h1>
-                                            <p class="opacity-60 pt-6 text-sm max-w-md mx-auto">Parece que até o momento você ainda não participou de nenhum jogo <span class="font-bold">:(</span> Todos os jogos estarão disponíveis aqui</p>
-                                            <a class="active:bg-transparent deposit-btn">
-                                                <div class="form-control">
-                                                    <label for="depo-modal" class="deposit-btn text-white bg-x1blue hover:bg-x1blue/80 border-none w-fit mx-auto mt-12">
-                                                        Clique e faça um depósito!
-                                                    </label>
-                                                </div>
-                                            </a>
-                                        </div>
+                                            </li>
+                                        </th:block>
                                     </ul>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1026,31 +1024,31 @@ CPF
 <script th:inline="javascript">
     /*<![CDATA[*/
     document.addEventListener('DOMContentLoaded', () => {
-        const loggedInUser = /*[[${user.getUsername()}]]*/ `default`;
+        const loggedInUser = /*[[${user.getUsername()}]]*/ 'default';
         console.log('Usuário logado:', loggedInUser);
+
         document.querySelectorAll('.money-gained').forEach(element => {
             const status = element.getAttribute('data-status');
             const player1 = element.getAttribute('data-player1');
             const player2 = element.getAttribute('data-player2');
 
-            let moneyGained = parseFloat(element.innerText.replace('R$ ', ''));
+            const moneyText = element.innerText.match(/[\d,.]+/);
+            let moneyGained = moneyText ? parseFloat(moneyText[0].replace(',', '.')) : 0;
+
             let moneyElement = element;
             let statusTextElement = element.nextElementSibling;
 
             if ((status === 'P1_WON' && loggedInUser === player1) || (status === 'P2_WON' && loggedInUser === player2)) {
                 moneyElement.classList.add('text-green-400');
-                moneyElement.previousElementSibling.querySelector('svg').classList.add('text-green-400');
-                moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2);
+                moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2)+moneyGained.toFixed(2)*0.9;
                 statusTextElement.innerText = 'VENCEU';
             } else if ((status === 'P1_WON' && loggedInUser === player2) || (status === 'P2_WON' && loggedInUser === player1)) {
                 moneyElement.classList.add('text-red-400');
-                moneyElement.previousElementSibling.querySelector('svg').classList.add('text-red-400');
-                moneyElement.innerText = 'R$ ' + (moneyGained / 2).toFixed(2);
+                moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2);
                 statusTextElement.innerText = 'PERDEU';
             } else if (status === 'DRAW') {
                 moneyElement.classList.add('text-yellow-400');
-                moneyElement.previousElementSibling.querySelector('svg').classList.add('text-yellow-400');
-                moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2);
+                moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2)*0.9;
                 statusTextElement.innerText = 'EMPATOU';
             }
         });

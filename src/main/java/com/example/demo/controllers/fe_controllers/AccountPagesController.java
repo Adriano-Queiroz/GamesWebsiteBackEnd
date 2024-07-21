@@ -1,17 +1,21 @@
 package com.example.demo.controllers.fe_controllers;
 
 import com.example.demo.dtos.Deposit_WithdrawalDTO;
+import com.example.demo.dtos.history.HistoryInfoDTO;
+import com.example.demo.models.history.HistoryModel;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IUserModelRepository;
 import com.example.demo.services.UserService;
 import com.example.demo.services.fe_services.AdminService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -103,10 +107,13 @@ public class AccountPagesController {
 
         UserModel user = (UserModel) session.getAttribute("user");
 
-        model.addAttribute("histories",userService.getHistory(user));
+        List<HistoryInfoDTO> historyInfo = userService.getHistory(user);
+
+        model.addAttribute("histories", historyInfo);
 
         model.addAttribute("user",session.getAttribute("user"));
 
         return "bets";
     }
+
 }

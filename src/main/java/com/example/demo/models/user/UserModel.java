@@ -126,14 +126,18 @@ public class UserModel {
 
     @Getter
     @Setter
-    private boolean whatsappNotifications = false;
+    @Column(columnDefinition = "boolean default false")
+    private boolean whatsappNotifications;
     @Getter
     @Setter
-    private boolean generalNotifications = false;
+    @Column(columnDefinition = "boolean default false")
+    private boolean generalNotifications;
     @Getter
     @Setter
-    private boolean weeklyNewsletter = false;
+    @Column(columnDefinition = "boolean default false")
+    private boolean weeklyNewsletter;
     private boolean isBotPlayer = false;
+
 
     @Override
     public boolean equals(Object o) {
