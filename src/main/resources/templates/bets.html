@@ -1033,22 +1033,22 @@ CPF
             const player2 = element.getAttribute('data-player2');
 
             const moneyText = element.innerText.match(/[\d,.]+/);
-            let moneyGained = moneyText ? parseFloat(moneyText[0].replace(',', '.')) : 0;
+            let moneyBet = moneyText ? parseFloat(moneyText[0].replace(',', '.')) : 0;
 
             let moneyElement = element;
             let statusTextElement = element.nextElementSibling;
 
             if ((status === 'P1_WON' && loggedInUser === player1) || (status === 'P2_WON' && loggedInUser === player2)) {
                 moneyElement.classList.add('text-green-400');
-                moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2)+moneyGained.toFixed(2)*0.9;
+                moneyElement.innerText = 'R$ ' + (moneyBet.toFixed(2) * 1.9).toFixed(2);
                 statusTextElement.innerText = 'VENCEU';
             } else if ((status === 'P1_WON' && loggedInUser === player2) || (status === 'P2_WON' && loggedInUser === player1)) {
                 moneyElement.classList.add('text-red-400');
-                moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2);
+                moneyElement.innerText = 'R$ ' + moneyBet.toFixed(2);
                 statusTextElement.innerText = 'PERDEU';
             } else if (status === 'DRAW') {
                 moneyElement.classList.add('text-yellow-400');
-                moneyElement.innerText = 'R$ ' + moneyGained.toFixed(2)*0.9;
+                moneyElement.innerText = 'R$ ' + (parseFloat(moneyBet.toFixed(2)) * 0.9).toFixed(2);
                 statusTextElement.innerText = 'EMPATOU';
             }
         });

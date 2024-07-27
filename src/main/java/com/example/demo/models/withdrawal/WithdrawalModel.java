@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Setter
 public class WithdrawalModel {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long codWithdrawal;
 
     private double amount;

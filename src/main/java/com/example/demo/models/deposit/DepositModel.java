@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 public class DepositModel {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long codDeposit;
 
     private double amount;
