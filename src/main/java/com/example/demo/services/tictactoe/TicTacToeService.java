@@ -29,15 +29,15 @@ public class TicTacToeService {
         this.iHistoryRepository = iHistoryRepository;
     }
 
-    public void treatFinishedGame(Tuple hasFinishedTuple, SimpMessagingTemplate messagingTemplate, long codBattle) throws NotFoundException {
+    public void treatFinishedGame(Tuple hasFinishedTuple, SimpMessagingTemplate messagingTemplate, long codBattle)  {
         Status status = (hasFinishedTuple.winner().equals("X") ? Status.P1_WON :
                 hasFinishedTuple.winner().equals("O") ? Status.P2_WON : Status.DRAW);
 
         
         Optional<BattleModel> optionalBattle = iBattleRepository.findById(codBattle);
 
-        if(optionalBattle.isEmpty())
-            throw new NotFoundException("Partida não encontrada");
+        //if(optionalBattle.isEmpty())
+        //    throw new NotFoundException("Partida não encontrada");
         BattleModel battle = optionalBattle.get();
         UserModel user1 = battle.getPlayer1();
         UserModel user2 = battle.getPlayer2();

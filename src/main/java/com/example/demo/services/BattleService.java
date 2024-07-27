@@ -116,11 +116,11 @@ public class BattleService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                try {
+                //try {
                     executeAction(battle);
-                } catch (NotFoundException e) {
-                    throw new RuntimeException(e);
-                }
+                //} catch (NotFoundException e) {
+                 //   throw new RuntimeException(e);
+                //}
             }
         }, 16000 + timeAdded);
 
@@ -138,11 +138,11 @@ public class BattleService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                try {
+              //  try {
                     executeAction(battle);
-                } catch (NotFoundException e) {
-                    throw new RuntimeException(e);
-                }
+              //  } catch (NotFoundException e) {
+                //    throw new RuntimeException(e);
+                //}
             }
         }, 16000);
 
@@ -161,7 +161,7 @@ public class BattleService {
         resetTimer(battle);
     }
 
-    private void executeAction(BattleModel battle) throws NotFoundException {
+    private void executeAction(BattleModel battle)  {
         if(battle.getPlayer2()==null)
             battle.setStatus(Status.P1_TURN);
         else if(battle.getPlayer1()==null)

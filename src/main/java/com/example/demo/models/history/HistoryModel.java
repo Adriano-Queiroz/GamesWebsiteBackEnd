@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class HistoryModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue()
     private Long codHistory;
 
     private Long codBattle;

@@ -422,6 +422,9 @@
             if (!isTurn) {
                 toastError("Espere a sua vez para desistir");
                 return;
+            }else if(isBoardEmpty(board)){
+                toastError("Não pode desistir na primeira jogada");
+                return;
             }
             await giveup(codUser, opponent);
             treatFinishedGame(isPlayer1 ? "P2_WON" : "P1_WON");
@@ -433,6 +436,9 @@
         const homePage = () => {
             window.location.href = '/';
         }
+        const isBoardEmpty = (board) => {
+            return board.every(row => row.every(cell => cell === ''));
+        };
         useEffect(() => {
             if(result.hasReturned)
                 setIsTurn(true);
