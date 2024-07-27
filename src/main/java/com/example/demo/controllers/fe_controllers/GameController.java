@@ -15,7 +15,6 @@ import com.example.demo.dtos.battle.IsInBattleDTO;
 import com.example.demo.models.battle.BattleModel;
 import com.example.demo.models.game.GameType;
 import com.example.demo.models.lobby.LobbyModel;
-import com.example.demo.models.room.RoomModel;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -58,7 +56,7 @@ public class GameController {
         if (isInBattleDTO.isInBattle())
             return getLobby(isInBattleDTO.result().codBattle(),true, session, model);
         model.addAttribute("user", session.getAttribute("user"));
-        return "home";
+        return "home2";
     }
 
     @GetMapping("/lobby")

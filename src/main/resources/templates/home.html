@@ -1,17 +1,357 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div class="name" th:text="${user.username}"></div>
-<button onclick="location.href='rooms'">
-    Rooms
-</button>
-<button onclick="location.href='jogosList'">
-    Jogos
-</button>
+<html lang="pt">
 
+<!-- Mirrored from x1jogos.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 22 Jul 2024 21:31:50 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,shrink-to-fit=no">
+<meta name="csrf-token" content="h0VHRgMmcdOjPsZluc5wB16UuqCvXFbCIH3UIw0m">
+<meta name="color-scheme" content="light">
+<title>Duelo Prmiado</title>
+<link rel="icon" type="image/x-icon" href="assets/images/branding/x1favicon.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000">
+<link rel="apple-touch-icon" href="assets/images/branding/apple-icon">
+<link rel="apple-touch-startup-image" href="assets/images/branding/splash-screen" media>
+<link rel="manifest" href="manifests/manifest.json">
+<meta name="facebook-domain-verification" content="tiz5tjez0qnn6pe9yxphgqoq8xkzah" />
+<meta name="HandheldFriendly" content="true">
+<meta property="og:title" content="X1 Jogos" />
+<meta property="og:description" content="Os jogos mais divertidos da internet estão aqui!" />
+
+<script src="cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js" integrity="sha512-d4KkQohk+HswGs6A1d6Gak6Bb9rMWtxjOa0IiY49Q3TeFd5xAzjWXDCBW9RS7m86FQ4RzM2BdHmdJnnKRYknxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js" integrity="sha512-Rdk63VC+1UYzGSgd3u2iadi0joUrcwX0IWp2rTh6KXFoAmgOjRS99Vynz1lJPT8dLjvo6JZOqpAHJyfCEZ5KoA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.10/clipboard.min.js"></script>
+
+<link rel="preload" as="style" href="user/assets/app-Dke6-wsL.css" /><link rel="modulepreload" href="user/assets/app-C1-XIpUa.js" /><link rel="stylesheet" href="user/assets/app-Dke6-wsL.css" data-navigate-track="reload" /><script type="module" src="user/assets/app-C1-XIpUa.js" data-navigate-track="reload"></script>
+
+<meta name="facebook-domain-verification" content="5rdpdzhi7ajzkb66t2a1apcp1zvni8" />
+<div>
+
+<noscript><iframe src="https://www.googletagmanager.com/ns?id=GTM-THS8683X"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'www.googletagmanager.com/gtm5445?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-THS8683X');</script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-11190888849"></script>
+<script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'AW-11190888849');
+    </script>
+
+<script>
+      gtag('event', 'conversion', {'send_to': 'AW-11190888849/CBduCMPCpaMYEJHTndgp'});
+    </script>
+
+
+
+<script>
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '1450530865858659');
+                fbq('track', 'PageView');
+                </script>
+<noscript><img height="1" width="1" style="display:none"
+                src="https://www.facebook.com/tr?id=1450530865858659&amp;ev=PageView&amp;noscript=1"
+                /></noscript>
+
+
+<script>
+            (function(h,o,t,j,a,r){
+                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                h._hjSettings={hjid:3506637,hjsv:6};
+                a=o.getElementsByTagName('head')[0];
+                r=o.createElement('script');r.async=1;
+                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+        </script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2XTE6MZ3D9"></script>
+<script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-2XTE6MZ3D9');
+    </script>
+</div>
+<script src="cdn.jsdelivr.net/npm/%40splidejs/splide%404.1.4/dist/js/splide.min.js"></script>
+<link href="cdn.jsdelivr.net/npm/%40splidejs/splide%404.1.4/dist/css/splide.min.css" rel="stylesheet">
+<style>[wire\:loading][wire\:loading], [wire\:loading\.delay][wire\:loading\.delay], [wire\:loading\.inline-block][wire\:loading\.inline-block], [wire\:loading\.inline][wire\:loading\.inline], [wire\:loading\.block][wire\:loading\.block], [wire\:loading\.flex][wire\:loading\.flex], [wire\:loading\.table][wire\:loading\.table], [wire\:loading\.grid][wire\:loading\.grid], [wire\:loading\.inline-flex][wire\:loading\.inline-flex] {display: none;}[wire\:loading\.delay\.none][wire\:loading\.delay\.none], [wire\:loading\.delay\.shortest][wire\:loading\.delay\.shortest], [wire\:loading\.delay\.shorter][wire\:loading\.delay\.shorter], [wire\:loading\.delay\.short][wire\:loading\.delay\.short], [wire\:loading\.delay\.default][wire\:loading\.delay\.default], [wire\:loading\.delay\.long][wire\:loading\.delay\.long], [wire\:loading\.delay\.longer][wire\:loading\.delay\.longer], [wire\:loading\.delay\.longest][wire\:loading\.delay\.longest] {display: none;}[wire\:offline][wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}:root {--livewire-progress-bar-color: #2299dd;}[x-cloak] {display: none !important;}</style>
+</head>
+<body id="main" class="antialiased overflow-y-scroll min-h-screen bg-[#000c20] font-sans">
+<div class="sticky z-50 top-0">
+<div x-data="{ open: true }">
+<template x-if="open">
+<div class="flex justify-center items-center bg-[#03c6fc] w-full py-1 px-2 lg:px-8">
+<div class="flex justify-center items-center w-full max-w-[1216px] gap-5">
+<div class="flex items-center w-full gap-4">
+<div class="flex">
+<span class="text-xl">💥</span>
+</div>
+<div class="flex">
+<span class="text-[10px] md:text-base leading-tight">Indique um amigo e ganhe R$ 100,00 de saldo bônus para cada amigo que convidar</span>
+</div>
+</div>
+<div class="flex items-center justify-center gap-5">
+<!--[if BLOCK]><![endif]--> <a href="login" class="inline-flex items-center justify-center px-2 py-1 rounded bg-[#212425] hover:opacity-50">
+<span class="text-[#03c6fc] text-xs leading-tight">Resgatar</span>
+</a>
+<!--[if ENDBLOCK]><![endif]-->
+<button class="cursor-pointer" @click="open = false">
+<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+</button>
+</div>
+</div>
+</div>
+</template>
+</div>
+<div class="bg-gradient-to-r from-[#000c20] to-[#0e245e] border-b-[1px] border-b-[#67A0FF] px-2 md:p-0">
+<header class="flex justify-center">
+<nav class="navbar flex items-center justify-between py-0 md:max-w-[1216px]">
+<a href="index" class="h-2/5 md:h-3/6">
+<img src="assets/images/branding/x1logo.png" alt="Logo" style class="h-full">
+</a>
+<ul class="menu menu-horizontal gap-3 flex p-0">
+<li>
+<!--[if BLOCK]><![endif]--> <a href="register" class="inline-flex items-center justify-center px-3 py-1.5 rounded-full border-[1px] border-[#03c6fc] hover:opacity-50 bg-[#000C20] hover:bg-[#000C20]/80">
+<span class="text-white font-medium leading-none">Registre-se</span>
+</a>
+<!--[if ENDBLOCK]><![endif]-->
+</li>
+<li>
+<!--[if BLOCK]><![endif]--> <a href="login" class="inline-flex items-center justify-center px-3 py-1.5 rounded-full border-[1px] border-[#03c6fc] hover:opacity-50 bg-none">
+<span class="text-[#03c6fc] font-medium leading-none">Entrar</span>
+</a>
+<!--[if ENDBLOCK]><![endif]-->
+</li>
+</ul>
+</nav>
+</header>
+</div>
+</div>
+<div class="content">
+<main>
+<div class>
+<div wire:snapshot="{&quot;data&quot;:{&quot;total_online_now&quot;:&quot;18&quot;,&quot;total_online&quot;:[{&quot;palitinho&quot;:3,&quot;domino&quot;:3,&quot;domino_batidinha&quot;:&quot;3&quot;,&quot;domino_classico&quot;:4,&quot;domino_ponta_de_5&quot;:2},{&quot;s&quot;:&quot;arr&quot;}],&quot;types&quot;:[null,{&quot;keys&quot;:[7,8,6],&quot;class&quot;:&quot;Illuminate\\Database\\Eloquent\\Collection&quot;,&quot;modelClass&quot;:&quot;App\\Models\\GameType&quot;,&quot;s&quot;:&quot;elcln&quot;}],&quot;multiplayer&quot;:[null,{&quot;class&quot;:&quot;App\\Models\\GameType&quot;,&quot;key&quot;:5,&quot;s&quot;:&quot;mdl&quot;}],&quot;mais_jogados&quot;:[null,{&quot;keys&quot;:{&quot;3&quot;:10245,&quot;4&quot;:10270,&quot;0&quot;:9783,&quot;2&quot;:10222,&quot;1&quot;:10187},&quot;class&quot;:&quot;Illuminate\\Database\\Eloquent\\Collection&quot;,&quot;modelClass&quot;:&quot;App\\Models\\Game&quot;,&quot;s&quot;:&quot;elcln&quot;}],&quot;items&quot;:[[[{&quot;title&quot;:&quot;Multiplayer&quot;,&quot;subtitle&quot;:&quot;PvP&quot;,&quot;href&quot;:&quot;https:\/\/x1jogos.com\/types\/Multiplayer&quot;,&quot;icon&quot;:&quot;gamepad&quot;},{&quot;s&quot;:&quot;std&quot;}],[{&quot;title&quot;:&quot;Cassino&quot;,&quot;subtitle&quot;:&quot;&quot;,&quot;href&quot;:&quot;https:\/\/x1jogos.com\/types\/Casino&quot;,&quot;icon&quot;:&quot;cassino&quot;},{&quot;s&quot;:&quot;std&quot;}],[{&quot;title&quot;:&quot;Cassino&quot;,&quot;subtitle&quot;:&quot;Ao Vivo&quot;,&quot;href&quot;:&quot;https:\/\/x1jogos.com\/types\/Live%20Casino&quot;,&quot;icon&quot;:&quot;live_cassino&quot;},{&quot;s&quot;:&quot;std&quot;}],[{&quot;title&quot;:&quot;Jogos&quot;,&quot;subtitle&quot;:&quot;Crash&quot;,&quot;href&quot;:&quot;https:\/\/x1jogos.com\/types\/Crash%20Games&quot;,&quot;icon&quot;:&quot;rocket&quot;},{&quot;s&quot;:&quot;std&quot;}],[{&quot;title&quot;:&quot;Fortune&quot;,&quot;subtitle&quot;:&quot;Tiger&quot;,&quot;href&quot;:&quot;https:\/\/x1jogos.com\/games\/PGSoft\/fortune-tiger&quot;,&quot;icon&quot;:&quot;roleta&quot;},{&quot;s&quot;:&quot;std&quot;}]],{&quot;class&quot;:&quot;Illuminate\\Support\\Collection&quot;,&quot;s&quot;:&quot;clctn&quot;}]},&quot;memo&quot;:{&quot;id&quot;:&quot;kipP13VnaqFaHxnuyesN&quot;,&quot;name&quot;:&quot;games.games&quot;,&quot;path&quot;:&quot;\/&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;children&quot;:{&quot;lw-2968836849-0&quot;:[&quot;div&quot;,&quot;NhLN8I6eQYQFQ8VCQ8JM&quot;],&quot;lw-2968836849-1&quot;:[&quot;div&quot;,&quot;TtetiX6W6qZYt2tr1S0P&quot;]},&quot;scripts&quot;:[&quot;2968836849-1&quot;],&quot;assets&quot;:[&quot;2968836849-0&quot;],&quot;errors&quot;:[],&quot;locale&quot;:&quot;pt&quot;},&quot;checksum&quot;:&quot;5f983caedeaa81a355d52b3e70280b20ff0580de8b1b9f0eceadb183ed516b39&quot;}" wire:effects="{&quot;scripts&quot;:{&quot;2968836849-1&quot;:&quot;&lt;script&gt;\n    Alpine.data(&#039;splideCarousel&#039;, () =&gt; ({\n        splide: null,\n\n        init() {\n            setTimeout(() =&gt; this.initSplide(), 0);\n        },\n        initSplide() {\n            if (this.splide) {\n                this.splide.destroy();\n            }\n            this.$nextTick(() =&gt; {\n                const splideElement = this.$el.querySelector(&#039;.splide&#039;);\n                if (!splideElement) {\n                    console.error(&#039;Splide element not found&#039;);\n                    return;\n                }\n                setTimeout(() =&gt; {\n                    requestAnimationFrame(() =&gt; {\n                        try {\n                            this.splide = new Splide(this.$el.querySelector(&#039;.splide&#039;), {\n                                rewind: false,\n                                perPage: 5,\n                                pagination: false,\n                                arrows: false,\n                                lazyLoad: &#039;nearby&#039;,\n                                updateOnMove: true,\n                                throttle: 100,\n                                gap: &#039;20px&#039;,\n                                padding: {right: &#039;4rem&#039;},\n                                breakpoints: {\n                                    1024: {\n                                        perPage: 4,\n                                    },\n                                    768: {\n                                        gap: &#039;10px&#039;,\n                                        perPage: 3,\n                                    },\n                                    480: {\n                                        gap: &#039;5px&#039;,\n                                        perPage: 2,\n                                    }\n                                }\n                            }).mount();\n                            this.setupNavigation();\n                        } catch (error) {\n                            console.error(&#039;Error initializing Splide:&#039;, error);\n                        }\n                    });\n                });\n            });\n        },\n        setupNavigation() {\n            const chavronLeft = this.$el.querySelector(&#039;#chavron-left&#039;);\n            const chavronRight = this.$el.querySelector(&#039;#chavron-right&#039;);\n\n            if (chavronLeft &amp;&amp; chavronRight) {\n                chavronLeft.addEventListener(&#039;click&#039;, () =&gt; this.splide.go(&#039;&lt;&#039;));\n                chavronRight.addEventListener(&#039;click&#039;, () =&gt; this.splide.go(&#039;&gt;&#039;));\n            }\n        },\n        destroy() {\n            if (this.splide) {\n                this.splide.destroy();\n                this.splide = null;\n            }\n        }\n    }));\n\n    function initMainCarousel(rootElement) {\n        const mainCarousel = rootElement.querySelector(&#039;#main-carousel&#039;);\n        if (!mainCarousel) return;\n\n        if (mainCarousel.splide) {\n            mainCarousel.splide.destroy();\n        }\n\n        setTimeout(() =&gt; {\n            requestAnimationFrame(() =&gt; {\n                try {\n                    let mainSplide = new Splide(mainCarousel, {\n                        type: &#039;loop&#039;,\n                        perPage: 1,\n                        pagination: true,\n                        arrows: true,\n                        autoplay: true,\n                        lazyLoad: &#039;nearby&#039;,\n                        updateOnMove: true,\n                        throttle: 100,\n                    }).mount();\n                } catch (error) {\n                    console.error(&#039;Error initializing main carousel:&#039;, error);\n                }\n            });\n        });\n    }\n\n    initMainCarousel(document);\n&lt;\/script&gt;\n    &quot;}}" wire:id="kipP13VnaqFaHxnuyesN">
+<div class="mx-auto px-3 sm:px-6 lg:px-8 flex flex-col justify-center items-center gap-4 pt-2 pb-20 max-w-7xl w-full" id="start">
+<div wire:ignore id="main-carousel" class="splide w-full">
+<div class="splide__track rounded-2xl">
+<ul class="splide__list">
+<li class="splide__slide">
+<label class="cursor-pointer">
+<img class="object-cover" src="assets/images/backgrounds/1.webp" alt>
+</label>
+</li>
+<!--[if BLOCK]><![endif]--> <li class="splide__slide">
+<label class="cursor-pointer">
+<img class="object-cover" src="assets/images/backgrounds/2.webp" alt>
+</label>
+</li>
+<!--[if ENDBLOCK]><![endif]-->
+<li class="splide__slide">
+<label class="cursor-pointer">
+<img class="object-cover" src="assets/images/backgrounds/3.webp" alt>
+</label>
+</li>
+</ul>
+</div>
+</div>
+
+<div wire:snapshot="{&quot;data&quot;:{&quot;state&quot;:null,&quot;search_term&quot;:null,&quot;found_games&quot;:null},&quot;memo&quot;:{&quot;id&quot;:&quot;NhLN8I6eQYQFQ8VCQ8JM&quot;,&quot;name&quot;:&quot;search-games&quot;,&quot;path&quot;:&quot;\/&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;pt&quot;},&quot;checksum&quot;:&quot;1342c85ee7a7355dd3ee2f238edf9b9cf1142a11bae5c91c5c8839ef9fc581ae&quot;}" wire:effects="[]" wire:id="NhLN8I6eQYQFQ8VCQ8JM" class="flex justify-center items-center w-full">
+
+</div>
+
+<div wire:snapshot="{&quot;data&quot;:{&quot;top_ganhos&quot;:[[[{&quot;uuid&quot;:&quot;7adbf303-e4e8-46a2-a5aa-441c739ac864&quot;,&quot;image&quot;:&quot;https:\/\/media.ttfileserver.com\/414\/evolutionGHHS\/300x300\/25706.png&quot;,&quot;name&quot;:&quot;MACOHAR&quot;,&quot;game_name&quot;:&quot;Blackjack Cl\u00e1ssico em Portugu\u00eas 13&quot;,&quot;value&quot;:178.22477650063857},{&quot;s&quot;:&quot;arr&quot;}],[{&quot;uuid&quot;:&quot;f87090e9-059f-4f5a-9011-e43349ff1f4a&quot;,&quot;image&quot;:&quot;https:\/\/fungamess.games\/images\/games\/y7fBsgBBGXLwTXl0hkLIFpec8bM0LAKwSc2b55LL.png&quot;,&quot;name&quot;:&quot;HAREJ&quot;,&quot;game_name&quot;:&quot;Wild Fireworks&quot;,&quot;value&quot;:1785.5747126436781},{&quot;s&quot;:&quot;arr&quot;}],[{&quot;uuid&quot;:&quot;74fb5b2e-0fe6-4c09-8299-8061cb7557db&quot;,&quot;image&quot;:&quot;https:\/\/media.ttfileserver.com\/376\/pragmatic-live\/300x300\/23684.png&quot;,&quot;name&quot;:&quot;PEJUDI&quot;,&quot;game_name&quot;:&quot;Drops &amp; Wins Live Casino&quot;,&quot;value&quot;:1455.6768837803322},{&quot;s&quot;:&quot;arr&quot;}],[{&quot;uuid&quot;:&quot;cae2ba42-030a-434f-85c0-0ca00ee89a94&quot;,&quot;image&quot;:&quot;https:\/\/media.ttfileserver.com\/414\/evolutionGHLS\/300x300\/25599.png&quot;,&quot;name&quot;:&quot;LILITUG&quot;,&quot;game_name&quot;:&quot;Klasik Blackjack 8&quot;,&quot;value&quot;:1493.448275862069},{&quot;s&quot;:&quot;arr&quot;}],[{&quot;uuid&quot;:&quot;2ca0fb92-8945-4c80-90f3-b1cb06b5a30c&quot;,&quot;image&quot;:&quot;https:\/\/media.ttfileserver.com\/414\/evolutionGHX\/300x300\/25735.png&quot;,&quot;name&quot;:&quot;BEWUWI&quot;,&quot;game_name&quot;:&quot;Bacar\u00e1 R\u00e1pido&quot;,&quot;value&quot;:1654.5530012771392},{&quot;s&quot;:&quot;arr&quot;}],[{&quot;uuid&quot;:&quot;82579993-fd42-4c18-b57a-17d3fb30a72f&quot;,&quot;image&quot;:&quot;https:\/\/media.ttfileserver.com\/414\/evolutionGH\/300x300\/25753.png&quot;,&quot;name&quot;:&quot;DOWIM&quot;,&quot;game_name&quot;:&quot;Football Studio Roulette&quot;,&quot;value&quot;:298.49297573435507},{&quot;s&quot;:&quot;arr&quot;}],[{&quot;uuid&quot;:&quot;f161c8ae-2d61-4ccf-8852-47fbc2043571&quot;,&quot;image&quot;:&quot;https:\/\/media.ttfileserver.com\/414\/evolutionGH\/300x300\/25746.png&quot;,&quot;name&quot;:&quot;FUJAJIR&quot;,&quot;game_name&quot;:&quot;Evo Speed Blackjack 3&quot;,&quot;value&quot;:3126.9476372924646},{&quot;s&quot;:&quot;arr&quot;}],[{&quot;uuid&quot;:&quot;c06b5ed1-b9bc-4f69-982c-0a4b876b2c18&quot;,&quot;image&quot;:&quot;https:\/\/media.ttfileserver.com\/414\/evolutionGH\/300x300\/25493.png&quot;,&quot;name&quot;:&quot;HUMUT&quot;,&quot;game_name&quot;:&quot;Roulette&quot;,&quot;value&quot;:1804.1890166028097},{&quot;s&quot;:&quot;arr&quot;}],[{&quot;uuid&quot;:&quot;3287542e-fb2f-4ed8-b2a1-c6b4f95d8757&quot;,&quot;image&quot;:&quot;https:\/\/media.ttfileserver.com\/414\/evolutionGH\/300x300\/25570.png&quot;,&quot;name&quot;:&quot;DIGALUP&quot;,&quot;game_name&quot;:&quot;Speed Baccarat U&quot;,&quot;value&quot;:1262.4712643678163},{&quot;s&quot;:&quot;arr&quot;}],[{&quot;uuid&quot;:&quot;18440d19-f969-4a64-a957-cba8b1218e6f&quot;,&quot;image&quot;:&quot;https:\/\/fungamess.games\/images\/games\/6CrNWaIe70gGFEJMURQedPxF4TIgBpZLpkbhgFY0.png&quot;,&quot;name&quot;:&quot;POCOM&quot;,&quot;game_name&quot;:&quot;Ganesha Gold&quot;,&quot;value&quot;:598.9910600255428},{&quot;s&quot;:&quot;arr&quot;}]],{&quot;class&quot;:&quot;Illuminate\\Support\\Collection&quot;,&quot;s&quot;:&quot;clctn&quot;}],&quot;period&quot;:1},&quot;memo&quot;:{&quot;id&quot;:&quot;TtetiX6W6qZYt2tr1S0P&quot;,&quot;name&quot;:&quot;top-ganhos&quot;,&quot;path&quot;:&quot;\/&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[&quot;3602740465-0&quot;],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;pt&quot;},&quot;checksum&quot;:&quot;d6045da15320f7b2a588f08ef1b16361f16c62ae75973f48b531c60ec9292a92&quot;}" wire:effects="{&quot;scripts&quot;:{&quot;3602740465-0&quot;:&quot;&lt;script&gt;\n    let topPremiosSplide;\n\n    function initSplide() {\n        if (topPremiosSplide) {\n            topPremiosSplide.destroy();\n        }\n        setTimeout(() =&gt; {\n            requestAnimationFrame(() =&gt; {\n                try {\n                    topPremiosSplide = new Splide(&#039;#top-premios&#039;, {\n                        type: &#039;loop&#039;,\n                        perPage: 4,\n                        perMove: 1,\n                        drag: false,\n                        interval: 2500,\n                        padding: { right: &#039;4rem&#039; },\n                        pagination: false,\n                        arrows: false,\n                        autoplay: true,\n                        gap: 10,\n                        lazyLoad: &#039;nearby&#039;,\n                        updateOnMove: true,\n                        throttle: 100,\n                        breakpoints: {\n                            1024: {\n                                perPage: 3,\n                            },\n                            768: {\n                                gap: &#039;10px&#039;,\n                                perPage: 2,\n                            },\n                            480: {\n                                gap: &#039;5px&#039;,\n                                perPage: 1,\n                            }\n                        },\n                    }).mount();\n                } catch (error) {\n                    console.error(&#039;Failed to initialize top pr\u00eamios carousel.&#039;);\n                }\n            });\n        });\n    }\n\n    Livewire.on(&#039;topGanhosUpdated&#039;, () =&gt; {\n        setTimeout(() =&gt; {\n            initSplide();\n        }, 0);\n    });\n\n&lt;\/script&gt;\n    &quot;},&quot;dispatches&quot;:[{&quot;name&quot;:&quot;topGanhosUpdated&quot;,&quot;params&quot;:[]}]}" wire:id="TtetiX6W6qZYt2tr1S0P" class="flex flex-col w-full gap-3">
+<div class="flex justify-start items-center gap-2">
+
+
+</div>
+
+
+<div class="flex flex-col w-full gap-2">
+<div class="flex justify-between md:justify-start w-full items-center md:gap-8 gap-0">
+<div class="flex items-center gap-4">
+<div class="text-2xl font-bold text-[#f1f1f1]">
+Multiplayer PvP
+</div>
+</div>
+<div class="rounded-full bg-green-500 text-white flex justify-center items-center px-4 py-1 space-x-2">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-green-300"></span>
+</span>
+<div class="inline-flex font-bold text-xs md:text-base">18 Online agora</div>
+</div>
+</div>
+<div class="grid grid-cols-1 w-full gap-2 md:gap-3">
+<!--[if BLOCK]><![endif]--> <!--[if BLOCK]><![endif]--> <div>
+<div x-data="{ show: false }" class="flex flex-col rounded-2xl w-full drop-shadow-md relative">
+<div @mouseover="show = true" @mouseleave="show = false" class="flex w-full relative">
+<img alt="Palitinho" class="top-0 bottom-0 right-0 left-0 w-full h-[121px] md:h-[358px] aspect-[6/8] object-cover object-center rounded-2xl" src="assets/game-covers/palitinho.webp">
+<div class="flex w-full h-full items-end justify-end pr-2 md:pr-4 pb-2 absolute">
+<div class="flex gap-1 md:p-2 items-center">
+<svg fill="#ffffff" width="20px" height="20px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M16 15.503A5.041 5.041 0 1 0 16 5.42a5.041 5.041 0 0 0 0 10.083zm0 2.215c-6.703 0-11 3.699-11 5.5v3.363h22v-3.363c0-2.178-4.068-5.5-11-5.5z"></path></g></svg>
+<span class="text-white font-bold">3</span>
+</div>
+</div>
+<a x-show="show" href="login">
+<div class="absolute top-0 bottom-0 left-0 right-0 z-50 bg-black/70 rounded-2xl cursor-pointer">
+<div class="flex justify-center items-center h-full">
+<!--[if BLOCK]><![endif]--> <div class="flex items-center justify-center gap-2 rounded py-1.5 px-3 bg-[#03C6FC]">
+<svg width="14px" height="14px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21.4086 9.35258C23.5305 10.5065 23.5305 13.4935 21.4086 14.6474L8.59662 21.6145C6.53435 22.736 4 21.2763 4 18.9671L4 5.0329C4 2.72368 6.53435 1.26402 8.59661 2.38548L21.4086 9.35258Z" fill="#2a2e30"></path> </g></svg>
+<span class="font-semibold text-[10px] text-[#2a2e30]">JOGAR</span>
+</div>
+<!--[if ENDBLOCK]><![endif]-->
+</div>
+</div>
+</a>
+</div>
+</div>
+</div>
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--> 
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--> 
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if ENDBLOCK]><![endif]-->
+</div>
+</div>
+<!--[if BLOCK]><![endif]--> 
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--> <!--[if BLOCK]><![endif]--> 
+</li>
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--> <li class="splide__slide cursor-pointer">
+
+</li>
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--> <li class="splide__slide cursor-pointer">
+
+</li>
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--> <li class="splide__slide cursor-pointer">
+
+</li>
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--> <li class="splide__slide cursor-pointer">
+
+</li>
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--> <li class="splide__slide cursor-pointer">
+
+</li>
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if ENDBLOCK]><![endif]-->
+</ul>
+</div>
+</div>
+</div>
+<!--[if ENDBLOCK]><![endif]-->
+</div>
+<!--[if ENDBLOCK]><![endif]-->
+<!--[if ENDBLOCK]><![endif]-->
+</div>
+<!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+</div>
+</div>
+</main>
+</div>
+<footer>
+<div>
+<div class="bg-[#08173F] text-[#94ACCF] flex justify-center pb-12">
+<div class="footer p-10 w-full">
+<div class="order-1">
+<img src="assets/images/branding/x1logo.png" alt="Logo" style="filter: grayscale(1);" class="w-20">
+<p class="mb-3 mt-4" style="max-width: 400px;">X1 Jogos é uma plataforma online de jogos
+clássicos, onde players podem se divertir sozinhos ou encontrar seus amigos para jogarem juntos!</p>
+<div class="grid grid-flow-col gap-4 text-base-400">
+<div class="flex flex-col">
+<div class="flex items-center gap-4">
+<a href="https://www.youtube.com/@x1jogos.oficial" target="_blank">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="fill-white w-6 social-icon">
+<path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z">
+</path>
+</svg>
+</a>
+<a href="https://www.facebook.com/profile.php?id=100091908323681" target="_blank">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="fill-white w-6 social-icon">
+<path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z">
+</path>
+</svg>
+</a>
+<!--[if BLOCK]><![endif]--> <a href="https://www.instagram.com/x1jogosoficial/" target="_blank">
+<div class="flex items-center gap-2 rounded-lg py-2 px-4 instagram transition ease-in-out hover:-translate-y-0.5 hover:scale-101 duration-300 shadow hover:shadow-md">
+<svg xmlns="http://www.w3.org/2000/svg" class="fill-white w-6" viewBox="0 0 448 512">
+
+<path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+</svg>
+<span class="font-bold text-white">Siga nossa rede social!</span>
+</div>
+</a>
+<style type="text/css" scoped>
+        .instagram {
+            background: #f09433;
+            background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
+            background-size: 100% 200%;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .instagram:hover {
+            background-position: 100% 100%;
+        }
+    </style>
+<!--[if ENDBLOCK]><![endif]-->
+</div>
+<a href="x1jogos.apk" target="_blank"><img src="assets/images/misc/download-apk.png" style="width: 120px; margin-top: 20px; height: auto;"></a>
+</div>
+</div>
+</div>
+<div class="order-3 md:order-2">
+<p class="footer-title text-[#C9D3E8] opacity-100">Legal</p>
+<a href="privacy" class="link link-hover">Política de Privacidade</a>
+<a class="link link-hover">Política de Cookies</a>
+</div>
+<div class="order-4 md:order-3">
+<p class="footer-title text-[#C9D3E8] opacity-100">Links úteis</p>
+<a href="support" class="link link-hover">Suporte </a>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col text-[#D7D7D7] text-xs font-semibold w-full items-center justify-center py-5">
+</div>
+</footer>
+</div>
+<script src="livewire/livewire.mine5b8.js?id=c4fc8c5d" data-csrf="h0VHRgMmcdOjPsZluc5wB16UuqCvXFbCIH3UIw0m" data-update-uri="/livewire/update" data-navigate-once="true"></script>
 </body>
+
+<!-- Mirrored from x1jogos.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 22 Jul 2024 21:42:05 GMT -->
 </html>
