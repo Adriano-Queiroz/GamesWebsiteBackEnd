@@ -7,6 +7,7 @@ import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IGameRepository;
 import com.example.demo.repositories.IRoomRepository;
 import com.example.demo.services.CommomMethods.CommonMethods;
+import com.example.demo.services.exceptions.NotEnoughFundsException;
 import com.example.demo.services.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class JogoController {
@@ -92,8 +94,14 @@ public class JogoController {
         return "entrar-no-jogo";
     }
     @PostMapping("/entrar-sala")
-    public String entrarSala(@RequestParam("codRoom") Long codRoom,HttpSession session, Model model, RedirectAttributes redirectAttributes){
+    public String entrarSala(@RequestParam("codRoom") Long codRoom,HttpSession session, Model model, RedirectAttributes redirectAttributes) throws NotFoundException, NotEnoughFundsException {
         UserModel user = (UserModel) session.getAttribute("user");
+        Optional<RoomModel> optionalRoom = iRoomRepository.findById(codRoom);
+        if(optionalRoom.isEmpty())
+            throw new NotFoundException("Sala não encontrada");
+        RoomModel room = optionalRoom.get();
+        if(user.getBalance()<room.getBet())
+            throw new NotEnoughFundsException("Você não tem dinheiro para entrar nesta sala, deposite");
         long codUser = user.getCodUser();
         Object roomsData = null;
         long codAutoRoom = codRoom;
