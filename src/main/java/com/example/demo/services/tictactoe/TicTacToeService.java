@@ -88,25 +88,45 @@ public class TicTacToeService {
                 "/topic/battle/" + codBattle +"/" + player,
                 responseDTO);
     }
-    public void treatNullUser1(UserModel user2, Status status, BattleModel battle, double bet, double betToContabilize, double houseAmount){
-        if(status==Status.P1_WON)
+    public boolean treatNullUser1(UserModel user2, Status status, BattleModel battle, double bet, double betToContabilize, double houseAmount){
+        if(status==Status.P1_WON){
             user2.setBalance(user2.getBalance() - bet);
-        else if(status == Status.P2_WON)
+            iUserModelRepository.save(user2);
+            iBattleRepository.delete(battle);
+            return true;
+        }
+        else if(status == Status.P2_WON){
             user2.setBalance(user2.getBalance() + betToContabilize);
-        else
+            iUserModelRepository.save(user2);
+            iBattleRepository.delete(battle);
+        }
+        else{
             user2.setBalance(user2.getBalance() - houseAmount);
-        iUserModelRepository.save(user2);
-        iBattleRepository.delete(battle);
+            iUserModelRepository.save(user2);
+            iBattleRepository.delete(battle);
+        }
+        return false;
+
     }
-    public void treatNullUser2(UserModel user1, Status status, BattleModel battle,  double bet, double betToContabilize, double houseAmount){
-        if(status==Status.P1_WON)
+    public boolean treatNullUser2(UserModel user1, Status status, BattleModel battle,  double bet, double betToContabilize, double houseAmount){
+        if(status==Status.P1_WON){
             user1.setBalance(user1.getBalance() + betToContabilize);
-        else if(status == Status.P2_WON)
+            iUserModelRepository.save(user1);
+            iBattleRepository.delete(battle);
+        }
+        else if(status == Status.P2_WON){
             user1.setBalance(user1.getBalance() - bet);
-        else
+            iUserModelRepository.save(user1);
+            iBattleRepository.delete(battle);
+            return true;
+        }
+        else{
             user1.setBalance(user1.getBalance() - houseAmount);
-        iUserModelRepository.save(user1);
-        iBattleRepository.delete(battle);
+            iUserModelRepository.save(user1);
+            iBattleRepository.delete(battle);
+        }
+        return false;
+
     }
     public double treatBets(Status status, UserModel user1, UserModel user2, BattleModel battle){
 
@@ -114,13 +134,13 @@ public class TicTacToeService {
         double bet = battle.getRoom().getBet();
         double betToContabilize = bet * (1.00-housePercentage);
         double houseAmount = bet - betToContabilize;
-        if(user1 == null){
-            treatNullUser1(user2,status,battle, bet, betToContabilize,houseAmount);
-            return houseAmount;
+        if(user1 == null || user1.isBotPlayer()){
+            boolean hasBotWon = treatNullUser1(user2,status,battle, bet, betToContabilize,houseAmount);
+            return hasBotWon ? bet : houseAmount;
         }
-        if(user2 == null){
-            treatNullUser2(user1,status,battle,bet,betToContabilize,houseAmount);
-            return houseAmount;
+        if(user2 == null || user2.isBotPlayer()){
+            boolean hasBotWon = treatNullUser2(user1,status,battle,bet,betToContabilize,houseAmount);
+            return hasBotWon ? bet : houseAmount;
         }
         if(status==Status.P1_WON){
             System.out.println("P1 Won");

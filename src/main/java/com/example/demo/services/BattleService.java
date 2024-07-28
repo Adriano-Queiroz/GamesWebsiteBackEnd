@@ -17,6 +17,7 @@ import com.example.demo.repositories.IHistoryRepository;
 import com.example.demo.repositories.IUserModelRepository;
 import com.example.demo.services.exceptions.NotFoundException;
 import com.example.demo.services.tictactoe.TicTacToeService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -107,7 +108,8 @@ public class BattleService {
         System.out.println("Message received for battle " + codBattle + ". Timer reset.");
         resetTimer(battle, timeAdded+1000);
     }
-    private synchronized void resetTimer(BattleModel battle, Long timeAdded) {
+    @Transactional
+    protected synchronized void resetTimer(BattleModel battle, Long timeAdded) {
         Timer timer = battleTimers.get(battle.getCodBattle());
         if (timer != null) {
             timer.cancel();

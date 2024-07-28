@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dtos.lobby.*;
+import com.example.demo.repositories.ILobbyRepository;
 import com.example.demo.services.LobbyService;
 import com.example.demo.services.exceptions.NotEnoughFundsException;
 import com.example.demo.services.exceptions.NotFoundException;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class LobbyController {
 
     private final LobbyService lobbyService;
+    private final ILobbyRepository iLobbyRepository;
 
     @Autowired
-    public LobbyController(LobbyService lobbyService) {
+    public LobbyController(LobbyService lobbyService, ILobbyRepository iLobbyRepository) {
         this.lobbyService = lobbyService;
+        this.iLobbyRepository = iLobbyRepository;
     }
 
     @PostMapping
@@ -26,6 +29,12 @@ public class LobbyController {
     @DeleteMapping("/delete")
     public ResponseEntity<DeleteLobbyResponseDTO> deleteLobby(@RequestBody DeleteLobbyRequestDTO deleteLobbyRequestDTO) {
         long codLobby = lobbyService.deleteLobby(deleteLobbyRequestDTO.codUser());
+        return ResponseEntity.ok(new DeleteLobbyResponseDTO(codLobby));
+    }
+
+    @DeleteMapping("/delete-by-cod")
+    public ResponseEntity<DeleteLobbyResponseDTO> deleteLobby(@RequestParam long codLobby){
+        iLobbyRepository.delete(iLobbyRepository.findById(codLobby).get());
         return ResponseEntity.ok(new DeleteLobbyResponseDTO(codLobby));
     }
 

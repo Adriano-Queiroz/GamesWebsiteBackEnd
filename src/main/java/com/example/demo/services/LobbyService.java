@@ -21,6 +21,7 @@ import com.example.demo.services.exceptions.NotEnoughFundsException;
 import com.example.demo.services.exceptions.NotFoundException;
 import com.example.demo.services.sockets.WebSocketService;
 import com.google.gson.Gson;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -153,6 +154,8 @@ public class LobbyService {
             return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), isPlayer1,board,-1));
         }
         LobbyModel lobby = optionalLobby.get();
+        if(lobby.getUser().getCodUser()==lobbyRequestDTO.codUser())
+            return null;
         return createBattle(lobby,newUser,room);
     }
 
@@ -191,6 +194,8 @@ public class LobbyService {
     public LobbyModel createLobby(UserModel user, RoomModel room,UserModel friend){
             if(iLobbyRepository.findFirstByUserOrderByCodLobbyDesc(user).isPresent())
                 iLobbyRepository.delete(iLobbyRepository.findFirstByUserOrderByCodLobbyDesc(user).get());
+            if(iLobbyRepository.findFirstByUserOrderByCodLobbyDesc(user).isPresent())
+                return null;
         LobbyModel lobby = new LobbyModel();
         lobby.setGame(room.getGame());
         lobby.setUser(user);
@@ -205,7 +210,7 @@ public class LobbyService {
         UserModel player2 = player1 == newUser ? oldUser : newUser;
         return new PlayersTuple(player1, player2);
     }
-
+    @Transactional
     public void setBattle(PlayersTuple playersTuple, BattleModel battle, RoomModel room) {
         battle.setPlayer1(playersTuple.player1());
         battle.setPlayer2(playersTuple.player2());

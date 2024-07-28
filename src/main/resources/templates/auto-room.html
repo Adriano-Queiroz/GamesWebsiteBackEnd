@@ -47,7 +47,7 @@
             setLoading(false); // Simulating fetched rooms from Thymeleaf data
         }, []);
 
-        const getFriendsLobby = async (codRoom,codUser) => {
+        const getFriendsLobby = async (codRoom, codUser) => {
 
             try {
                 const response = await fetch(`/friendship/newInvite`, {
@@ -59,7 +59,7 @@
                         codRoom: codRoom,
                         codUser: codUser,
                         friendUsername: "",
-                        codLobby:-1
+                        codLobby: -1
                     })
                 });
                 if (!response.ok)
@@ -111,7 +111,7 @@
                     }, function (error) {
                         console.error('Error:', error);
                     });
-                }else{
+                } else {
                     console.log("MAMBO");
                     //navigate('/lobby', {state: { result }});
                     window.location.href = '/lobby?codBattle=' + result.codBattle
@@ -124,7 +124,7 @@
         }
 
 
-        const getLobby = async (codRoom,codUser) => {
+        const getLobby = async (codRoom, codUser) => {
             try {
                 const response = await fetch('/lobby', {
                     method: 'POST',
@@ -171,8 +171,8 @@
                                     },
                                     body: JSON.stringify({
                                         codUser: codUser,
-                                        isPlayer1 : result.isPlayer1,
-                                        codLobby : result.codLobby
+                                        isPlayer1: result.isPlayer1,
+                                        codLobby: result.codLobby
                                     })
                                 })
                                     .then(r => {
@@ -221,12 +221,27 @@
             console.log("codRoom:" + codRoom);
             console.log(codRoom);
             console.log("isFriendsRoom:" + isFriendsRooms);
-            if(isFriendsRooms)
-                getFriendsLobby(codRoom,codUser)
+            if (isFriendsRooms)
+                getFriendsLobby(codRoom, codUser)
             else
-                getLobby(codRoom,codUser);
+                getLobby(codRoom, codUser);
         };
 
+        const handleCancel = async (codLobby) => {
+            try {
+                const response = await fetch(`/delete-by-cod?codLobby=${codLobby}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    window.history.back
+                }
+                throw new error('An error occurred while deleting the lobby.');
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
         handleRoomButtonClick(codAutoRoom);
         /*
         return (
@@ -254,16 +269,21 @@
                         <div style={styles.modalBody}>
                             <p>Esperando alguém entrar</p>
                         </div>
-                        <div style={styles.modalFooter}>
-                            <button onClick={window.history.back} style={styles.button}>
-                                Go Back
-                            </button>
-                        </div>
+
                     </div>
                 </div>
             </div>
         );
-    };
+
+
+        /*
+        return (
+            <h1>Esperando</h1>
+        )
+        */
+
+    }
+
 
     const styles = {
         body: {
