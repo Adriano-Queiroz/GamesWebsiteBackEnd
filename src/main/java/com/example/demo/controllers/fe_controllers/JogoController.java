@@ -102,6 +102,7 @@ public class JogoController {
         model.addAttribute("codUser", codUser);
         model.addAttribute("codAutoRoom", codAutoRoom);
         model.addAttribute("isFriendsRooms", isFriendsRooms);
+        model.addAttribute("codUser",codUser);
         return "auto-room";
     }
     @PostMapping("entrar-sala-friends")
@@ -115,6 +116,7 @@ public class JogoController {
         model.addAttribute("codUser", codUser);
         model.addAttribute("codAutoRoom", codAutoRoom);
         model.addAttribute("isFriendsRooms", isFriendsRooms);
+        model.addAttribute("codUser", codUser);
         return "auto-room";
     }
     @GetMapping("/auto-room")
@@ -122,6 +124,7 @@ public class JogoController {
         if(session.getAttribute("user") == null)
             return "redirect:/login";
         UserModel user = (UserModel) session.getAttribute("user");
+        model.addAttribute("codUser", user.getCodUser());
         String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
         if(!isInBattle.equals(""))
             return isInBattle;

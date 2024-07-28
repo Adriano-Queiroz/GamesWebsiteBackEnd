@@ -16,4 +16,5 @@ public interface IBattleRepository extends JpaRepository<BattleModel,Long> {
     @Query("SELECT CASE WHEN b.player1 = :player THEN b.player2 ELSE b.player1 END FROM BattleModel b WHERE b.player1 = :player OR b.player2 = :player")
     UserModel findOpponentByPlayer(@Param("player") UserModel player);
 
+
 }

@@ -4,6 +4,7 @@ import com.example.demo.models.game.GameModel;
 import com.example.demo.models.lobby.LobbyModel;
 import com.example.demo.models.room.RoomModel;
 import com.example.demo.models.user.UserModel;
+import jakarta.persistence.Lob;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -17,5 +18,7 @@ public interface ILobbyRepository extends JpaRepository<LobbyModel,Long> {
     Optional<LobbyModel> findFirstByUserOrderByCodLobbyDesc(UserModel user);
     Optional<LobbyModel> findFirstByInviteCode(String inviteCode);
     //Optional<LobbyModel> findFirstByInviteIdOrderByCodLobby(long inviteId);
+
+    List<LobbyModel> findAllByUser(UserModel user);
 
 }

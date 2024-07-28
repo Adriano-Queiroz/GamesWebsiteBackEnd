@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -65,17 +66,15 @@ public class LobbyService {
         this.battleService = battleService;
     }
 
-    public long deleteLobby(long codUser){
+    public void deleteLobby(long codUser){
         try{
             UserModel user = iUserModelRepository.findById(codUser).get();
-            LobbyModel lobby = iLobbyRepository.findFirstByUserOrderByCodLobbyDesc(user).get();
-            iLobbyRepository.delete(lobby);
-            return lobby.getCodLobby();
+            List<LobbyModel> lobbyList = iLobbyRepository.findAllByUser(user);
+            iLobbyRepository.deleteAll(lobbyList);
+            //return lobby.getCodLobby();
         }catch(Exception e){
             System.out.println("mambo");
         }
-      return -1;
-
     }
     /*
     public ResponseEntity<LobbyResponseDTO> createFriendsLobby(FriendsLobbyRequestDTO friendsLobbyRequestDTO) throws NotFoundException{

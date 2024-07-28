@@ -26,14 +26,14 @@ public class LobbyController {
     public ResponseEntity<LobbyResponseDTO> getLobby(@RequestBody LobbyRequestDTO lobbyRequestDTO) throws NotFoundException, NotEnoughFundsException {
         return lobbyService.getLobby(lobbyRequestDTO);
     }
-    @DeleteMapping("/delete")
-    public ResponseEntity<DeleteLobbyResponseDTO> deleteLobby(@RequestBody DeleteLobbyRequestDTO deleteLobbyRequestDTO) {
-        long codLobby = lobbyService.deleteLobby(deleteLobbyRequestDTO.codUser());
-        return ResponseEntity.ok(new DeleteLobbyResponseDTO(codLobby));
+    @DeleteMapping("/delete/{codUser}")
+    public ResponseEntity<String> deleteLobbyByCodUser(@PathVariable long codUser) {
+        lobbyService.deleteLobby(codUser);
+        return ResponseEntity.ok("Lobby cancelado com Sucesso");
     }
 
-    @DeleteMapping("/delete-by-cod")
-    public ResponseEntity<DeleteLobbyResponseDTO> deleteLobby(@RequestParam long codLobby){
+    @DeleteMapping("/delete-by-cod/{codLobby}")
+    public ResponseEntity<DeleteLobbyResponseDTO> deleteLobby(@PathVariable long codLobby){
         iLobbyRepository.delete(iLobbyRepository.findById(codLobby).get());
         return ResponseEntity.ok(new DeleteLobbyResponseDTO(codLobby));
     }

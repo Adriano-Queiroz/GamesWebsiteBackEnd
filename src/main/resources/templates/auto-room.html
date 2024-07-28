@@ -39,7 +39,7 @@
 <script type="text/babel">
     const { useEffect, useState } = React;
 
-    function App({ rooms }) {
+    function App({ rooms, codUser }) {
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
 
@@ -48,7 +48,6 @@
         }, []);
 
         const getFriendsLobby = async (codRoom, codUser) => {
-
             try {
                 const response = await fetch(`/friendship/newInvite`, {
                     method: 'POST',
@@ -83,10 +82,7 @@
                             console.log('Received message:', message.body);
                             stompClient.disconnect();
                             const number = 1;
-                            //clearTimeout(timeout); // Clear the timeout if we received a message
-                            //navigate('/lobby', {state: { result, codBattle }});
                             window.location.href = '/lobby?codBattle=' + result.codBattle
-
                         });
 
                         // Set a timeout to finalize if no message is received within 5 seconds
@@ -106,23 +102,18 @@
                                 stompClient.disconnect();
                             }
                        }, 15000);
-
                          */
                     }, function (error) {
                         console.error('Error:', error);
                     });
                 } else {
                     console.log("MAMBO");
-                    //navigate('/lobby', {state: { result }});
                     window.location.href = '/lobby?codBattle=' + result.codBattle
-
-                    //navigate('/rooms');
                 }
             } catch (error) {
                 alert(error);
             }
         }
-
 
         const getLobby = async (codRoom, codUser) => {
             try {
@@ -188,8 +179,6 @@
                                     .catch(error => {
                                         console.error('Error:', error);
                                     });
-                                //navigate("/battle", {state : {result }})
-
                             }
                         }, 5000);
                     }, function (error) {
@@ -204,6 +193,33 @@
             }
         };
 
+        useEffect(() => {
+            handleRoomButtonClick(codAutoRoom);
+        }, []);
+
+        const handleRoomButtonClick = (codRoom) => {
+            if (isFriendsRooms)
+                getFriendsLobby(codRoom, codUser);
+            else
+                getLobby(codRoom, codUser);
+        };
+
+        const handleCancel = async (codLobby) => {
+            try {
+                const response = await fetch(`/lobby/delete/${codUser}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    window.history.back();
+                    return;
+                }
+                throw new Error('An error occurred while deleting the lobby.');
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
         if (loading) {
             return (
                 <div className="loader">
@@ -216,49 +232,6 @@
             return <div>Error: {error.message}</div>;
         }
 
-        const handleRoomButtonClick = (codRoom) => {
-            // Example function to handle room button click
-            console.log("codRoom:" + codRoom);
-            console.log(codRoom);
-            console.log("isFriendsRoom:" + isFriendsRooms);
-            if (isFriendsRooms)
-                getFriendsLobby(codRoom, codUser)
-            else
-                getLobby(codRoom, codUser);
-        };
-
-        const handleCancel = async (codLobby) => {
-            try {
-                const response = await fetch(`/delete-by-cod?codLobby=${codLobby}`, {
-                    method: 'DELETE',
-                });
-
-                if (response.ok) {
-                    window.history.back
-                }
-                throw new error('An error occurred while deleting the lobby.');
-            } catch (error) {
-                console.log(error);
-            }
-
-        }
-        handleRoomButtonClick(codAutoRoom);
-        /*
-        return (
-            <div className="room-buttons">
-                {rooms.map((room) => (
-                    <button
-                        key={room.codRoom}
-                        className="room-button"
-                        onClick={handleRoomButtonClick.bind(this, room.codRoom)}
-                    >
-                        {room.bet}
-                    </button>
-                ))}
-            </div>
-        );
-
-         */
         return (
             <div style={styles.body}>
                 <div style={styles.modal}>
@@ -269,19 +242,20 @@
                         <div style={styles.modalBody}>
                             <p>Esperando alguém entrar</p>
                         </div>
-
+                        <div style={styles.modalFooter}>
+                            <button onClick={handleCancel} style={styles.button}>
+                                Cancelar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         );
 
 
-        /*
-        return (
-            <h1>Esperando</h1>
-        )
-        */
-
+       // return (
+       //     <h1>hi</h1>
+       // )
     }
 
 
@@ -295,71 +269,61 @@
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundImage: 'url("assets/images/backgrounds/WP1.png")',
+            fontFamily: 'Arial, sans-serif',
+            backgroundImage: 'url("assets/images/backgrounds/WP1.png")', // Update this path
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            zIndex: -1,
-            overflow: 'hidden',
-        },
-        overlay: {
-            content: '""',
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'rgba(0, 0, 0, 0.3)',
-            zIndex: -1,
-            backdropFilter: 'blur(5px)',
         },
         modal: {
+            position: 'absolute',
+            zIndex: 1,
+            paddingTop: '100px',
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            overflow: 'auto',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 10,
         },
         modalContent: {
-            background: 'white',
+            backgroundColor: '#fefefe',
+            margin: 'auto',
             padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-            maxWidth: '500px',
-            width: '100%',
+            border: '1px solid #888',
+            width: '80%',
+            maxWidth: '400px',
             textAlign: 'center',
+            borderRadius: '10px',
         },
         modalHeader: {
             fontSize: '24px',
             fontWeight: 'bold',
-            marginBottom: '15px',
+            marginBottom: '10px',
         },
         modalBody: {
-            fontSize: '16px',
-            marginBottom: '15px',
+            fontSize: '18px',
+            marginBottom: '20px',
         },
         modalFooter: {
-            textAlign: 'right',
+            display: 'flex',
+            justifyContent: 'center',
         },
         button: {
-            backgroundColor: '#3490dc',
-            color: 'white',
             padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#008cba',
+            color: 'white',
             border: 'none',
             borderRadius: '5px',
             cursor: 'pointer',
-            fontSize: '14px',
         },
     };
 
-
-
-    // Render the React component
-    ReactDOM.render(<App rooms={roomsData} codUser={codUser} codAutoRoom={codAutoRoom} isFriendsRooms={isFriendsRooms}/>, document.getElementById('root'));
+    // Render the App component into the root element
+    ReactDOM.render(<App rooms={roomsData} codUser={codUser} />, document.getElementById('root'));
 </script>
 </body>
 </html>

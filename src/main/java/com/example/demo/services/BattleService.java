@@ -168,6 +168,7 @@ public class BattleService {
             battle.setStatus(Status.P1_TURN);
         else if(battle.getPlayer1()==null)
             battle.setStatus(Status.P2_TURN);
+        if(iBattleRepository.findById(battle.getCodBattle()).isPresent())
             iBattleRepository.save(battle);
         if(battle.getStatus() == Status.P2_TURN){
             ticTacToeService.treatFinishedGame(new Tuple(true,"X"),messagingTemplate,battle.getCodBattle());
