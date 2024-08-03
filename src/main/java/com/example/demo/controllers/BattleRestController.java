@@ -33,7 +33,7 @@ import static com.example.demo.mappers.BoardMapper.getBoard;
 @RestController
 @RequestMapping("/rest_battle")
 public class BattleRestController {
-
+//teste
     //GetBoard e status
     @Autowired
     private IBattleRepository iBattleRepository;
