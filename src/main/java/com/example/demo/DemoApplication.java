@@ -6,6 +6,7 @@ import com.example.demo.config.users.UsersDomainConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -19,7 +20,7 @@ import java.time.Duration;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @EnableScheduling
-public class DemoApplication {
+public class DemoApplication extends SpringBootServletInitializer {
 
 	@Bean
 	public TokenEncoder tokenEncoder() {
