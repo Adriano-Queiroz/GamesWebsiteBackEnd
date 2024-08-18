@@ -94,7 +94,7 @@ public class UserService {
         user.setPhoneNumber(phoneNumber);
         user.setPasswordValidationInfo(passwordValidationInfo.validationInfo());
         user.setBalance(0.0);
-        user.setUserRole(iUserRoleModelRepository.findById(0L).get());
+        user.setUserRole(iUserRoleModelRepository.findById(1L).get());
         return userRepository.save(user);
 
     }

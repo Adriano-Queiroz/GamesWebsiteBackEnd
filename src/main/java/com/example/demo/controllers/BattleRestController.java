@@ -72,7 +72,7 @@ public class BattleRestController {
         Tuple hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
                 getBoard(GameType.TICTACTOE, board))
                 .getBoard());
-
+        String oldBoard = battle.getBoard();
         if (hasFinishedTuple.hasFinished()) {
             Status status = ticTacToeService.RestTreatFinishedGame(hasFinishedTuple, makeMoveRequestDTO.codBattle());
             battleService.shutdown(makeMoveRequestDTO.codBattle());
@@ -87,11 +87,16 @@ public class BattleRestController {
                 String[][] boardArray = ((TicTacToeBoard)
                 BoardMapper.getBoard(GameType.TICTACTOE, board))
                 .getBoard();
+        String[][] oldBoardArray = ((TicTacToeBoard)
+                BoardMapper.getBoard(GameType.TICTACTOE, oldBoard))
+                .getBoard();
+
         Gson gson = new Gson();
         board = gson.toJson(gamesService.makeBotMove(
                 boardArray,
                 makeMoveRequestDTO.player().equals("X") ? "O" : "X" ,
-                battle.getRoom().getGame().getGameType()));
+                battle.getRoom().getGame().getGameType(),
+                gamesService.findDifferingCellIndex(boardArray,oldBoardArray)));
         makeMoveRequestDTO = new MakeMoveRequestDTO(makeMoveRequestDTO.player(),
                 board,
                 makeMoveRequestDTO.codBattle(),

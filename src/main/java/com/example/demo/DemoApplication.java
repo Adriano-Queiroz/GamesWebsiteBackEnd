@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.Auth_Pipeline.Sha256TokenEncoder;
 import com.example.demo.Auth_Pipeline.TokenEncoder;
 import com.example.demo.config.users.UsersDomainConfig;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -48,6 +49,9 @@ public class DemoApplication extends SpringBootServletInitializer {
 
 
 	public static void main(String[] args) {
+		Dotenv dotenv = Dotenv.configure().load();
+		System.out.println("Database URL: " + dotenv.get("DATABASE_URL"));
+
 		SpringApplication.run(DemoApplication.class, args);
 	}
 

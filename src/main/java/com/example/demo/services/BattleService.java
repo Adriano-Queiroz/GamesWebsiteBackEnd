@@ -146,7 +146,7 @@ public class BattleService {
                 //    throw new RuntimeException(e);
                 //}
             }
-        }, 16000);
+        }, 10006000);
 
         battleTimers.put(battle.getCodBattle(), timer);
         iBattleRepository.save(battle);
