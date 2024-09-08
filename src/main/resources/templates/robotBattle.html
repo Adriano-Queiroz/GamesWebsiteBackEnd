@@ -301,7 +301,6 @@
         console.log("hasReturned:" + hasReturned)
         const [waitingForPlayAgain, setWaitingForPlayAgain] = useState()
         const [board, setBoard] = useState(result.board ? JSON.parse(result.board) : []);
-
         const treatFinishedGame = (status) => {
             if (status === 'DRAW') {
                 setIsFinished(true);

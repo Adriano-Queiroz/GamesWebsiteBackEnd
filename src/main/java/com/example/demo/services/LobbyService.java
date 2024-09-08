@@ -153,8 +153,8 @@ public class LobbyService {
             return ResponseEntity.ok(new LobbyResponseDTO("Waiting for player", false, lobby.getCodLobby(), isPlayer1,board,-1));
         }
         LobbyModel lobby = optionalLobby.get();
-        if(lobby.getUser().getCodUser()==lobbyRequestDTO.codUser())
-            return null;
+        //if(lobby.getUser().getCodUser()==lobbyRequestDTO.codUser())
+        //    return null;
         return createBattle(lobby,newUser,room);
     }
 

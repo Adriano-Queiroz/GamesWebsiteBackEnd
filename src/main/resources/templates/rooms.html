@@ -67,7 +67,7 @@
                 console.log("is Second Player: " + result.isSecondPlayer);
                 if (!result.isSecondPlayer) {
                     // WebSocket communication
-                    const socket = new SockJS(`http://localhost:9000/ws`);
+                    const socket = new SockJS(`https://localhost:10001/wss`);
                     const stompClient = Stomp.over(socket);
                     let messageReceived = false;
 
@@ -143,7 +143,7 @@
 
                 if (!result.isSecondPlayer) {
                     // WebSocket communication
-                    const socket = new SockJS('http://localhost:9000/ws');
+                    const socket = new SockJS('https://localhost:10001/wss');
                     const stompClient = Stomp.over(socket);
                     let messageReceived = false;
 
