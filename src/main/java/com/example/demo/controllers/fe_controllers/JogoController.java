@@ -1,5 +1,6 @@
 package com.example.demo.controllers.fe_controllers;
 
+import com.example.demo.config.WsProperties;
 import com.example.demo.dtos.games.GameDTO;
 import com.example.demo.models.game.GameModel;
 import com.example.demo.models.room.RoomModel;
@@ -31,6 +32,8 @@ public class JogoController {
     private IRoomRepository iRoomRepository;
     @Autowired
     private CommonMethods commonMethods;
+    @Autowired
+    private WsProperties wsProperties;
     @GetMapping("jogosList")
     public String jogosList(HttpSession session, Model model) throws NotFoundException {
         if(session.getAttribute("user") == null)
@@ -95,6 +98,9 @@ public class JogoController {
     }
     @PostMapping("/entrar-sala")
     public String entrarSala(@RequestParam("codRoom") Long codRoom,HttpSession session, Model model, RedirectAttributes redirectAttributes) throws NotFoundException, NotEnoughFundsException {
+        model.addAttribute("port", wsProperties.getPort());
+        model.addAttribute("type", wsProperties.getType());
+        model.addAttribute("protocol", wsProperties.getProtocol());
         UserModel user = (UserModel) session.getAttribute("user");
         Optional<RoomModel> optionalRoom = iRoomRepository.findById(codRoom);
         if(optionalRoom.isEmpty())
@@ -125,10 +131,16 @@ public class JogoController {
         model.addAttribute("codAutoRoom", codAutoRoom);
         model.addAttribute("isFriendsRooms", isFriendsRooms);
         model.addAttribute("codUser", codUser);
+        model.addAttribute("port", wsProperties.getPort());
+        model.addAttribute("type", wsProperties.getType());
+        model.addAttribute("protocol", wsProperties.getProtocol());
         return "auto-room";
     }
     @GetMapping("/auto-room")
     public String autoRoom(HttpSession session, Model model) throws NotFoundException {
+        model.addAttribute("port", wsProperties.getPort());
+        model.addAttribute("type", wsProperties.getType());
+        model.addAttribute("protocol", wsProperties.getProtocol());
         if(session.getAttribute("user") == null)
             return "redirect:/login";
         UserModel user = (UserModel) session.getAttribute("user");

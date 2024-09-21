@@ -1,6 +1,7 @@
 package com.example.demo.controllers.fe_controllers;
 
 import com.example.demo.boards.TicTacToeBoard;
+import com.example.demo.config.WsProperties;
 import com.example.demo.mappers.BoardMapper;
 import com.example.demo.models.user.UserModel;
 import com.example.demo.repositories.IBattleRepository;
@@ -35,6 +36,8 @@ public class GameController {
     private final GamesService gamesService;
     private final BattleService battleService;
     private final ILobbyRepository iLobbyRepository;
+    @Autowired
+    private WsProperties wsProperties;
 
     @Autowired
     public GameController(UserService userService, IRoomRepository iRoomRepository, IGameRepository iGameRepository, IBattleRepository iBattleRepository, GamesService gamesService, BattleService battleService, ILobbyRepository iLobbyRepository) {
@@ -67,6 +70,9 @@ public class GameController {
             Model model) {
         if (session.getAttribute("user") == null)
             return "redirect:/login";
+        model.addAttribute("port", wsProperties.getPort());
+        model.addAttribute("type", wsProperties.getType());
+        model.addAttribute("protocol", wsProperties.getProtocol());
         UserModel user = (UserModel) session.getAttribute("user");
         long codUser = user.getCodUser();
         BattleModel battle = iBattleRepository.findById(codBattle).get();

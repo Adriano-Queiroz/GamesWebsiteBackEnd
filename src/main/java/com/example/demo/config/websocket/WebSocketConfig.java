@@ -20,6 +20,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("https://localhost:9000")
                 .withSockJS(); // Enable SockJS fallback for browsers that don't support WebSocket directly
+        registry.addEndpoint("/wss")
+                .setAllowedOrigins("https://localhost:9000")
+                .withSockJS(); // Enable SockJS fallback for browsers that don't support WebSocket directly
     }
     /*
     @Override

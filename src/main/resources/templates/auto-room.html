@@ -29,6 +29,15 @@
         /*<![CDATA[*/
         const codAutoRoom = /*[[${codAutoRoom}]]*/ [[${codAutoRoom}]];
         /*]]>*/
+        /*<![CDATA[*/
+        const port = /*[[${port}]]*/ [[${port}]];
+        /*]]>*/
+        /*<![CDATA[*/
+        const type = /*[[${type}]]*/ [[${type}]];
+        /*]]>*/
+        /*<![CDATA[*/
+        const protocol = /*[[${protocol}]]*/ [[${protocol}]];
+        /*]]>*/
     </script>
 </head>
 <body>
@@ -69,7 +78,7 @@
                 console.log("is Second Player: " + result.isSecondPlayer);
                 if (!result.isSecondPlayer) {
                     // WebSocket communication
-                    const socket = new SockJS(`http://localhost:9000/ws`);
+                    const socket = new SockJS(`${protocol}://localhost:${port}/${type}`);
                     const stompClient = Stomp.over(socket);
                     let messageReceived = false;
 
@@ -137,7 +146,7 @@
 
                 if (!result.isSecondPlayer) {
                     // WebSocket communication
-                    const socket = new SockJS('http://localhost:9000/ws');
+                    const socket = new SockJS(`${protocol}://localhost:${port}/${type}`);
                     const stompClient = Stomp.over(socket);
                     let messageReceived = false;
 

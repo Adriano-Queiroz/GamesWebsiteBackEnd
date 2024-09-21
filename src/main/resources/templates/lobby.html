@@ -83,7 +83,7 @@
 
             if (!result.isSecondPlayer) {
                 // WebSocket communication
-                const socket = new SockJS('https://localhost:10001/wss');
+                const socket = new SockJS(`${protocol}://localhost:${port}/${type}`);
                 const stompClient = Stomp.over(socket);
                 let messageReceived = false;
 
@@ -307,7 +307,7 @@
         };
 
         useEffect(() => {
-            socketRef.current = new SockJS('https://localhost:10001/wss');
+            socketRef.current = new SockJS(`${protocol}://localhost:${port}/${type}`);
             stompClientRef.current = Stomp.over(socketRef.current);
 
             stompClientRef.current.connect({}, async function (frame) {
@@ -510,6 +510,9 @@
 
     const codRoom = [[${codRoom}]];
     const codUser = [[${codUser}]];
+    const protocol = '[[${protocol}]]';
+    const port = [[${port}]];
+    const type = '[[${type}]]';
 
     const boardToTranslate = '[[${board}]]';
     const possibleMovesToTranslate = '[[${possibleMoves}]]'

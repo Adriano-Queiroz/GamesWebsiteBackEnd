@@ -1,6 +1,7 @@
 package com.example.demo.controllers.fe_controllers;
 
 import com.example.demo.boards.TicTacToeBoard;
+import com.example.demo.config.WsProperties;
 import com.example.demo.dtos.battle.IsInBattleDTO;
 import com.example.demo.dtos.invites.SendNewInviteRequestDTO;
 import com.example.demo.dtos.lobby.LobbyResponseDTO;
@@ -43,6 +44,8 @@ public class FriendsController {
     private final IUserModelRepository iUserModelRepository;
     private final IInviteRepository iInviteRepository;
     private LobbyService lobbyService;
+    @Autowired
+    private WsProperties wsProperties;
 
 
     @Autowired
@@ -89,6 +92,9 @@ public class FriendsController {
             Model model) {
         if (session.getAttribute("user") == null)
             return "redirect:/login";
+        model.addAttribute("port", wsProperties.getPort());
+        model.addAttribute("type", wsProperties.getType());
+        model.addAttribute("protocol", wsProperties.getProtocol());
         UserModel user = (UserModel) session.getAttribute("user");
         long codUser = user.getCodUser();
         BattleModel battle = iBattleRepository.findById(codBattle).get();
