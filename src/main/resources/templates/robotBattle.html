@@ -118,7 +118,8 @@
 
             if (!result.isSecondPlayer) {
                 // WebSocket communication
-                const socket = new SockJS(`${protocol}://localhost:${port}/${type}`);
+                //const socket = new SockJS(`${protocol}://${url}/${type}`);
+                const socket = new SockJS("http://localhost:9000/ws");
                 const stompClient = Stomp.over(socket);
                 let messageReceived = false;
 
@@ -357,7 +358,7 @@
         }, [resultado, waitTime]);
 
         useEffect(() => {
-            socketRef.current = new SockJS(`${protocol}://localhost:${port}/${type}`);
+            socketRef.current = SockJS(`${protocol}://${url}:${port}/${type}`);
             stompClientRef.current = Stomp.over(socketRef.current);
             stompClientRef.current.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
@@ -568,6 +569,7 @@
     const codUser = [[${codUser}]];
     const protocol = '[[${protocol}]]';
     const port = [[${port}]];
+    const url = '[[${url}]]';
     const type = '[[${type}]]';
 
     const boardToTranslate = '[[${board}]]';

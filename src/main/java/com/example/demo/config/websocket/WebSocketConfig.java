@@ -17,11 +17,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         System.out.println("HIIII");
+        //registry.addEndpoint("/ws")
+        //        .setAllowedOrigins("https://localhost:8443")
+        //        .withSockJS(); // Enable SockJS fallback for browsers that don't support WebSocket directly
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("https://localhost:9000")
-                .withSockJS(); // Enable SockJS fallback for browsers that don't support WebSocket directly
-        registry.addEndpoint("/wss")
-                .setAllowedOrigins("https://localhost:9000")
+                .setAllowedOrigins("https://localhost:8080")
                 .withSockJS(); // Enable SockJS fallback for browsers that don't support WebSocket directly
     }
     /*

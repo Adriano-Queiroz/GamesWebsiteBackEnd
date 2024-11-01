@@ -101,6 +101,7 @@ public class JogoController {
         model.addAttribute("port", wsProperties.getPort());
         model.addAttribute("type", wsProperties.getType());
         model.addAttribute("protocol", wsProperties.getProtocol());
+        model.addAttribute("url", wsProperties.getUrl());
         UserModel user = (UserModel) session.getAttribute("user");
         Optional<RoomModel> optionalRoom = iRoomRepository.findById(codRoom);
         if(optionalRoom.isEmpty())
@@ -134,6 +135,8 @@ public class JogoController {
         model.addAttribute("port", wsProperties.getPort());
         model.addAttribute("type", wsProperties.getType());
         model.addAttribute("protocol", wsProperties.getProtocol());
+        model.addAttribute("url", wsProperties.getUrl());
+
         return "auto-room";
     }
     @GetMapping("/auto-room")
@@ -141,6 +144,7 @@ public class JogoController {
         model.addAttribute("port", wsProperties.getPort());
         model.addAttribute("type", wsProperties.getType());
         model.addAttribute("protocol", wsProperties.getProtocol());
+        model.addAttribute("url", wsProperties.getUrl());
         if(session.getAttribute("user") == null)
             return "redirect:/login";
         UserModel user = (UserModel) session.getAttribute("user");

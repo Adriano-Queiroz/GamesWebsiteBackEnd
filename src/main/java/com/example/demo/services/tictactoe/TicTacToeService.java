@@ -160,4 +160,6 @@ public class TicTacToeService {
         iBattleRepository.delete(battle);
         return houseAmount;
     }
+
+
 }

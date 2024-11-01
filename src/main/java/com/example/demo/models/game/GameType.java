@@ -4,5 +4,6 @@ package com.example.demo.models.game;
 public enum GameType {
     BATTLESHIP,
     TICTACTOE,
-    CONNECT4
+    CONNECT4,
+    CHECKERS
 }

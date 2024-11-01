@@ -14,4 +14,5 @@ public class WsProperties {
     private int port;
     private String type;
     private String protocol;
+    private String url;
 }

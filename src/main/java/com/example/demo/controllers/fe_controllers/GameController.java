@@ -1,5 +1,6 @@
 package com.example.demo.controllers.fe_controllers;
 
+import com.example.demo.boards.CheckersBoard;
 import com.example.demo.boards.TicTacToeBoard;
 import com.example.demo.config.WsProperties;
 import com.example.demo.mappers.BoardMapper;
@@ -73,14 +74,20 @@ public class GameController {
         model.addAttribute("port", wsProperties.getPort());
         model.addAttribute("type", wsProperties.getType());
         model.addAttribute("protocol", wsProperties.getProtocol());
+        model.addAttribute("url", wsProperties.getUrl());
         UserModel user = (UserModel) session.getAttribute("user");
         long codUser = user.getCodUser();
         BattleModel battle = iBattleRepository.findById(codBattle).get();
+        GameType gameType = battle.getRoom().getGame().getGameType();
+
         boolean isPlayer1 = battle.getPlayer1() != null && battle.getPlayer1().getCodUser() == codUser;
         String board = battle.getBoard();
-        String[][] boardArray = ((TicTacToeBoard)
+        String[][] boardArray = gameType == GameType.TICTACTOE ? ((TicTacToeBoard)
                 BoardMapper.getBoard(GameType.TICTACTOE, board))
-                .getBoard();
+                .getBoard():
+                ((CheckersBoard)
+                BoardMapper.getBoard(GameType.CHECKERS, board)).getBoard();
+
         model.addAttribute("codRoom", battle.getRoom().getCodRoom());
         model.addAttribute("isPlayer1", isPlayer1);
         model.addAttribute("status", battle.getStatus());
@@ -104,7 +111,9 @@ public class GameController {
         }
         if (battle.getPlayer1() != null && battle.getPlayer2() != null) {
             model.addAttribute("board", board);
-            return "lobby";
+            return gameType == GameType.TICTACTOE ? "lobby" :
+                    gameType == GameType.CHECKERS ? "checkers" :
+                    "";
         }
         if (!isPlayer1)
             model.addAttribute("firstMoveBoard", firstMoveBoard);
@@ -113,6 +122,7 @@ public class GameController {
         model.addAttribute("board", board);
         return "robotBattle";
     }
+
 /*
     @GetMapping("/rooms")
     public String rooms(HttpSession session, Model model) throws NotFoundException {

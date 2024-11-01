@@ -69,11 +69,16 @@ public class BattleRestController {
             throw new NotFoundException("Partida não encontrada");
         BattleModel battle = optionalBattle.get();
         String board = makeMoveRequestDTO.board();
-        Tuple hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
-                getBoard(GameType.TICTACTOE, board))
-                .getBoard());
+        Tuple hasFinishedTuple = null;
+        //TODO substituir isto por chamar um hasfinished globalqe lá fazemos o if de jogos
+        if(battle.getRoom().getGame().getGameType() == GameType.TICTACTOE){
+            hasFinishedTuple = ticTacToeLogicService.hasFinished(((TicTacToeBoard)
+                    getBoard(GameType.TICTACTOE, board))
+                    .getBoard());
+        }
+
         String oldBoard = battle.getBoard();
-        if (hasFinishedTuple.hasFinished()) {
+        if (hasFinishedTuple != null && hasFinishedTuple.hasFinished()) {
             Status status = ticTacToeService.RestTreatFinishedGame(hasFinishedTuple, makeMoveRequestDTO.codBattle());
             battleService.shutdown(makeMoveRequestDTO.codBattle());
             return ResponseEntity.ok(new MakeMoveResponseDTO(

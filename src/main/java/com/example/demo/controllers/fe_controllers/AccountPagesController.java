@@ -63,6 +63,21 @@ public class AccountPagesController {
 
         return "transactions";
     }
+    @GetMapping("/transactions2")
+    public String transactions2(Model model, HttpSession session) throws NotFoundException {
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
+        UserModel user = (UserModel) session.getAttribute("user");
+        model.addAttribute("user",user);
+
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
+        model.addAttribute("transactions",userService.getTransactions(null,user.getCodUser(),null,null,null,null,null,null));
+
+
+        return "transactions2";
+    }
     @GetMapping("/getTransactions")
     @ResponseBody
     public List<Deposit_WithdrawalDTO> transactions(
@@ -130,6 +145,26 @@ public class AccountPagesController {
 
 
         return "bets";
+    }
+    @GetMapping("/bets2")
+    public String bets2(Model model,HttpSession session) throws NotFoundException {
+        if(session.getAttribute("user") == null)
+            return "redirect:/login";
+
+        UserModel user = (UserModel) session.getAttribute("user");
+
+        model.addAttribute("user",session.getAttribute("user"));
+
+        String isInBattle = commonMethods.isInBattle(user.getCodUser(), session, model);
+        if(!isInBattle.equals(""))
+            return isInBattle;
+
+        List<HistoryInfoDTO> historyInfo = userService.getHistory(user);
+
+        model.addAttribute("histories", historyInfo);
+
+
+        return "bets2";
     }
 
 }

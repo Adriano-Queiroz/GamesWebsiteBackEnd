@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>React Checkers Game</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React CDN -->
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX to JS conversion -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Include SockJS and Stomp from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex justify-center items-center">
+<div id="checkers-game"></div>
+
+<script type="text/babel">
+
+    const SIZE = 8;
+    const P1_PIECE = 'x'; // Player 1 piece
+    const P2_PIECE = 'o'; // Player 2 piece
+    const EMPTY = '.'; // Empty square
+
+    const initializeBoard = () => {
+        const board = Array(SIZE).fill(null).map(() => Array(SIZE).fill(EMPTY));
+        for (let row = 0; row < SIZE; row++) {
+            for (let col = 0; col < SIZE; col++) {
+                if ((row + col) % 2 === 1) {
+                    if (row < 3) board[row][col] = P1_PIECE;
+                    if (row > 4) board[row][col] = P2_PIECE;
+                }
+            }
+        }
+        return board;
+    };
+
+    const CheckersGame = (codUser, codRoom, result, protocol, url, type, port) => {
+        const [board, setBoard] = React.useState(initializeBoard());
+        const [player1Turn, setPlayer1Turn] = React.useState(true);
+        const [selected, setSelected] = React.useState({ row: -1, col: -1 });
+        console.log("result inside checkersGame:")
+        console.log(result);
+        const resetSelection = () => setSelected({ row: -1, col: -1 });
+
+        const renderBoard = () => {
+            const rows = [];
+            for (let row = 0; row < SIZE; row++) {
+                const cols = [];
+                for (let col = 0; col < SIZE; col++) {
+                    const piece = board[row][col];
+                    const isSelected = selected.row === row && selected.col === col;
+                    const bgColor = (row + col) % 2 === 1 ? 'bg-gray-800' : 'bg-gray-300';
+                    const pieceColor = piece === P1_PIECE ? 'text-red-600' : 'text-green-600';
+                    const pieceSymbol = piece === EMPTY ? '' : piece;
+
+                    cols.push(
+                        <button
+                            key={`${row}-${col}`}
+                            className={`w-16 h-16 flex justify-center items-center ${bgColor} ${isSelected ? 'ring-4 ring-green-400' : ''}`}
+                            onClick={handleSquareClick.bind(this,row, col)}
+                        >
+
+                            <span className={`text-3xl ${pieceColor}`}>{pieceSymbol}</span>
+                        </button>
+                    );
+                }
+                rows.push(<div key={row} className="flex">{cols}</div>);
+            }
+            return rows;
+        };
+
+        const isValidMove = (startRow, startCol, endRow, endCol) => {
+            if (startRow < 0 || startRow >= SIZE || startCol < 0 || startCol >= SIZE ||
+                endRow < 0 || endRow >= SIZE || endCol < 0 || endCol >= SIZE) {
+                return false;
+            }
+
+            const piece = board[startRow][startCol];
+            const target = board[endRow][endCol];
+            const rowDiff = endRow - startRow;
+            const colDiff = Math.abs(endCol - startCol);
+
+            if (target !== EMPTY || (colDiff !== 1 && colDiff !== 2)) return false;
+
+            if (player1Turn && piece === P1_PIECE && rowDiff !== 1 && rowDiff !== 2) return false;
+            if (!player1Turn && piece === P2_PIECE && rowDiff !== -1 && rowDiff !== -2) return false;
+
+            if (colDiff === 2) {
+                const captureRow = (startRow + endRow) / 2;
+                const captureCol = (startCol + endCol) / 2;
+                const capturedPiece = board[captureRow][captureCol];
+                if (player1Turn && capturedPiece !== P2_PIECE) return false;
+                if (!player1Turn && capturedPiece !== P1_PIECE) return false;
+            }
+
+            return true;
+        };
+
+        const canCaptureAgain = (row, col) => {
+            const direction = player1Turn ? 1 : -1;
+            return (isValidMove(row, col, row + 2 * direction, col + 2) ||
+                isValidMove(row, col, row + 2 * direction, col - 2));
+        };
+
+        const handleSquareClick = (row, col) => {
+            if (selected.row === -1) {
+                const piece = board[row][col];
+                debugger;
+                if ((player1Turn && piece === P1_PIECE, result.isPlayer1) || (!player1Turn && piece === P2_PIECE, !result.isPlayer1)) {
+                    setSelected({ row, col });
+                }
+            } else {
+                const { row: startRow, col: startCol } = selected;
+                if (isValidMove(startRow, startCol, row, col)) {
+                    const newBoard = board.map(row => row.slice());
+                    let hasCaptured = false;
+
+                    if (Math.abs(startRow - row) === 2) {
+                        const captureRow = (startRow + row) / 2;
+                        const captureCol = (startCol + col) / 2;
+                        newBoard[captureRow][captureCol] = EMPTY;
+                        hasCaptured = true;
+                    }
+
+                    newBoard[row][col] = newBoard[startRow][startCol];
+                    newBoard[startRow][startCol] = EMPTY;
+
+                    setBoard(newBoard);
+                    if (hasCaptured && canCaptureAgain(row, col)) return;
+                    setPlayer1Turn(!player1Turn);
+                    resetSelection();
+                } else {
+                    resetSelection();
+                }
+            }
+        };
+
+        return (
+            <div className="flex flex-col items-center">
+                <h1 className="text-2xl font-bold mb-4">{`Player ${player1Turn ? 1 : 2}'s Turn`}</h1>
+                <div className="border-4 border-black inline-block">
+                    {renderBoard()}
+                </div>
+            </div>
+        );
+    };
+    const codRoom = [[${codRoom}]];
+    const codUser = [[${codUser}]];
+    const protocol = '[[${protocol}]]';
+    const url = '[[${url}]]';
+    const port = [[${port}]];
+    const type = '[[${type}]]';
+
+    const boardToTranslate = '[[${board}]]';
+    const possibleMovesToTranslate = '[[${possibleMoves}]]'
+    console.log("codRoom:" + codRoom);
+    console.log("codUser:" + codUser);
+    console.log("protocol:" + protocol);
+    console.log("url:" + url);
+    console.log("port:" + port);
+    console.log("type:" + type);
+    const result = {
+        codBattle: [[${codBattle}]],
+        isPlayer1: [[${isPlayer1}]],
+        status: '[[${status}]]',
+        hasReturned: [[${hasReturned}]],
+        board: boardToTranslate.replace(/&quot;/g, '"'),
+        possibleMoves: possibleMovesToTranslate.replace(/&quot;/g, '"'),
+        timerSeconds: [[${seconds}]]
+    };
+    console.log("result:");
+    console.log(result);
+    // Render the game into the #checkers-game div
+    ReactDOM.render(<CheckersGame codUser={codUser} codRoom={codRoom} result={result}  codUser={codUser} protocol={protocol} url={url} port={port} type={type}/>, document.getElementById('checkers-game'));
+
+</script>
+</body>
+</html>

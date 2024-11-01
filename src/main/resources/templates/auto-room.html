@@ -38,6 +38,9 @@
         /*<![CDATA[*/
         const protocol = /*[[${protocol}]]*/ [[${protocol}]];
         /*]]>*/
+        /*<![CDATA[*/
+        const url = /*[[${url}]]*/ [[${url}]];
+        /*]]>*/
     </script>
 </head>
 <body>
@@ -78,7 +81,7 @@
                 console.log("is Second Player: " + result.isSecondPlayer);
                 if (!result.isSecondPlayer) {
                     // WebSocket communication
-                    const socket = new SockJS(`${protocol}://localhost:${port}/${type}`);
+                    const socket = new SockJS(`${protocol}://${url}:${port}/${type}`);
                     const stompClient = Stomp.over(socket);
                     let messageReceived = false;
 
@@ -146,7 +149,7 @@
 
                 if (!result.isSecondPlayer) {
                     // WebSocket communication
-                    const socket = new SockJS(`${protocol}://localhost:${port}/${type}`);
+                    const socket = new SockJS(`${protocol}://${url}:${port}/${type}`);
                     const stompClient = Stomp.over(socket);
                     let messageReceived = false;
 

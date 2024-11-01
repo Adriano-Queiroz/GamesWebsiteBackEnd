@@ -83,7 +83,7 @@
 
             if (!result.isSecondPlayer) {
                 // WebSocket communication
-                const socket = new SockJS(`${protocol}://localhost:${port}/${type}`);
+                const socket = new SockJS(`${protocol}://${url}:${port}/${type}`);
                 const stompClient = Stomp.over(socket);
                 let messageReceived = false;
 
@@ -307,7 +307,7 @@
         };
 
         useEffect(() => {
-            socketRef.current = new SockJS(`${protocol}://localhost:${port}/${type}`);
+            socketRef.current = new SockJS('http://localhost:9000/ws');
             stompClientRef.current = Stomp.over(socketRef.current);
 
             stompClientRef.current.connect({}, async function (frame) {
@@ -511,6 +511,7 @@
     const codRoom = [[${codRoom}]];
     const codUser = [[${codUser}]];
     const protocol = '[[${protocol}]]';
+    const url = '[[${url}]]';
     const port = [[${port}]];
     const type = '[[${type}]]';
 

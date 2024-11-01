@@ -95,6 +95,7 @@ public class FriendsController {
         model.addAttribute("port", wsProperties.getPort());
         model.addAttribute("type", wsProperties.getType());
         model.addAttribute("protocol", wsProperties.getProtocol());
+        model.addAttribute("url", wsProperties.getUrl());
         UserModel user = (UserModel) session.getAttribute("user");
         long codUser = user.getCodUser();
         BattleModel battle = iBattleRepository.findById(codBattle).get();

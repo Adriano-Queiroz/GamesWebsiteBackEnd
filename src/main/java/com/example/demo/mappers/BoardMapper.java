@@ -1,6 +1,7 @@
 package com.example.demo.mappers;
 
 import com.example.demo.boards.Board;
+import com.example.demo.boards.CheckersBoard;
 import com.example.demo.boards.TicTacToeBoard;
 import com.example.demo.models.game.GameType;
 import com.google.gson.Gson;
@@ -19,7 +20,7 @@ public class BoardMapper {
             }
             return ticTacToeBoard;
         }
-        return null;
+        return new CheckersBoard();
     }
 
 }
